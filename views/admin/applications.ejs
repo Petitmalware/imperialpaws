@@ -1,0 +1,96 @@
+<div class="admin-shell">
+
+  <!-- SIDEBAR (same as dashboard, DO NOT CHANGE) -->
+  <aside class="admin-sidebar">
+
+    <div class="admin-logo">
+      <span class="paw">🐾</span>
+      <div>
+        <strong>ImperialPaws</strong>
+        <em>Admin Panel</em>
+      </div>
+    </div>
+
+    <nav class="admin-menu">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications" class="active">Applications</a>
+      <a href="/admin/puppies">Puppies</a>
+      <a href="/admin/testimonials">Testimonials</a>
+      <a href="/admin/invoices">Invoices</a>
+      <a href="/admin/settings">Site Settings</a>
+      <a href="/admin/admins">Admins</a>
+    </nav>
+
+    <div class="admin-logout">
+      <a href="/admin/logout">Logout</a>
+    </div>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-content">
+
+    <h1>Adoption Applications</h1>
+
+    <% if (applications.length === 0) { %>
+      <p class="admin-empty">No applications submitted yet.</p>
+    <% } else { %>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+
+          <thead>
+            <tr>
+              <th>Tracking Code</th>
+              <th>Puppy</th>
+              <th>Applicant</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% applications.forEach(app => { %>
+              <tr>
+                <td class="mono"><%= app.id %></td>
+                <td><%= app.puppyName %></td>
+                <td><%= app.name %></td>
+                <td><%= app.email %></td>
+
+                <td>
+                  <span class="status-pill <%= app.status.toLowerCase() %>">
+                    <%= app.status %>
+                  </span>
+
+                  <form
+                    method="post"
+                    action="/admin/applications/<%= app.id %>/status"
+                    class="status-form">
+
+                    <select name="status" required>
+                      <option value="">Change status</option>
+                      <option value="Approved">Approve</option>
+                      <option value="Rejected">Reject</option>
+                      <option value="Sold">Mark Sold</option>
+                    </select>
+
+                    <button type="submit">Update</button>
+                  </form>
+                </td>
+
+                <td>
+                  <%= new Date(app.createdAt).toLocaleDateString() %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+
+        </table>
+      </div>
+
+    <% } %>
+
+  </main>
+
+</div>

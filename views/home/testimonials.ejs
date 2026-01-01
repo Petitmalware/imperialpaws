@@ -1,0 +1,47 @@
+<section class="page-hero reveal">
+  <div class="container">
+    <h1>Testimonials</h1>
+    <p class="subtitle">
+      Experiences shared by ImperialPaws puppy families.
+    </p>
+  </div>
+</section>
+
+<section class="page-content">
+  <div class="container">
+
+    <% if (!testimonials.length) { %>
+      <p class="center">No testimonials available yet.</p>
+    <% } else { %>
+
+      <div class="testimonials-lux-grid">
+
+        <% testimonials.forEach(t => { %>
+          <article class="testimonial-card">
+
+            <p class="testimonial-message">
+              “<%= t.message %>”
+            </p>
+
+            <div class="testimonial-author">
+              <strong><%= t.name %></strong>
+              <% if (t.location) { %>
+                <span><%= t.location %></span>
+              <% } %>
+            </div>
+
+          </article>
+        <% }) %>
+
+      </div>
+
+    <% } %>
+
+    <div class="center" style="margin-top:3rem;">
+      <a href="/testimonials/submit" class="btn-primary">
+        Share Your Experience
+      </a>
+    </div>
+
+  </div>
+</section>

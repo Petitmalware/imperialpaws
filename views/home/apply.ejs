@@ -1,0 +1,76 @@
+<div class="page-application">
+
+  <section class="page-hero">
+    <div class="container">
+      <h1>Adoption Application</h1>
+      <p class="subtitle">
+        Please complete the form below to apply for this puppy.
+      </p>
+    </div>
+  </section>
+
+  <section class="page-content">
+    <div class="container narrow">
+
+      <form method="POST" action="/apply" class="application-form">
+
+        <input type="hidden" name="puppyId" value="<%= puppy.id %>">
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" name="phone" required>
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" name="location" required>
+        </div>
+
+        <div class="form-group">
+          <label>Message</label>
+          <textarea
+            name="message"
+            rows="5"
+            placeholder="Tell us about your household and experience with dogs or the breed">
+          </textarea>
+        </div>
+
+        <button class="btn-primary" type="submit">
+          Submit Application
+        </button>
+
+      </form>
+
+      <div class="application-notes">
+
+        <p class="note-strong">
+          No payments are requested or accepted until an application has been
+          reviewed and approved.
+        </p>
+
+        <p>
+          Submitting an adoption application allows us to learn more about you
+          and determine whether this puppy is the right fit for your home.
+        </p>
+
+        <p>
+          Submitting an application does not guarantee approval.
+          Our goal is thoughtful, responsible placement rather than rushed decisions.
+        </p>
+
+      </div>
+
+    </div>
+  </section>
+
+</div>

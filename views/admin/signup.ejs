@@ -1,0 +1,33 @@
+<div class="admin-page admin-auth-setup">
+
+  <div class="admin-card">
+
+    <h2>Admin Account Setup</h2>
+    <p class="admin-subtitle">
+      Complete your administrator account to access the ImperialPaws admin panel.
+    </p>
+
+    <form method="post" action="/admin/admins/signup">
+
+      <input type="hidden" name="email" value="<%= email %>">
+      <input type="hidden" name="code" value="<%= code %>">
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" value="<%= email %>" disabled>
+      </div>
+
+      <div class="form-group">
+        <label>Create Password</label>
+        <input type="password" name="password" required>
+      </div>
+
+      <button type="submit" class="btn-admin-primary">
+        Create Admin Account
+      </button>
+
+    </form>
+
+  </div>
+
+</div>

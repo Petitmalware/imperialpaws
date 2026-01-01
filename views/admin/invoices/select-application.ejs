@@ -1,0 +1,19 @@
+<section class="admin-page">
+  <h1>Select Approved Application</h1>
+
+  <% if (!applications.length) { %>
+    <p>No approved applications yet.</p>
+  <% } else { %>
+    <ul>
+      <% applications.forEach(app => { %>
+        <li style="margin-bottom:12px;">
+          <strong><%= app.name %></strong>
+          —
+          <a href="/admin/invoices/add/<%= app.id %>">
+            Create Invoice
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</section>

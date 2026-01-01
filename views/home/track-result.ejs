@@ -1,0 +1,85 @@
+<div class="page-tracking-result">
+
+  <section class="page-hero">
+    <div class="container">
+      <h1>Application Status</h1>
+    </div>
+  </section>
+
+  <section class="page-content">
+    <div class="container narrow">
+
+      <div class="status-box">
+
+        <div class="status-row">
+          <span class="label">Tracking Code</span>
+          <span class="value"><%= application.id %></span>
+        </div>
+
+        <div class="status-row">
+          <span class="label">Application Status</span>
+          <span class="status-pill <%= application.status.toLowerCase() %>">
+            <%= application.status %>
+          </span>
+        </div>
+
+        <div class="status-row">
+          <span class="label">Submitted On</span>
+          <span class="value">
+            <%= new Date(application.createdAt).toLocaleDateString() %>
+          </span>
+        </div>
+
+      </div>
+
+      <div class="tracking-divider"></div>
+
+      <div class="puppy-summary">
+
+        <h2>Puppy Information</h2>
+
+        <p>
+          <strong>Puppy ID:</strong> <%= puppy.id %><br>
+          <strong>Current Status:</strong> <%= puppy.status %>
+        </p>
+
+        <a
+          href="/puppies/<%= puppy.id %>?fromTracking=true"
+          class="btn-secondary">
+          View Full Puppy Details
+        </a>
+
+
+        
+
+<% if (application.status === "Approved" && invoice) { %>
+  <hr>
+
+  <div class="invoice-box">
+    <h3>Invoice</h3>
+
+    <p>
+      <strong>Invoice Number:</strong>
+      <%= invoice.invoiceNumber %>
+    </p>
+
+    <p>
+      <strong>Status:</strong>
+      <%= invoice.paid ? "Paid" : "Pending" %>
+    </p>
+
+    <a href="/invoice/<%= invoice.invoiceNumber %>" class="btn-primary">
+      View Invoice
+    </a>
+  </div>
+<% } %>
+
+
+
+
+      </div>
+
+    </div>
+  </section>
+
+</div>

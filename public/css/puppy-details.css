@@ -1,0 +1,234 @@
+/* ===============================
+   PUPPY DETAIL — LUXURY & TRUST
+   Scoped to .page-puppy-detail
+=============================== */
+
+.page-puppy-detail {
+  background: linear-gradient(
+    180deg,
+    #f4f1ea 0%,
+    #efece4 100%
+  );
+}
+
+/* ---------- HERO ---------- */
+
+.page-puppy-detail .page-hero {
+  padding: 64px 0 42px;
+  text-align: center;
+}
+
+.page-puppy-detail .page-hero h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 42px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #1f1f1f;
+}
+
+.page-puppy-detail .page-hero .puppy-intro {
+  max-width: 720px;
+  margin: 0 auto 12px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #555;
+}
+
+.page-puppy-detail .page-hero .subtitle {
+  margin-top: 18px;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+}
+
+/* ---------- CONTENT WRAPPER ---------- */
+
+.page-puppy-detail .detail-content {
+  padding: 64px 0 90px;
+}
+
+.page-puppy-detail .lux-detail-grid {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+/* ---------- IMAGE SLIDER ---------- */
+
+.page-puppy-detail .lux-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-puppy-detail .lux-main-image {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  max-width: 520px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #e5e2da;
+}
+
+.page-puppy-detail .lux-main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Thumbnails */
+
+.page-puppy-detail .lux-thumbnails {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.page-puppy-detail .lux-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+  cursor: pointer;
+  opacity: 0.65;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.page-puppy-detail .lux-thumb:hover,
+.page-puppy-detail .lux-thumb.active {
+  opacity: 1;
+  border-color: #c7a45a;
+}
+
+/* ---------- DETAILS ---------- */
+
+.page-puppy-detail .lux-details {
+  text-align: center;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.page-puppy-detail .lux-breed {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c7a45a;
+  font-weight: 600;
+}
+
+.page-puppy-detail .lux-details h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 36px;
+  margin: 12px 0 8px;
+  font-weight: 500;
+}
+
+.page-puppy-detail .lux-status {
+  display: inline-block;
+  margin: 14px 0 20px;
+  padding: 6px 18px;
+  font-size: 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-puppy-detail .lux-status.available {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.page-puppy-detail .lux-status.reserved {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* ---------- DESCRIPTION ---------- */
+
+.page-puppy-detail .lux-description {
+  margin: 18px auto 28px;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #444;
+  max-width: 480px;
+}
+
+/* ---------- ATTRIBUTES ---------- */
+
+.page-puppy-detail .lux-attributes {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 30px;
+  max-width: 420px;
+}
+
+.page-puppy-detail .lux-attributes li {
+  font-size: 15px;
+  padding: 6px 0;
+  display: flex;
+  justify-content: space-between;
+  color: #333;
+}
+
+.page-puppy-detail .lux-attributes strong {
+  color: #1f1f1f;
+}
+
+/* ---------- PRICE ---------- */
+
+.page-puppy-detail .lux-price-large {
+  font-size: 30px;
+  font-weight: 500;
+  color: #1f1f1f;
+  margin-bottom: 28px;
+}
+
+/* ---------- CTA — MATCHES HOME & PUPPIES ---------- */
+
+.page-puppy-detail .btn-primary {
+  display: inline-block;
+  padding: 14px 38px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid #c7a45a;
+  color: #1f1f1f;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.page-puppy-detail .btn-primary:hover {
+  background: #c7a45a;
+  color: #111;
+  transform: translateY(-2px);
+}
+
+/* ---------- UNAVAILABLE ---------- */
+
+.page-puppy-detail .lux-unavailable {
+  display: inline-block;
+  font-size: 14px;
+  color: #777;
+  margin-top: 12px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1024px) {
+  .page-puppy-detail .lux-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 52px;
+  }
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "admin-1",
+    "username": "owner",
+    "password": "password123",
+    "role": "owner",
+    "active": true
+  },
+  {
+    "id": "admin-1766693158715",
+    "username": "admin@imperialpaws.com",
+    "password": "admin123",
+    "role": "admin",
+    "active": true,
+    "createdAt": "2025-12-25T20:05:58.715Z"
+  }
+]

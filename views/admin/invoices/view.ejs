@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice <%= invoice.invoiceNumber %></title>
+  <link rel="stylesheet" href="/css/invoice.css">
+</head>
+
+<body>
+<div class="invoice-page">
+<div class="invoice-actions no-print">
+  <button onclick="window.print()" class="btn-print">
+    🖨 Print / Save as PDF
+  </button>
+</div>
+
+  <!-- HEADER -->
+  <div class="invoice-header">
+
+    <div class="logo">
+      <%- include('../../partials/paw-logo') %>
+      <div class="brand-text">
+        <strong>ImperialPaws</strong>
+        <span>PEKINGESE</span>
+      </div>
+    </div>
+
+    <div class="invoice-meta">
+      <h1>INVOICE</h1>
+
+      <% if (invoice.invoiceNumber) { %>
+        <p><strong>Invoice No:</strong> <%= invoice.invoiceNumber %></p>
+      <% } %>
+
+      <% if (invoice.issueDate) { %>
+        <p><strong>Issue Date:</strong> <%= invoice.issueDate %></p>
+      <% } %>
+
+      <% if (invoice.dueDate) { %>
+        <p><strong>Due Date:</strong> <%= invoice.dueDate %></p>
+      <% } %>
+    </div>
+
+  </div>
+
+  <!-- INFO -->
+  <div class="info-row">
+
+    <% if (invoice.adoptingParent && invoice.adoptingParent.name) { %>
+      <div class="card">
+        <h3>ADOPTING PARENT</h3>
+
+        <p><strong><%= invoice.adoptingParent.name %></strong></p>
+
+        <% if (invoice.adoptingParent.address) { %>
+          <p><%= invoice.adoptingParent.address %></p>
+        <% } %>
+
+        <% if (invoice.adoptingParent.city || invoice.adoptingParent.state) { %>
+          <p>
+            <%= invoice.adoptingParent.city || "" %>
+            <%= invoice.adoptingParent.state || "" %>
+            <%= invoice.adoptingParent.zip || "" %>
+          </p>
+        <% } %>
+
+        <% if (invoice.adoptingParent.phone) { %>
+          <p>Phone: <%= invoice.adoptingParent.phone %></p>
+        <% } %>
+
+        <% if (invoice.adoptingParent.email) { %>
+          <p>Email: <%= invoice.adoptingParent.email %></p>
+        <% } %>
+      </div>
+    <% } %>
+
+    <% if (invoice.applicationId) { %>
+      <div class="card">
+        <h3>APPLICATION</h3>
+        <p>ID: <%= invoice.applicationId %></p>
+      </div>
+    <% } %>
+
+  </div>
+
+  <!-- ITEMS -->
+  <table class="items">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% var subtotal = 0; %>
+
+      <% if (invoice.items && invoice.items.length) { %>
+        <% invoice.items.forEach(function(item) { 
+             var lineTotal = Number(item.qty) * Number(item.unitPrice);
+             subtotal += lineTotal;
+        %>
+          <tr>
+            <td><%= item.description %></td>
+            <td><%= item.qty %></td>
+            <td><%= invoice.currency %><%= Number(item.unitPrice).toFixed(2) %></td>
+            <td><%= invoice.currency %><%= lineTotal.toFixed(2) %></td>
+          </tr>
+        <% }); %>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- TOTALS -->
+  <div class="totals">
+
+    <p>
+      Subtotal
+      <span><%= invoice.currency %><%= subtotal.toFixed(2) %></span>
+    </p>
+
+    <% if (invoice.taxRate) { 
+         var tax = subtotal * invoice.taxRate;
+    %>
+      <p>
+        Tax (<%= invoice.taxRate * 100 %>%)
+        <span><%= invoice.currency %><%= tax.toFixed(2) %></span>
+      </p>
+    <% } %>
+
+    <p class="grand">
+      Total Due
+      <span>
+        <%= invoice.currency %>
+        <%= (subtotal + (invoice.taxRate ? tax : 0)).toFixed(2) %>
+      </span>
+    </p>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+
+    <% if (invoice.notes) { %>
+      <p><strong><%= invoice.notes %></strong></p>
+    <% } %>
+
+    <% if (invoice.seller && invoice.seller.name) { %>
+      <div class="seller-card">
+        <strong><%= invoice.seller.name %></strong>
+
+        <% if (invoice.seller.address) { %>
+          <p><%= invoice.seller.address %></p>
+        <% } %>
+
+        <% if (invoice.seller.city || invoice.seller.state) { %>
+          <p>
+            <%= invoice.seller.city || "" %>
+            <%= invoice.seller.state || "" %>
+            <%= invoice.seller.zip || "" %>
+          </p>
+        <% } %>
+
+        <% if (invoice.seller.phone) { %>
+          <p><%= invoice.seller.phone %></p>
+        <% } %>
+
+        <% if (invoice.seller.email) { %>
+          <p><%= invoice.seller.email %></p>
+        <% } %>
+
+        <% if (invoice.seller.website) { %>
+          <p><%= invoice.seller.website %></p>
+        <% } %>
+      </div>
+    <% } %>
+
+  </div>
+
+</div>
+</body>
+</html>

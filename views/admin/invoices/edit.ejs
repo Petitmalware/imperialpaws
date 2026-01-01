@@ -1,0 +1,44 @@
+<section class="admin-page">
+<h1>Edit Invoice</h1>
+
+<form method="POST" action="/admin/invoices/edit/<%= invoice.invoiceNumber %>">
+
+<h3>Seller</h3>
+<input name="sellerName" value="<%= invoice.seller?.name || '' %>">
+<input name="sellerAddress" value="<%= invoice.seller?.address || '' %>">
+<input name="sellerPhone" value="<%= invoice.seller?.phone || '' %>">
+<input name="sellerEmail" value="<%= invoice.seller?.email || '' %>">
+<input name="sellerWebsite" value="<%= invoice.seller?.website || '' %>">
+
+<h3>Adopting Parent</h3>
+<input name="parentName" value="<%= invoice.adoptingParent?.name || '' %>">
+<input name="parentAddress" value="<%= invoice.adoptingParent?.address || '' %>">
+<input name="parentCity" value="<%= invoice.adoptingParent?.city || '' %>">
+<input name="parentState" value="<%= invoice.adoptingParent?.state || '' %>">
+<input name="parentZip" value="<%= invoice.adoptingParent?.zip || '' %>">
+<input name="parentPhone" value="<%= invoice.adoptingParent?.phone || '' %>">
+<input name="parentEmail" value="<%= invoice.adoptingParent?.email || '' %>">
+
+<h3>Invoice</h3>
+<input type="date" name="issueDate" value="<%= invoice.issueDate || '' %>">
+<input type="date" name="dueDate" value="<%= invoice.dueDate || '' %>">
+
+<select name="currency">
+  <option value="$" <%= invoice.currency === "$" ? "selected" : "" %>>$ USD</option>
+  <option value="€" <%= invoice.currency === "€" ? "selected" : "" %>>€ EUR</option>
+  <option value="£" <%= invoice.currency === "£" ? "selected" : "" %>>£ GBP</option>
+</select>
+
+<h3>Item</h3>
+<input name="itemDescription" value="<%= invoice.items?.[0]?.description || '' %>">
+<input type="number" name="itemQty" value="<%= invoice.items?.[0]?.qty || 1 %>">
+<input type="number" step="0.01" name="itemPrice" value="<%= invoice.items?.[0]?.unitPrice || 0 %>">
+
+<h3>Tax & Notes</h3>
+<input type="number" step="0.01" name="taxRate" value="<%= invoice.taxRate || 0 %>">
+<textarea name="notes"><%= invoice.notes || '' %></textarea>
+
+<br>
+<button class="btn-primary">Save Changes</button>
+</form>
+</section>

@@ -1,0 +1,91 @@
+<section class="page-hero reveal">
+  <div class="container">
+    <h1>Contact ImperialPaws Pekingese</h1>
+    <p class="subtitle">
+      Thoughtful communication focused on responsible placement.
+    </p>
+  </div>
+</section>
+
+<section class="page-content">
+  <div class="container narrow">
+
+    <p>
+      Thank you for your interest in ImperialPaws Pekingese. We welcome
+      thoughtful inquiries from individuals and families who are genuinely
+      interested in learning more about our puppies and adoption process.
+    </p>
+
+    <h2>Before Reaching Out</h2>
+    <p>
+      For questions related to a specific puppy, we kindly encourage visitors
+      to review the puppy’s detail page, our adoption process, and our frequently
+      asked questions before contacting us.
+    </p>
+
+    <p>
+      Many common questions regarding availability, health care, and placement
+      are answered throughout the site.
+    </p>
+
+    <h2>Adoption Applications</h2>
+    <p>
+      If you are interested in a particular puppy, the first step is to submit
+      an adoption application directly from that puppy’s detail page.
+    </p>
+
+    <p>
+      If you have already submitted an application, you may track the status of
+      your application at any time using the tracking code provided after submission.
+    </p>
+
+    <h2>General Inquiries</h2>
+    <p>
+      For general questions that are not addressed elsewhere on the site, you may
+      contact us using the information provided below. We strive to respond within
+      a reasonable timeframe and appreciate your patience.
+    </p>
+ 
+<section class="page-content">
+  <div class="container">
+
+    <% if (
+      siteSettings.contact.email ||
+      siteSettings.contact.phone ||
+      siteSettings.contact.location
+    ) { %>
+
+      <div class="contact-details">
+
+        <% if (siteSettings.contact.email) { %>
+          <p><strong>Email:</strong> <%= siteSettings.contact.email %></p>
+        <% } %>
+
+        <% if (siteSettings.contact.phone) { %>
+          <p><strong>Phone:</strong> <%= siteSettings.contact.phone %></p>
+        <% } %>
+
+        <% if (siteSettings.contact.location) { %>
+          <p><strong>Location:</strong> <%= siteSettings.contact.location %></p>
+        <% } %>
+
+      </div>
+
+    <% } else { %>
+      <p>
+        Contact information will be provided to approved applicants
+        during the adoption process.
+      </p>
+    <% } %>
+
+  </div>
+</section>
+
+
+    <p class="closing-note">
+      Please note that we prioritize inquiries related to active applications and
+      available puppies. Messages outside of these topics may receive limited responses.
+    </p>
+
+  </div>
+</section>

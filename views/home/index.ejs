@@ -1,0 +1,348 @@
+<section class="home-hero reveal" style="--hero-bg: url('/images/hero-pekingese.jpg');">
+  <div class="container">
+    <h1>ImperialPaws Pekingese</h1>
+
+    <p class="hero-subtitle">
+      Ethical, responsible Pekingese breeding focused on health,
+      temperament, and lifelong placement.
+    </p>
+
+    <a class="btn-primary" href="/puppies">View Available Puppies</a>
+
+    <p class="hero-trust">
+      Home-raised • Thoughtful placement • Ongoing support
+    </p>
+  </div>
+</section>
+
+
+  <section class="home-section reveal">
+    <div class="container narrow">
+      <p class="intro-text">
+        ImperialPaws is a small, dedicated Pekingese breeding program committed
+        to raising healthy, well-socialized puppies in a calm and structured
+        home environment. Every puppy is raised with intention, care, and
+        respect, with placement decisions made thoughtfully and responsibly.
+      </p>
+
+      <p class="intro-text">
+        Our focus is not on volume or speed, but on long-term success — for both
+        the puppy and the family welcoming them.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+
+
+
+
+
+<% if (featuredPuppies && featuredPuppies.length) { %>
+<section class="home-featured-lux reveal">
+  <div class="container">
+
+    <header class="featured-header">
+      <h2>Featured Puppies</h2>
+      <p>
+        A small selection of our currently available Pekingese puppies,
+        raised with care, transparency, and intention.
+      </p>
+    </header>
+
+    <div class="featured-grid">
+
+      <% featuredPuppies.forEach(puppy => { %>
+        <article class="featured-card">
+
+          <!-- IMAGE -->
+          <div class="featured-image">
+            <% if (puppy.images && puppy.images.length) { %>
+              <img
+                src="<%= puppy.images.find(i => i.isCover)?.path || puppy.images[0].path %>"
+                alt="<%= puppy.name %>">
+            <% } else { %>
+              <div class="image-placeholder">No Image</div>
+            <% } %>
+
+            <span class="featured-status <%= puppy.status.toLowerCase() %>">
+              <%= puppy.status %>
+            </span>
+          </div>
+
+          <!-- CONTENT -->
+          <div class="featured-body">
+            <h3><%= puppy.name %></h3>
+
+            <p class="meta">
+              <%= puppy.gender || "—" %>
+              <% if (puppy.color) { %> • <%= puppy.color %> <% } %>
+            </p>
+
+            <% if (puppy.price) { %>
+              <div class="price">
+                <%= puppy.currency === "USD" ? "$" : puppy.currency %>
+                <%= Number(puppy.price).toFixed(2) %>
+              </div>
+            <% } %>
+
+            <a href="/puppies/<%= puppy.id %>" class="btn-secondary">
+              View Details
+            </a>
+          </div>
+
+        </article>
+      <% }) %>
+
+    </div>
+
+    <div class="featured-footer">
+      <a href="/puppies" class="text-link">
+        View all available puppies
+      </a>
+    </div>
+
+  </div>
+</section>
+<% } %>
+
+
+
+
+
+
+
+
+<section class="home-section reveal">
+  <div class="container narrow">
+    <h2>Not a Marketplace</h2>
+
+    <p>
+      ImperialPaws does not operate as a marketplace or broker. Puppies are not
+      placed based on speed, bidding, or payment alone. Each placement is made
+      intentionally, with the welfare of the puppy as the primary consideration.
+    </p>
+
+    <p>
+      This approach allows us to maintain consistency, fairness, and long-term
+      accountability in every adoption decision.
+    </p>
+  </div>
+</section>
+
+
+
+<section class="home-highlight reveal">
+  <div class="container narrow">
+    <p>
+      Responsible breeding is about more than producing puppies — it is about
+      planning, care, and ethical decision-making. Every ImperialPaws puppy
+      is raised with long-term well-being in mind.
+    </p>
+  </div>
+</section>
+
+<section class="home-section reveal">
+  <div class="container narrow">
+    <h2>Our Commitment</h2>
+
+    <p>
+      We are committed to responsible breeding practices, transparent
+      communication, and thoughtful placement. Puppies are raised in a home
+      environment with daily interaction, early socialization, and appropriate
+      veterinary care.
+    </p>
+
+    <p class="center">
+      <a class="text-link" href="/about">Learn more about us</a>
+    </p>
+  </div>
+</section>
+
+<section class="home-section reveal">
+  <div class="container narrow">
+    <h2>Our Adoption Process</h2>
+
+    <p>
+      Our adoption process is designed to support careful, informed placement.
+      Applications help ensure the best possible match between puppy and family.
+    </p>
+
+    <p class="center">
+      <a class="text-link" href="/adoption-process">
+        Learn more about our adoption process
+      </a>
+    </p>
+  </div>
+</section>
+
+<section class="home-section reveal home-alt">
+  <div class="container narrow">
+    <h2>Continuity & Accountability</h2>
+
+    <p>
+      We believe responsible breeding includes accountability beyond placement.
+      Our program is structured to provide consistent communication, documented
+      application tracking, and clear decision updates through this website.
+    </p>
+
+    <p>
+      Families are never left wondering about application status or next steps.
+      Transparency is built into every stage of the process.
+    </p>
+  </div>
+</section>
+
+
+<section class="home-section reveal">
+  <div class="container narrow">
+    <h2>Frequently Asked Questions</h2>
+
+    <p>
+      Adopting a puppy comes with important questions. Our FAQ page covers
+      common topics including applications, availability, care, and what
+      families can expect.
+    </p>
+
+    <p class="center">
+      <a class="text-link" href="/faq">
+        Read frequently asked questions
+      </a>
+    </p>
+  </div>
+</section>
+
+<section class="home-section reveal home-alt">
+  <div class="container">
+    <h2>Why Choose ImperialPaws</h2>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <h3>Ethical Breeding</h3>
+        <p>
+          We prioritize health, temperament, and ethical standards over
+          production volume or trends.
+        </p>
+      </div>
+
+      <div class="feature">
+        <h3>Health & Transparency</h3>
+        <p>
+          Health care, monitoring, and documentation are handled responsibly
+          and shared clearly with approved families.
+        </p>
+      </div>
+
+      <div class="feature">
+        <h3>Home-Raised Puppies</h3>
+        <p>
+          Puppies are raised in a calm, structured home environment with
+          daily interaction and early socialization.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="home-section reveal">
+  <div class="container narrow">
+    <h2>What to Expect When Adopting</h2>
+
+    <div class="expect-grid">
+      <div>
+        <h3>Browse & Learn</h3>
+        <p>
+          Review available puppies and detailed profiles at your own pace.
+        </p>
+      </div>
+
+      <div>
+        <h3>Submit an Application</h3>
+        <p>
+          Applications allow us to make thoughtful placement decisions.
+        </p>
+      </div>
+
+      <div>
+        <h3>Review & Placement</h3>
+        <p>
+          Each application is reviewed individually and carefully.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="home-section reveal">
+  <div class="container narrow">
+    <h2>Is ImperialPaws the Right Fit?</h2>
+
+    <p>
+      ImperialPaws may not be the right fit for those seeking immediate placement,
+      impulse purchases, or purely transactional arrangements. Our focus is on
+      long-term success and responsible ownership.
+    </p>
+
+    <p>
+      We encourage families to take time, review our process, and ensure alignment
+      before moving forward.
+    </p>
+  </div>
+</section>
+
+
+
+
+<% if (testimonials && testimonials.length) { %>
+<section class="home-testimonials-lux reveal">
+  <div class="container">
+
+    <header class="testimonials-header">
+      <h2>What Our Puppy Families Say</h2>
+      <p>
+        Thoughtful words shared by families who welcomed an ImperialPaws
+        Pekingese into their home.
+      </p>
+    </header>
+
+    <div class="testimonials-grid">
+
+      <% testimonials.forEach(t => { %>
+        <article class="testimonial-card">
+
+          <p class="testimonial-message">
+            “<%= t.message %>”
+          </p>
+
+          <div class="testimonial-author">
+            <strong><%= t.name %></strong>
+            <% if (t.location) { %>
+              <span><%= t.location %></span>
+            <% } %>
+          </div>
+
+        </article>
+      <% }) %>
+
+    </div>
+
+    <div class="testimonials-footer">
+      <a href="/testimonials" class="text-link">
+        Read more testimonials
+      </a>
+      <span class="divider">•</span>
+      <a href="/testimonials/submit" class="text-link">
+        Share your experience
+      </a>
+    </div>
+
+  </div>
+</section>
+<% } %>
+
+
+
+
+
+</div>

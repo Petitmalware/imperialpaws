@@ -1,0 +1,62 @@
+<section class="admin-page">
+  <h1>Invoices</h1>
+
+  <a href="/admin/invoices/select-application" class="btn-primary">
+    ➕ Create Invoice
+  </a>
+
+  <br><br>
+
+  <% if (!invoices.length) { %>
+    <p>No invoices created yet.</p>
+  <% } else { %>
+
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Invoice</th>
+          <th>Status</th>
+          <th>Paid</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% invoices.forEach(inv => { %>
+          <tr>
+            <td><%= inv.invoiceNumber %></td>
+
+            <td>
+              <span class="status-badge <%= inv.paid ? 'paid' : 'pending' %>">
+                <%= inv.paid ? "Paid" : "Pending" %>
+              </span>
+            </td>
+
+            <td><%= inv.paid ? "Yes" : "No" %></td>
+
+            <td>
+              <%= new Date(inv.createdAt).toLocaleDateString() %>
+            </td>
+
+            <td style="white-space:nowrap">
+              <a href="/admin/invoices/view/<%= inv.invoiceNumber %>">View</a>
+              |
+              <a href="/admin/invoices/edit/<%= inv.invoiceNumber %>">Edit</a>
+
+              <form
+                method="POST"
+                action="/admin/invoices/<%= inv.invoiceNumber %>/toggle-paid"
+                style="display:inline"
+              >
+                <button type="submit">
+                  <%= inv.paid ? "Mark Unpaid" : "Mark Paid" %>
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+  <% } %>
+</section>

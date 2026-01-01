@@ -1,0 +1,97 @@
+<div class="page-puppy-detail">
+
+  <section class="page-hero">
+    <div class="container">
+<h1 class="hero-title"><%= puppy.name %></h1>
+
+      <p class="puppy-intro">
+        Raised in a home environment with daily care,
+        early socialization, and ongoing health monitoring.
+      </p>
+
+      <p class="subtitle">Pekingese Puppy Details</p>
+    </div>
+  </section>
+
+  <section class="detail-content">
+    <div class="lux-detail-grid">
+
+      <!-- IMAGE SLIDER -->
+      <div class="lux-slider">
+
+        <div class="lux-main-image">
+          <% if (puppy.images && puppy.images.length) { %>
+            <img
+              id="mainPuppyImage"
+              src="<%= puppy.images.find(i => i.isCover)?.path || puppy.images[0].path %>"
+              alt="<%= puppy.name %>">
+          <% } else { %>
+            <div class="lux-image-placeholder">No Image Available</div>
+          <% } %>
+        </div>
+
+        <% if (puppy.images && puppy.images.length > 1) { %>
+          <div class="lux-thumbnails">
+            <% puppy.images.forEach(img => { %>
+              <img
+                src="<%= img.path %>"
+                class="lux-thumb"
+                onclick="document.getElementById('mainPuppyImage').src='<%= img.path %>'">
+            <% }) %>
+          </div>
+        <% } %>
+
+      </div>
+
+      <!-- DETAILS -->
+      <div class="lux-details">
+
+        <span class="lux-breed">
+          <%= puppy.breed || "Pekingese" %>
+        </span>
+
+<h2 class="lux-name"><%= puppy.name %></h2>
+
+        <span class="lux-status <%= puppy.status.toLowerCase() %>">
+          <%= puppy.status %>
+        </span>
+
+        <% if (puppy.description) { %>
+          <p class="lux-description"><%= puppy.description %></p>
+        <% } %>
+
+        <ul class="lux-attributes">
+          <% if (puppy.gender) { %><li><strong>Gender:</strong> <%= puppy.gender %></li><% } %>
+          <% if (puppy.color) { %><li><strong>Color:</strong> <%= puppy.color %></li><% } %>
+          <% if (puppy.dob) { %><li><strong>Date of Birth:</strong> <%= puppy.dob %></li><% } %>
+          <% if (puppy.vetChecked !== undefined) { %>
+            <li><strong>Vet Checked:</strong> <%= puppy.vetChecked ? "Yes" : "No" %></li>
+          <% } %>
+          <% if (puppy.vaccinationStatus) { %>
+            <li><strong>Vaccination:</strong> <%= puppy.vaccinationStatus %></li>
+          <% } %>
+          <% if (puppy.registrationType) { %>
+            <li><strong>Registration:</strong> <%= puppy.registrationType %></li>
+          <% } %>
+          <% if (puppy.sireName) { %><li><strong>Sire:</strong> <%= puppy.sireName %></li><% } %>
+          <% if (puppy.damName) { %><li><strong>Dam:</strong> <%= puppy.damName %></li><% } %>
+        </ul>
+
+        <div class="lux-price-large">
+          <%= puppy.currency === "USD" ? "$" : puppy.currency %><%= Number(puppy.price || 0).toFixed(2) %>
+        </div>
+
+        <% if (puppy.status.toLowerCase() === "available") { %>
+          <a href="/apply/<%= puppy.id %>" class="btn-primary">
+            Apply For Adoption
+          </a>
+        <% } else { %>
+          <span class="lux-unavailable">Currently Not Available</span>
+        <% } %>
+
+      </div>
+
+    </div>
+  </section>
+
+</div>

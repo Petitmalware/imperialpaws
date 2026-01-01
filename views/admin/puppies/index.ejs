@@ -1,0 +1,75 @@
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <span class="paw">🐾</span>
+      <strong>ImperialPaws</strong>
+      <em>Admin</em>
+    </div>
+
+    <nav class="admin-nav">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications">Applications</a>
+      <a href="/admin/puppies" class="active">Puppies</a>
+      <a href="/admin/testimonials">Testimonials</a>
+      <a href="/admin/invoices">Invoices</a>
+      <a href="/admin/settings">Settings</a>
+      <a href="/admin/admins">Admins</a>
+      <a href="/admin/logout" class="logout">Logout</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-content">
+
+    <section class="admin-page">
+      <h1>Manage Puppies</h1>
+
+      <a href="/admin/puppies/add" class="btn-primary">
+        ➕ Add New Puppy
+      </a>
+
+      <br><br>
+
+      <% if (!puppies || !puppies.length) { %>
+        <p>No puppies added yet.</p>
+      <% } else { %>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Featured</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% puppies.forEach(puppy => { %>
+              <tr>
+                <td><%= puppy.name %></td>
+                <td><%= puppy.status %></td>
+                <td><%= puppy.featured ? "Yes" : "No" %></td>
+                <td class="actions">
+                  <a href="/admin/puppies/edit?id=<%= puppy.id %>">Edit</a>
+                  <a href="/admin/puppies/images?id=<%= puppy.id %>">Images</a>
+                  <form
+                    action="/admin/puppies/delete"
+                    method="POST"
+                    onsubmit="return confirm('Delete this puppy?');">
+                    <input type="hidden" name="id" value="<%= puppy.id %>">
+                    <button type="submit" class="btn-danger">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+
+      <% } %>
+    </section>
+
+  </main>
+
+</div>

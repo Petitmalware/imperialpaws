@@ -1,0 +1,72 @@
+<div class="admin-page admin-settings">
+
+  <div class="admin-card wide">
+
+    <h2>Site Settings</h2>
+    <p class="admin-subtitle">
+      Manage public contact information and social links displayed across the website.
+    </p>
+
+    <form method="POST" action="/admin/settings" class="admin-form">
+
+      <!-- CONTACT INFO -->
+      <div class="admin-section">
+        <h3>Contact Information</h3>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" value="<%= settings.contact.email || '' %>">
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" name="phone" value="<%= settings.contact.phone || '' %>">
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" name="location" value="<%= settings.contact.location || '' %>">
+        </div>
+      </div>
+
+      <!-- SOCIAL LINKS -->
+      <div class="admin-section">
+        <h3>Social Links</h3>
+
+        <div class="form-group">
+          <label>Facebook URL</label>
+          <input type="text" name="facebook" value="<%= settings.socials.facebook || '' %>">
+        </div>
+
+        <div class="form-group">
+          <label>Instagram URL</label>
+          <input type="text" name="instagram" value="<%= settings.socials.instagram || '' %>">
+        </div>
+
+        <div class="form-group">
+          <label>Twitter / X URL</label>
+          <input type="text" name="twitter" value="<%= settings.socials.twitter || '' %>">
+        </div>
+
+        <div class="form-group">
+          <label>TikTok URL</label>
+          <input type="text" name="tiktok" value="<%= settings.socials.tiktok || '' %>">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-admin-primary">
+        Save Settings
+      </button>
+
+      <% if (settings.meta && settings.meta.lastUpdated) { %>
+        <p class="admin-note">
+          Last updated:
+          <%= new Date(settings.meta.lastUpdated).toLocaleString() %>
+        </p>
+      <% } %>
+
+    </form>
+
+  </div>
+
+</div>

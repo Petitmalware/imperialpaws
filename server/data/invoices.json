@@ -1,0 +1,182 @@
+[
+  {
+    "invoiceNumber": "IP-2601-7532",
+    "status": "Pending",
+    "paid": false,
+    "createdAt": "2026-01-01T09:59:12.992Z",
+    "applicationId": "IP-puppy-1766700361125-2025MF1I",
+    "puppyId": "puppy-1766700361125",
+    "currency": "$",
+    "issueDate": "2026-01-01",
+    "dueDate": "2026-01-01",
+    "seller": {
+      "name": "ImperialPaws Pekingese",
+      "address": "winfiels8480",
+      "phone": "652452797",
+      "email": "info@gmail.com",
+      "website": "imperialpaws.com"
+    },
+    "adoptingParent": {
+      "name": "Tanya Wright",
+      "address": "30 N Gould St",
+      "city": "Sheridan",
+      "state": "British Columbia",
+      "zip": "V6M 3A1",
+      "phone": "3072013238",
+      "email": "tanyawright795@gmail.com"
+    },
+    "items": [
+      {
+        "description": "Puppy Adoption Fee",
+        "qty": 1,
+        "unitPrice": 50000
+      }
+    ],
+    "taxRate": 0,
+    "notes": "Thank You For Adopting!"
+  },
+  {
+    "invoiceNumber": "IP-2601-4250",
+    "status": "Pending",
+    "paid": false,
+    "createdAt": "2026-01-01T11:36:16.473Z",
+    "applicationId": "IP-puppy-1766700361125-2025MF1I",
+    "puppyId": "puppy-1766700361125",
+    "currency": "$",
+    "issueDate": "2026-01-01",
+    "dueDate": "2026-01-01",
+    "seller": {
+      "name": "ImperialPaws Pekingese",
+      "address": "winfiels8480",
+      "phone": "",
+      "email": "info@gmail.com",
+      "website": "imperialpaws.com"
+    },
+    "adoptingParent": {
+      "name": "Tanya Wright",
+      "address": "30 N Gould St",
+      "city": "Sheridan",
+      "state": "British Columbia",
+      "zip": "V6M 3A1",
+      "phone": "",
+      "email": "tanyawright795@gmail.com"
+    },
+    "items": [
+      {
+        "description": "Puppy Adoption Fee",
+        "qty": 1,
+        "unitPrice": 9000
+      }
+    ],
+    "taxRate": 0,
+    "notes": ""
+  },
+  {
+    "invoiceNumber": "IP-2601-4291",
+    "status": "Pending",
+    "paid": false,
+    "createdAt": "2026-01-01T12:50:45.612Z",
+    "applicationId": "IP-puppy-1766700361125-2025MF1I",
+    "puppyId": "puppy-1766700361125",
+    "currency": "$",
+    "issueDate": "2026-01-01",
+    "dueDate": "2026-01-01",
+    "seller": {
+      "name": "ImperialPaws Pekingese",
+      "address": "winfiels8480",
+      "phone": "",
+      "email": "info@gmail.com",
+      "website": "imperialpaws.com"
+    },
+    "adoptingParent": {
+      "name": "Tanya Wright",
+      "address": "30 N Gould St",
+      "city": "Sheridan",
+      "state": "British Columbia",
+      "zip": "V6M 3A1",
+      "phone": "",
+      "email": "tanyawright795@gmail.com"
+    },
+    "items": [
+      {
+        "description": "Puppy Adoption Fee",
+        "qty": 1,
+        "unitPrice": 50
+      }
+    ],
+    "taxRate": 0,
+    "notes": ""
+  },
+  {
+    "invoiceNumber": "IP-2601-4464",
+    "status": "Pending",
+    "paid": false,
+    "createdAt": "2026-01-01T13:04:44.856Z",
+    "applicationId": "IP-PUPPY-2512-4299",
+    "puppyId": "puppy-1766704424268",
+    "currency": "$",
+    "issueDate": "2026-04-05",
+    "dueDate": "2026-02-01",
+    "seller": {
+      "name": "NBA's CODEX",
+      "address": "winfiels8480",
+      "phone": "3072013238",
+      "email": "shinuashinua38@gmail.com",
+      "website": "imperialpaws.com"
+    },
+    "adoptingParent": {
+      "name": "Fabrice",
+      "address": "30 N Gould St",
+      "city": "Sheridan",
+      "state": "British Columbia",
+      "zip": "V6M 3A1",
+      "phone": "3072013238",
+      "email": "fabrice.fx.trade@gmail.com"
+    },
+    "items": [
+      {
+        "description": "Puppy Adoption Fee",
+        "qty": 1,
+        "unitPrice": 700
+      }
+    ],
+    "taxRate": 0,
+    "notes": ""
+  },
+  {
+    "invoiceNumber": "IP-2601-2158",
+    "status": "Pending",
+    "paid": false,
+    "createdAt": "2026-01-01T13:25:58.052Z",
+    "applicationId": "IP-PUPPY-2512-4299",
+    "puppyId": "puppy-1766704424268",
+    "currency": "$",
+    "issueDate": "2026-04-05",
+    "dueDate": "2026-02-01",
+    "seller": {
+      "name": "NBA's CODEX",
+      "address": "winfiels8480",
+      "phone": "3072013238",
+      "email": "shinuashinua38@gmail.com",
+      "website": "imperialpaws.com"
+    },
+    "adoptingParent": {
+      "name": "Fabrice",
+      "address": "30 N Gould St",
+      "city": "Sheridan",
+      "state": "British Columbia",
+      "zip": "V6M 3A1",
+      "phone": "",
+      "email": "fabrice.fx.trade@gmail.com"
+    },
+    "items": [
+      {
+        "description": "Puppy Adoption Fee",
+        "qty": 1,
+        "unitPrice": 2000
+      }
+    ],
+    "taxRate": 0,
+    "notes": ""
+  }
+]

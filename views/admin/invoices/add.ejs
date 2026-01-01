@@ -1,0 +1,46 @@
+<section class="admin-page">
+<h1>Create Invoice</h1>
+
+<form method="POST" action="/admin/invoices/add">
+
+<input type="hidden" name="applicationId" value="<%= application.id %>">
+<input type="hidden" name="puppyId" value="<%= puppy?.id || '' %>">
+
+<h3>Seller</h3>
+<input name="sellerName" placeholder="Business Name">
+<input name="sellerAddress" placeholder="Address">
+<input name="sellerPhone" placeholder="Phone">
+<input name="sellerEmail" placeholder="Email">
+<input name="sellerWebsite" placeholder="Website">
+
+<h3>Adopting Parent</h3>
+<input name="parentName" value="<%= application.name %>">
+<input name="parentAddress">
+<input name="parentCity">
+<input name="parentState">
+<input name="parentZip">
+<input name="parentPhone">
+<input name="parentEmail" value="<%= application.email %>">
+
+<h3>Invoice Info</h3>
+<input name="issueDate" type="date">
+<input name="dueDate" type="date">
+<select name="currency">
+  <option value="$">$ USD</option>
+  <option value="€">€ EUR</option>
+  <option value="£">£ GBP</option>
+</select>
+
+<h3>Line Item</h3>
+<input name="itemDescription" value="Puppy Adoption Fee">
+<input name="itemQty" type="number" value="1">
+<input name="itemPrice" type="number" step="0.01">
+
+<h3>Tax & Notes</h3>
+<input name="taxRate" type="number" step="0.01" placeholder="0.00">
+<textarea name="notes"></textarea>
+
+<br>
+<button class="btn-primary">Create Invoice</button>
+</form>
+</section>

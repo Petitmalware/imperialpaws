@@ -1,0 +1,196 @@
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <span class="paw">🐾</span>
+      <strong>ImperialPaws</strong>
+      <em>Admin</em>
+    </div>
+
+    <nav class="admin-nav">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications">Applications</a>
+      <a href="/admin/puppies" class="active">Puppies</a>
+      <a href="/admin/testimonials">Testimonials</a>
+      <a href="/admin/invoices">Invoices</a>
+      <a href="/admin/settings">Settings</a>
+      <a href="/admin/admins">Admins</a>
+      <a href="/admin/logout" class="logout">Logout</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-content">
+
+    <section class="admin-page admin-add-puppy">
+
+      <header class="admin-header">
+        <h1>Add New Puppy</h1>
+        <p class="admin-subtitle">
+          Create a new puppy listing. Images can be added after saving.
+        </p>
+      </header>
+
+      <form
+        method="POST"
+        action="/admin/puppies/add"
+        class="admin-form-wide"
+      >
+
+        <!-- BASIC INFO -->
+        <section class="admin-card">
+          <h3>Basic Information</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Name *</label>
+              <input type="text" name="name" required>
+            </div>
+
+            <div class="form-group">
+              <label>Breed</label>
+              <input type="text" name="breed" value="Pekingese">
+            </div>
+
+            <div class="form-group">
+              <label>Gender</label>
+              <select name="gender">
+                <option value="">— Select —</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Color</label>
+              <input type="text" name="color">
+            </div>
+
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" name="dob">
+            </div>
+          </div>
+        </section>
+
+        <!-- DESCRIPTION -->
+        <section class="admin-card">
+          <h3>Description</h3>
+
+          <textarea
+            name="description"
+            rows="4"
+            placeholder="Describe temperament, personality, and key details"
+          ></textarea>
+        </section>
+
+        <!-- HEALTH -->
+        <section class="admin-card">
+          <h3>Health</h3>
+
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" name="vetChecked">
+              Vet Checked
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>Vaccination</label>
+            <input type="text" name="vaccination">
+          </div>
+        </section>
+
+        <!-- REGISTRATION -->
+        <section class="admin-card">
+          <h3>Registration</h3>
+
+          <div class="form-group">
+            <label>Registration Type</label>
+            <input type="text" name="registration">
+          </div>
+
+          <div class="form-group">
+            <label>Registration Notes</label>
+            <textarea name="registrationNotes" rows="3"></textarea>
+          </div>
+        </section>
+
+        <!-- PARENTS -->
+        <section class="admin-card">
+          <h3>Parents</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Sire Name</label>
+              <input type="text" name="sireName">
+            </div>
+
+            <div class="form-group">
+              <label>Dam Name</label>
+              <input type="text" name="damName">
+            </div>
+          </div>
+        </section>
+
+        <!-- PRICING & STATUS -->
+        <section class="admin-card">
+          <h3>Pricing & Status</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Price</label>
+              <input type="number" step="0.01" name="price">
+            </div>
+
+            <div class="form-group">
+              <label>Currency</label>
+              <select name="currency">
+                <option value="USD">$ USD</option>
+                <option value="CAD">$ CAD</option>
+                <option value="EUR">€ EUR</option>
+                <option value="GBP">£ GBP</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Status</label>
+              <select name="status">
+                <option value="Available">Available</option>
+                <option value="Reserved">Reserved</option>
+                <option value="Sold">Sold</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" name="featured">
+              Featured Puppy
+            </label>
+          </div>
+        </section>
+
+        <!-- ACTIONS -->
+        <div class="admin-actions">
+          <button type="submit" class="btn-primary">
+            Save Puppy
+          </button>
+
+          <a href="/admin/puppies" class="btn-secondary">
+            Cancel
+          </a>
+        </div>
+
+      </form>
+
+      <p class="admin-note">
+        Images are uploaded after saving via <strong>Manage Images</strong>.
+      </p>
+
+    </section>
+
+  </main>
+
+</div>

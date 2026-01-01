@@ -1,0 +1,40 @@
+<div class="page-application-confirmation">
+
+  <section class="page-hero">
+    <div class="container">
+      <h1>Application Submitted</h1>
+      <p class="subtitle">
+        Thank you for your interest in one of our puppies.
+      </p>
+    </div>
+  </section>
+
+  <section class="page-content">
+    <div class="container center">
+
+      <div class="tracking-box">
+        <h2>Your Tracking Code</h2>
+
+        <p class="confirmation-message">
+          We review each application individually and may reach out if additional
+          information is needed.
+        </p>
+
+        <p class="tracking-code">
+          <strong><%= trackingCode %></strong>
+        </p>
+
+        <p class="note">
+          Please save this tracking code.
+          You will need it to check your application status.
+        </p>
+
+        <a href="/track?code=<%= trackingCode %>" class="btn-primary">
+          Track My Application
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,94 @@
+/* ===============================
+   FOOTER — IMPERIALPAWS
+   =============================== */
+
+.site-footer {
+  background: #1f1f1f;
+  color: rgba(255,255,255,0.85);
+  padding: 4rem 1.5rem 2rem;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 3rem;
+}
+
+.footer-brand-head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.site-footer h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.site-footer h4 {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+/* PAW ICON */
+.site-footer .brand-icon svg {
+  width: 26px;
+  height: 26px;
+  fill: var(--gold);
+}
+
+/* TEXT */
+.site-footer p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+}
+
+/* LINKS */
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links a,
+.footer-socials a {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover,
+.footer-socials a:hover {
+  color: var(--gold);
+}
+
+/* SOCIAL */
+.social-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* BOTTOM */
+.footer-bottom {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.6);
+}

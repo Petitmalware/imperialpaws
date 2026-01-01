@@ -1,0 +1,74 @@
+<div class="page-puppies reveal">
+
+  <section class="page-hero">
+    <div class="container">
+      <h1>Our Puppies</h1>
+      <p class="subtitle">
+        Available Pekingese puppies raised with care, intention, and transparency.
+      </p>
+    </div>
+  </section>
+
+  <section class="page-content">
+    <div class="container">
+
+      <% if (!puppies.length) { %>
+        <p class="center">No puppies available at the moment.</p>
+      <% } else { %>
+
+        <div class="premium-puppy-grid">
+
+          <% puppies.forEach(puppy => { %>
+            <article class="premium-puppy-card">
+
+              <!-- IMAGE -->
+              <div class="puppy-image-wrap">
+                <% if (puppy.images && puppy.images.length) { %>
+                  <img
+                    src="<%= puppy.images.find(i => i.isCover)?.path || puppy.images[0].path %>"
+                    alt="<%= puppy.name %>">
+                <% } else { %>
+                  <div class="image-placeholder">No Image</div>
+                <% } %>
+
+                <span class="status-badge <%= puppy.status.toLowerCase() %>">
+                  <%= puppy.status %>
+                </span>
+              </div>
+
+              <!-- CONTENT -->
+              <div class="puppy-card-body">
+                <h3><%= puppy.name %></h3>
+
+                <p class="meta">
+                  <%= puppy.gender || "—" %>
+                  <% if (puppy.color) { %> • <%= puppy.color %> <% } %>
+                </p>
+
+                <% if (puppy.price) { %>
+                  <div class="price">
+                    <%= puppy.currency === "USD" ? "$" : puppy.currency %>
+                    <%= Number(puppy.price).toFixed(2) %>
+                  </div>
+                <% } %>
+
+                <a href="/puppies/<%= puppy.id %>" class="btn-secondary">
+                  View Details
+                </a>
+              </div>
+
+            </article>
+          <% }) %>
+
+        </div>
+
+      <% } %>
+
+      <p class="closing-note center">
+        Availability updates as placement decisions are made.
+      </p>
+
+    </div>
+  </section>
+
+</div>

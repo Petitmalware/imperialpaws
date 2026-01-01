@@ -1,0 +1,307 @@
+/* ======================================================
+   IMPERIALPAWS — MASTER VISITOR STYLESHEET
+   Luxury • Trust • Calm • No Leakage
+   ====================================================== */
+
+/* ===============================
+   ROOT DESIGN SYSTEM
+================================ */
+:root {
+  --bg-main: #f4f2ee;
+  --bg-alt: #ece9e2;
+  --bg-soft: #faf9f6;
+  --gold: #c7a45a;
+  --gold-dark: #b4934c;
+  --text-main: #1f1f1f;
+  --text-soft: #555;
+}
+
+/* ===============================
+   GLOBAL RESET
+================================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(180deg, var(--bg-main), var(--bg-alt));
+  color: var(--text-main);
+  line-height: 1.75;
+}
+
+/* ===============================
+   CONTAINERS
+================================ */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.container.narrow {
+  max-width: 860px;
+}
+
+/* ===============================
+   TYPOGRAPHY
+================================ */
+h1, h2, h3 {
+  font-family: "Playfair Display", Georgia, serif;
+  letter-spacing: -0.02em;
+  color: #1e1e1e;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin-bottom: 1.4rem;
+  color: var(--text-soft);
+}
+
+/* ===============================
+   GLOBAL HERO (ALL NON-HOME)
+================================ */
+.page-hero {
+  background: linear-gradient(
+    180deg,
+    #f7f5f0 0%,
+    #efece4 100%
+  );
+  padding: 4.5rem 1.5rem 4rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.page-hero h1 {
+  margin-bottom: 0.8rem;
+}
+
+.page-hero .subtitle,
+.page-hero .track-intro,
+.page-hero .track-note {
+  max-width: 720px;
+  margin: 0.4rem auto;
+  color: #555;
+  font-size: 1.05rem;
+}
+
+/* ===============================
+   HOME HERO (IMAGE ONLY HERE)
+================================ */
+.home-hero {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  background:
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+    var(--hero-bg) center / cover no-repeat;
+}
+
+.home-hero h1 {
+  color: #fff;
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  text-shadow: 0 10px 35px rgba(0,0,0,0.35);
+}
+
+.hero-subtitle {
+  color: rgba(255,255,255,0.9);
+  max-width: 640px;
+  margin: 1.2rem auto 2.2rem;
+}
+
+.hero-trust {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  margin-top: 1.6rem;
+}
+
+/* ===============================
+   BUTTON SYSTEM (GLOBAL)
+================================ */
+.btn-primary {
+  display: inline-block;
+  padding: 0.85rem 2.4rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #111;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: var(--gold-dark);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 0.7rem 2rem;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  color: #7a5b00;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--gold);
+  color: #111;
+}
+
+/* ===============================
+   HOME SECTIONS
+================================ */
+.home-section {
+  padding: 4rem 0;
+}
+
+.home-section.home-alt {
+  background: var(--bg-alt);
+}
+
+.home-highlight {
+  background: #1f1f1f;
+  padding: 3.2rem 0;
+}
+
+.home-highlight p {
+  color: rgba(255,255,255,0.9);
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+/* ===============================
+   FEATURED PUPPIES
+================================ */
+.home-featured-lux {
+  background: linear-gradient(180deg, var(--bg-alt), var(--bg-main));
+  padding: 4.5rem 0;
+}
+
+.featured-header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 3rem;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 2.5rem;
+}
+
+/* ===============================
+   FEATURE GRID / EXPECT GRID
+================================ */
+.feature-grid,
+.expect-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+/* ===============================
+   TESTIMONIALS (HOME)
+================================ */
+.home-testimonials-lux {
+  padding: 4.5rem 0;
+  background: linear-gradient(180deg, var(--bg-main), var(--bg-alt));
+}
+
+/* ===============================
+   FINAL CTA
+================================ */
+.home-cta {
+  background: #1f1f1f;
+  padding: 4.5rem 0;
+  text-align: center;
+}
+
+.home-cta h2 {
+  color: #fff;
+}
+
+.home-cta p {
+  color: rgba(255,255,255,0.85);
+  max-width: 560px;
+  margin: 0 auto 2rem;
+}
+
+/* ===============================
+   FORMS (ALL)
+================================ */
+form {
+  background: #fff;
+  padding: 2.8rem;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+}
+
+label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  color: #444;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 1.6rem;
+  font-family: inherit;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #111;
+}
+
+/* ===============================
+   STATUS / INFO BOXES
+================================ */
+.status-box,
+.tracking-box {
+  background: #fff;
+  padding: 2.6rem;
+  border-radius: 14px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+}
+
+/* ===============================
+   FOOTER SAFETY
+================================ */
+.site-footer {
+  background: #1f1f1f;
+  color: rgba(255,255,255,0.85);
+  padding: 3.5rem 1.5rem;
+}
+
+/* ===============================
+   END OF FILE
+================================ */

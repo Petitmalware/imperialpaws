@@ -1,0 +1,124 @@
+<div class="admin-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+
+    <div class="admin-logo">
+      <span class="paw">🐾</span>
+      <div>
+        <strong>ImperialPaws</strong>
+        <em>Admin Panel</em>
+      </div>
+    </div>
+
+    <nav class="admin-menu">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications">Applications</a>
+      <a href="/admin/puppies">Puppies</a>
+      <a href="/admin/testimonials">Testimonials</a>
+      <a href="/admin/invoices">Invoices</a>
+      <a href="/admin/settings">Site Settings</a>
+      <a href="/admin/admins" class="active">Admins</a>
+    </nav>
+
+    <div class="admin-logout">
+      <a href="/admin/logout">Logout</a>
+    </div>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-content">
+
+    <h1>Manage Admins</h1>
+
+    <p class="admin-note">
+      Owners can add or remove administrators.  
+      Admins can manage puppies and applications but cannot manage other admins.
+    </p>
+
+    <!-- ADD ADMIN -->
+    <section class="admin-card">
+
+      <h2>Add New Admin</h2>
+
+      <form method="POST" action="/admin/admins/add" class="admin-form">
+
+        <div class="form-row">
+          <label>Username</label>
+          <input type="text" name="username" required>
+        </div>
+
+        <div class="form-row">
+          <label>Password</label>
+          <input type="password" name="password" required>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          Add Admin
+        </button>
+
+      </form>
+
+    </section>
+
+    <!-- ADMIN LIST -->
+    <section class="admin-card">
+
+      <h2>Existing Admins</h2>
+
+      <% if (!admins || admins.length === 0) { %>
+        <p class="admin-empty">No admins found.</p>
+      <% } else { %>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% admins.forEach(admin => { %>
+                <tr>
+                  <td><%= admin.username %></td>
+                  <td><%= admin.role %></td>
+                  <td>
+                    <span class="status-pill <%= admin.active ? 'approved' : 'rejected' %>">
+                      <%= admin.active ? 'Active' : 'Inactive' %>
+                    </span>
+                  </td>
+                  <td>
+                    <% if (admin.role !== "owner") { %>
+                      <form method="POST"
+                            action="/admin/admins/<%= admin.id %>/delete"
+                            onsubmit="return confirm('Remove this admin?');">
+
+                        <button type="submit" class="btn-danger">
+                          Remove
+                        </button>
+
+                      </form>
+                    <% } else { %>
+                      —
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+
+          </table>
+        </div>
+
+      <% } %>
+
+    </section>
+
+  </main>
+
+</div>

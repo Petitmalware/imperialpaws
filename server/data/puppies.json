@@ -1,0 +1,160 @@
+[
+  {
+    "id": "puppy-001",
+    "name": "Lily",
+    "gender": "Female",
+    "color": "Fawn",
+    "status": "Reserved",
+    "description": "Lily is a calm, affectionate Pekingese puppy raised in a home environment with early socialization and daily care.",
+    "dob": "2025-02-12",
+    "vaccination": "Up to date",
+    "vetChecked": true,
+    "registration": "AKC",
+    "parents": {
+      "sire": "ImperialPaws Max",
+      "dam": "ImperialPaws Bella"
+    },
+    "registrationNotes": "",
+    "sireName": "",
+    "damName": "",
+    "featured": true,
+    "images": [
+      {
+        "id": "img-1766741310660",
+        "path": "/uploads/puppies/puppy-001/1766741310655.jpg",
+        "isCover": true
+      },
+      {
+        "id": "img-1766746005503",
+        "path": "/uploads/puppies/puppy-001/1766746005489.jpg",
+        "isCover": false
+      },
+      {
+        "id": "img-1766746037152",
+        "path": "/uploads/puppies/puppy-001/1766746037140.jpg",
+        "isCover": false
+      },
+      {
+        "id": "img-1766746109704",
+        "path": "/uploads/puppies/puppy-001/1766746109694.jpg",
+        "isCover": false
+      }
+    ]
+  },
+  {
+    "id": "puppy-002",
+    "name": "ImperialPaws Theo",
+    "gender": "Male",
+    "color": "Red",
+    "status": "Reserved",
+    "description": "Theo is a confident, well-balanced puppy with a gentle temperament and strong people focus.",
+    "dob": "2025-01-30",
+    "vaccination": "Up to date",
+    "vetChecked": true,
+    "registration": "AKC",
+    "parents": {
+      "sire": "ImperialPaws Leo",
+      "dam": "ImperialPaws Ruby"
+    },
+    "registrationNotes": "",
+    "sireName": "",
+    "damName": "",
+    "featured": true,
+    "images": [
+      {
+        "id": "img-1766741635700",
+        "path": "/uploads/puppies/puppy-002/1766741635696.jpg",
+        "isCover": true
+      }
+    ]
+  },
+  {
+    "id": "puppy-1766700361125",
+    "name": "Tan",
+    "gender": "female",
+    "dob": "2000-02-04",
+    "color": "fawnblack",
+    "description": "i love her",
+    "status": "Reserved",
+    "featured": true,
+    "price": "500",
+    "currency": "USD",
+    "vetChecked": true,
+    "vaccinationStatus": "Up to date",
+    "registrationType": "AKC",
+    "registrationNotes": "Perfection",
+    "createdAt": "2025-12-25T22:06:01.125Z",
+    "vaccination": "",
+    "registration": "",
+    "sireName": "",
+    "damName": "",
+    "images": [
+      {
+        "id": "img-1766741657013",
+        "path": "/uploads/puppies/puppy-1766700361125/1766741657007.jpg",
+        "isCover": true
+      }
+    ]
+  },
+  {
+    "id": "puppy-1766704424268",
+    "name": "Bella",
+    "gender": "female",
+    "dob": "2005-02-05",
+    "color": "black",
+    "description": "i love her",
+    "status": "Reserved",
+    "featured": true,
+    "currency": "USD",
+    "vetChecked": true,
+    "vaccinationStatus": "",
+    "registrationType": "",
+    "registrationNotes": "",
+    "createdAt": "2025-12-25T23:13:44.268Z",
+    "vaccination": "",
+    "registration": "",
+    "sireName": "",
+    "damName": "",
+    "images": [
+      {
+        "id": "img-1766741696039",
+        "path": "/uploads/puppies/puppy-1766704424268/1766741696026.jpg",
+        "isCover": true
+      }
+    ]
+  },
+  {
+    "id": "puppy-1766932780547",
+    "name": "Tanya Wright",
+    "gender": "Male",
+    "dob": "2000-02-02",
+    "color": "black",
+    "description": "gfwfwewed",
+    "status": "Available",
+    "featured": false,
+    "price": "1200",
+    "currency": "USD",
+    "vetChecked": true,
+    "vaccinationStatus": "",
+    "registrationType": "",
+    "registrationNotes": "",
+    "createdAt": "2025-12-28T14:39:40.547Z",
+    "images": [
+      {
+        "id": "img-1766932814710",
+        "path": "/uploads/puppies/puppy-1766932780547/1766932814700.jpg",
+        "isCover": false
+      },
+      {
+        "id": "img-1766932825828",
+        "path": "/uploads/puppies/puppy-1766932780547/1766932825825.jpg",
+        "isCover": false
+      },
+      {
+        "id": "img-1766933786027",
+        "path": "/uploads/puppies/puppy-1766932780547/1766933786023.jpg",
+        "isCover": true
+      }
+    ]
+  }
+]

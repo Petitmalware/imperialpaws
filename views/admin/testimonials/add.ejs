@@ -1,0 +1,44 @@
+<body class="page-testimonial-submit">
+
+<section class="page-hero">
+  <div class="container">
+    <h1>Share Your Experience</h1>
+    <p class="subtitle">
+      Your feedback helps future families feel confident.
+    </p>
+  </div>
+</section>
+
+<section class="page-content">
+  <div class="container">
+
+<% if (typeof error !== "undefined" && error) { %>
+  <p class="error center"><%= error %></p>
+<% } %>
+
+
+    <form method="post" action="/testimonials/submit" class="form">
+
+      <label>Name *</label>
+      <input type="text" name="name" required>
+
+      <label>Email *</label>
+      <input type="email" name="email" required>
+
+      <label>Location (optional)</label>
+      <input type="text" name="location">
+
+
+
+      <label>Your Experience *</label>
+      <textarea name="message" rows="5" required></textarea>
+
+      <button type="submit" class="btn-primary">
+        Submit Testimonial
+      </button>
+
+    </form>
+
+  </div>
+</section>
+</body>

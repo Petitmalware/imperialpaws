@@ -1,0 +1,163 @@
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <span class="paw">🐾</span>
+      <strong>ImperialPaws</strong>
+      <em>Admin</em>
+    </div>
+
+    <nav class="admin-nav">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications">Applications</a>
+      <a href="/admin/puppies" class="active">Puppies</a>
+      <a href="/admin/testimonials">Testimonials</a>
+      <a href="/admin/invoices">Invoices</a>
+      <a href="/admin/settings">Settings</a>
+      <a href="/admin/admins">Admins</a>
+      <a href="/admin/logout" class="logout">Logout</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-content">
+
+    <section class="admin-page admin-edit-puppy">
+
+      <header class="admin-header">
+        <h1>Edit Puppy</h1>
+        <p class="admin-subtitle">
+          Editing profile for <strong><%= puppy.name %></strong>
+        </p>
+      </header>
+
+      <form
+        method="POST"
+        action="/admin/puppies/edit/<%= puppy.id %>"
+        class="admin-form-wide"
+      >
+
+        <!-- BASIC INFO -->
+        <section class="admin-card">
+          <h3>Basic Information</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Name *</label>
+              <input type="text" name="name" value="<%= puppy.name %>" required>
+            </div>
+
+            <div class="form-group">
+              <label>Status</label>
+              <select name="status">
+                <option value="Available" <%= puppy.status === "Available" ? "selected" : "" %>>Available</option>
+                <option value="Reserved" <%= puppy.status === "Reserved" ? "selected" : "" %>>Reserved</option>
+                <option value="Sold" <%= puppy.status === "Sold" ? "selected" : "" %>>Sold</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" name="featured" <%= puppy.featured ? "checked" : "" %>>
+              Featured Puppy
+            </label>
+          </div>
+        </section>
+
+        <!-- DETAILS -->
+        <section class="admin-card">
+          <h3>Details</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Gender</label>
+              <input type="text" name="gender" value="<%= puppy.gender || "" %>">
+            </div>
+
+            <div class="form-group">
+              <label>Color</label>
+              <input type="text" name="color" value="<%= puppy.color || "" %>">
+            </div>
+
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" name="dob" value="<%= puppy.dob || "" %>">
+            </div>
+
+            <div class="form-group">
+              <label>Vaccination</label>
+              <input type="text" name="vaccination" value="<%= puppy.vaccination || "" %>">
+            </div>
+          </div>
+
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" name="vetChecked" <%= puppy.vetChecked ? "checked" : "" %>>
+              Vet Checked
+            </label>
+          </div>
+        </section>
+
+        <!-- REGISTRATION -->
+        <section class="admin-card">
+          <h3>Registration</h3>
+
+          <div class="form-group">
+            <label>Registration Type</label>
+            <input type="text" name="registration" value="<%= puppy.registration || "" %>">
+          </div>
+
+          <div class="form-group">
+            <label>Registration Notes</label>
+            <textarea name="registrationNotes" rows="4"><%= puppy.registrationNotes || "" %></textarea>
+          </div>
+        </section>
+
+        <!-- PARENTS -->
+        <section class="admin-card">
+          <h3>Parents</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Sire Name</label>
+              <input type="text" name="sireName" value="<%= puppy.sireName || "" %>">
+            </div>
+
+            <div class="form-group">
+              <label>Dam Name</label>
+              <input type="text" name="damName" value="<%= puppy.damName || "" %>">
+            </div>
+          </div>
+        </section>
+
+        <!-- DESCRIPTION -->
+        <section class="admin-card">
+          <h3>Description</h3>
+
+          <textarea
+            name="description"
+            rows="5"
+            placeholder="Describe temperament, personality, and any important notes"
+          ><%= puppy.description || "" %></textarea>
+        </section>
+
+        <!-- ACTIONS -->
+        <div class="admin-actions">
+          <button type="submit" class="btn-primary">
+            Save Changes
+          </button>
+
+          <a href="/admin/puppies" class="btn-secondary">
+            Cancel
+          </a>
+        </div>
+
+      </form>
+
+    </section>
+
+  </main>
+
+</div>

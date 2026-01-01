@@ -1,0 +1,145 @@
+/* ============================
+   PUPPIES PAGE — CLEAN & TRUSTED
+   Scoped to .page-puppies
+============================ */
+
+.page-puppies {
+  background: linear-gradient(
+    180deg,
+    #f4f1ea 0%,
+    #efece4 100%
+  );
+}
+
+/* ----------------------------
+   GRID
+----------------------------- */
+.page-puppies .premium-puppy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2.2rem;
+  margin-top: 3rem;
+}
+
+/* ----------------------------
+   CARD
+----------------------------- */
+.page-puppies .premium-puppy-card {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.page-puppies .premium-puppy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+}
+
+/* ----------------------------
+   IMAGE
+----------------------------- */
+.page-puppies .puppy-image-wrap {
+  position: relative;
+  height: 240px;
+  background: #e9e6de;
+  overflow: hidden;
+}
+
+.page-puppies .puppy-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ----------------------------
+   STATUS — UNCHANGED
+----------------------------- */
+.page-puppies .status-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.page-puppies .status-badge.available {
+  background: #1f7a4d;
+}
+
+.page-puppies .status-badge.reserved {
+  background: #b08900;
+}
+
+.page-puppies .status-badge.sold {
+  background: #8b0000;
+}
+
+/* ----------------------------
+   BODY
+----------------------------- */
+.page-puppies .puppy-card-body {
+  padding: 1.6rem;
+  text-align: center;
+}
+
+.page-puppies .puppy-card-body h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.3rem;
+  margin-bottom: .4rem;
+  color: #1f1f1f;
+}
+
+.page-puppies .meta {
+  font-size: .85rem;
+  color: #666;
+  margin-bottom: .9rem;
+}
+
+.page-puppies .price {
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 1.2rem;
+}
+
+/* ----------------------------
+   BUTTON — DEFAULT NEUTRAL
+   GOLD ONLY ON HOVER (MATCH HOME)
+----------------------------- */
+.page-puppies .btn-secondary {
+  display: inline-block;
+  padding: .7rem 1.6rem;
+  border-radius: 999px;
+  background: transparent;
+  color: #1f1f1f;
+  border: 1px solid #c7a45a;
+  text-decoration: none;
+  font-size: .8rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition:
+    background .2s ease,
+    color .2s ease,
+    transform .2s ease;
+}
+
+.page-puppies .btn-secondary:hover {
+  background: #c7a45a;
+  color: #111;
+  transform: translateY(-2px);
+}
+
+/* ----------------------------
+   MOBILE
+----------------------------- */
+@media (max-width: 480px) {
+  .page-puppies .puppy-image-wrap {
+    height: 210px;
+  }
+}

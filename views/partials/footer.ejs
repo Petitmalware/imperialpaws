@@ -1,0 +1,66 @@
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- BRAND / STATEMENT -->
+    <div class="footer-brand">
+      <div class="footer-brand-head">
+        <span class="brand-icon">
+          <!-- SAME PAW SVG AS HEADER -->
+          <svg viewBox="0 0 512 512" aria-hidden="true">
+            <path d="M256 224c-70.7 0-128 57.3-128 128 0 53 32 99 78 118 11 5 18 16 18 28v14h64v-14c0-12 7-23 18-28 46-19 78-65 78-118 0-70.7-57.3-128-128-128z"/>
+            <circle cx="144" cy="176" r="48"/>
+            <circle cx="368" cy="176" r="48"/>
+            <circle cx="208" cy="96" r="48"/>
+            <circle cx="304" cy="96" r="48"/>
+          </svg>
+        </span>
+
+        <h3>ImperialPaws Pekingese</h3>
+      </div>
+
+      <p>
+        Ethical, responsible Pekingese breeding with a focus on health,
+        temperament, and lifelong placement.
+      </p>
+    </div>
+
+    <!-- LINKS -->
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/puppies">Puppies</a></li>
+        <li><a href="/adoption-process">Adoption Process</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/testimonials">Testimonials</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/track">Track Application</a></li>
+      </ul>
+    </div>
+
+    <!-- SOCIAL -->
+    <div class="footer-socials">
+      <h4>Connect</h4>
+      <div class="social-icons">
+        <% if (siteSettings?.socials?.facebook) { %>
+          <a href="<%= siteSettings.socials.facebook %>" target="_blank">Facebook</a>
+        <% } %>
+        <% if (siteSettings?.socials?.instagram) { %>
+          <a href="<%= siteSettings.socials.instagram %>" target="_blank">Instagram</a>
+        <% } %>
+        <% if (siteSettings?.socials?.twitter) { %>
+          <a href="<%= siteSettings.socials.twitter %>" target="_blank">X</a>
+        <% } %>
+        <% if (siteSettings?.socials?.tiktok) { %>
+          <a href="<%= siteSettings.socials.tiktok %>" target="_blank">TikTok</a>
+        <% } %>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom">
+    © <%= new Date().getFullYear() %> ImperialPaws Pekingese. All rights reserved.
+  </div>
+</footer>
