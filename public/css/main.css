@@ -1,14 +1,72 @@
 /* ===============================
-   MOBILE BASELINE FIX
+   GLOBAL MOBILE SAFETY RESET
+   =============================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Prevent layout shift */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Containers must center properly */
+.container,
+.container.narrow {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* ===============================
+   MOBILE LAYOUT FIX
    =============================== */
 @media (max-width: 768px) {
-  body {
-    font-size: 16px; /* prevents tiny text */
-    line-height: 1.65;
+
+  /* Stop hero from eating the screen */
+  .home-hero,
+  .page-hero {
+    min-height: auto !important;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
   }
 
-  p {
-    font-size: 1rem;
+  /* Center all sections properly */
+  section {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Fix navbar overflow */
+  .site-header,
+  .header-inner {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .main-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  /* Text baseline (what you already started) */
+  body {
+    font-size: 16px;
+    line-height: 1.65;
   }
 
   h1 {
@@ -23,18 +81,16 @@
   h3 {
     font-size: 1.2rem;
   }
-}
 
+  p {
+    font-size: 1rem;
+  }
 
-
-
-
-
-@media (max-width: 768px) {
+  /* Buttons must not overflow */
   .btn-primary,
   .btn-secondary {
-    font-size: 0.95rem;
-    padding: 0.85rem 1.8rem;
-    width: auto;
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
   }
 }
