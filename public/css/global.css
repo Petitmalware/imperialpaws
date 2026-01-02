@@ -1,0 +1,106 @@
+@media (max-width: 768px) {
+  .admin-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+
+
+
+
+
+/* =========================
+   MOBILE HERO FIX
+========================= */
+@media (max-width: 768px) {
+
+  .page-hero,
+  .hero,
+  .hero-section {
+    min-height: auto;
+    padding: 2.5rem 1.2rem 2rem;
+    text-align: center;
+  }
+
+  .page-hero h1,
+  .hero h1 {
+    font-size: 1.9rem;
+    line-height: 1.25;
+    margin-bottom: 0.8rem;
+  }
+
+  .page-hero p,
+  .hero p {
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  /* If hero has background image */
+  .hero,
+  .page-hero {
+    background-position: center top;
+    background-size: cover;
+  }
+}
+
+
+/* =========================
+   MOBILE CONTENT WIDTH
+========================= */
+@media (max-width: 768px) {
+
+  .container,
+  .page-content,
+  .content,
+  main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  section {
+    margin-bottom: 2rem;
+  }
+}
+
+
+
+/* =========================
+   MOBILE STACKING
+========================= */
+@media (max-width: 768px) {
+
+  .grid,
+  .two-col,
+  .three-col,
+  .columns {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .card,
+  .box,
+  .panel {
+    width: 100%;
+  }
+}
+
+
+
+
+@media (max-width: 768px) {
+
+  body {
+    line-height: 1.65;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  small {
+    font-size: 0.9rem;
+  }
+}
