@@ -1,0 +1,40 @@
+/* ===============================
+   MOBILE BASELINE FIX
+   =============================== */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px; /* prevents tiny text */
+    line-height: 1.65;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+}
+
+
+
+
+
+
+@media (max-width: 768px) {
+  .btn-primary,
+  .btn-secondary {
+    font-size: 0.95rem;
+    padding: 0.85rem 1.8rem;
+    width: auto;
+  }
+}
