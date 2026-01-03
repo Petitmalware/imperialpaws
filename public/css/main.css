@@ -97,6 +97,10 @@ body {
 
 
 
+/* Offset page content for fixed header */
+body {
+  padding-top: 72px;
+}
 
 
 
