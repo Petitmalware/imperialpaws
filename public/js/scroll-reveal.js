@@ -1,23 +1,17 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const revealElements = document.querySelectorAll(".reveal");
+// Scroll reveal
+const revealElements = document.querySelectorAll(".reveal");
 
-  if (!revealElements.length) return;
+const revealOnScroll = () => {
+  const windowHeight = window.innerHeight;
 
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    {
-      root: null,
-      threshold: 0.2,
-      rootMargin: "0px 0px -120px 0px"
+  revealElements.forEach(el => {
+    const elementTop = el.getBoundingClientRect().top;
+
+    if (elementTop < windowHeight - 80) {
+      el.classList.add("visible");
     }
-  );
+  });
+};
 
-  revealElements.forEach(el => observer.observe(el));
-});
+window.addEventListener("scroll", revealOnScroll);
+window.addEventListener("load", revealOnScroll);

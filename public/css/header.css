@@ -182,20 +182,52 @@
   display: block;
 }
 
-/* ================================
-   MOBILE NAV
-================================ */
-.mobile-nav {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+/* ===============================
+   MOBILE NAV — SMOOTH DROPDOWN
+=============================== */
+@media (max-width: 768px) {
 
-  background: #f6f4ef;
-  padding: 1.2rem 0;
+  .main-nav {
+    position: fixed;
+    top: 72px; /* header height */
+    left: 0;
+    width: 100%;
 
-  border-top: 1px solid rgba(0,0,0,0.05);
+    background: linear-gradient(to bottom, #f6f4ef, #eee9df);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+
+    padding: 1.5rem 0;
+
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-8px);
+    overflow: hidden;
+
+    transition:
+      max-height 0.35s ease,
+      opacity 0.25s ease,
+      transform 0.25s ease;
+
+    z-index: 999;
+  }
+
+  /* OPEN STATE */
+  #nav-toggle:checked ~ .main-nav {
+    max-height: 60vh;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .main-nav a {
+    font-size: 1.05rem;
+    padding: 0.6rem 0;
+  }
 }
+
 
 /* ================================
    RESPONSIVE
@@ -217,4 +249,17 @@
   .mobile-nav a {
     font-size: 1.05rem;
   }
+}
+
+
+
+
+
+
+
+
+
+/* Header shadow on scroll */
+.site-header.scrolled {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
