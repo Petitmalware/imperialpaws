@@ -18,3 +18,7 @@ nav.querySelectorAll("a").forEach(link => {
     document.body.style.overflow = "";
   });
 });
+
+toggle.addEventListener("click", () => {
+  nav.classList.toggle("open");
+});
