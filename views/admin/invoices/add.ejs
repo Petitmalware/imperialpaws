@@ -1,4 +1,31 @@
 <section class="admin-page">
+    <!-- SIDEBAR (same as dashboard, DO NOT CHANGE) -->
+  <aside class="admin-sidebar">
+
+    <div class="admin-logo">
+      <span class="paw">🐾</span>
+      <div>
+        <strong>ImperialPaws</strong>
+        <em>Admin Panel</em>
+      </div>
+    </div>
+
+    <nav class="admin-menu">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications" class="active">Applications</a>
+      <a href="/admin/puppies">Puppies</a>
+      <a href="/admin/testimonials">Testimonials</a>
+      <a href="/admin/invoices">Invoices</a>
+      <a href="/admin/settings">Site Settings</a>
+      <a href="/admin/admins">Admins</a>
+    </nav>
+
+    <div class="admin-logout">
+      <a href="/admin/logout">Logout</a>
+    </div>
+
+  </aside>
+
 <h1>Create Invoice</h1>
 
 <form method="POST" action="/admin/invoices/add">

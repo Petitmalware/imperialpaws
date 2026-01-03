@@ -1,5 +1,6 @@
 /* ===============================
    PUPPY DETAIL — LUXURY & TRUST
+   Mobile-Safe • Gold • Stable
    Scoped to .page-puppy-detail
 =============================== */
 
@@ -14,30 +15,30 @@
 /* ---------- HERO ---------- */
 
 .page-puppy-detail .page-hero {
-  padding: 64px 0 42px;
+  padding: 4rem 0 2.8rem;
   text-align: center;
 }
 
 .page-puppy-detail .page-hero h1 {
   font-family: "Playfair Display", serif;
-  font-size: 42px;
+  font-size: clamp(2.2rem, 4vw, 2.6rem);
   font-weight: 500;
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
   color: #1f1f1f;
 }
 
 .page-puppy-detail .page-hero .puppy-intro {
   max-width: 720px;
-  margin: 0 auto 12px;
-  font-size: 16px;
+  margin: 0 auto 0.75rem;
+  font-size: 1rem;
   line-height: 1.7;
   color: #555;
 }
 
 .page-puppy-detail .page-hero .subtitle {
-  margin-top: 18px;
-  font-size: 12px;
-  letter-spacing: 0.2em;
+  margin-top: 1.2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #8a8a8a;
 }
@@ -45,7 +46,7 @@
 /* ---------- CONTENT WRAPPER ---------- */
 
 .page-puppy-detail .detail-content {
-  padding: 64px 0 90px;
+  padding: 4rem 0 5.5rem;
 }
 
 .page-puppy-detail .lux-detail-grid {
@@ -53,7 +54,7 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: 520px 1fr;
-  gap: 64px;
+  gap: 4rem;
   align-items: center;
 }
 
@@ -85,13 +86,13 @@
 .page-puppy-detail .lux-thumbnails {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 .page-puppy-detail .lux-thumb {
-  width: 72px;
-  height: 72px;
+  width: 68px;
+  height: 68px;
   border-radius: 10px;
   object-fit: cover;
   cursor: pointer;
@@ -115,7 +116,7 @@
 }
 
 .page-puppy-detail .lux-breed {
-  font-size: 12px;
+  font-size: 0.7rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #c7a45a;
@@ -124,16 +125,16 @@
 
 .page-puppy-detail .lux-details h2 {
   font-family: "Playfair Display", serif;
-  font-size: 36px;
-  margin: 12px 0 8px;
+  font-size: clamp(1.9rem, 3.5vw, 2.25rem);
+  margin: 0.75rem 0 0.5rem;
   font-weight: 500;
 }
 
 .page-puppy-detail .lux-status {
   display: inline-block;
-  margin: 14px 0 20px;
+  margin: 1rem 0 1.4rem;
   padding: 6px 18px;
-  font-size: 12px;
+  font-size: 0.7rem;
   border-radius: 999px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -153,8 +154,8 @@
 /* ---------- DESCRIPTION ---------- */
 
 .page-puppy-detail .lux-description {
-  margin: 18px auto 28px;
-  font-size: 16px;
+  margin: 1.2rem auto 1.8rem;
+  font-size: 1rem;
   line-height: 1.75;
   color: #444;
   max-width: 480px;
@@ -165,12 +166,12 @@
 .page-puppy-detail .lux-attributes {
   list-style: none;
   padding: 0;
-  margin: 0 auto 30px;
+  margin: 0 auto 1.8rem;
   max-width: 420px;
 }
 
 .page-puppy-detail .lux-attributes li {
-  font-size: 15px;
+  font-size: 0.95rem;
   padding: 6px 0;
   display: flex;
   justify-content: space-between;
@@ -184,22 +185,22 @@
 /* ---------- PRICE ---------- */
 
 .page-puppy-detail .lux-price-large {
-  font-size: 30px;
+  font-size: clamp(1.6rem, 3vw, 1.9rem);
   font-weight: 500;
   color: #1f1f1f;
-  margin-bottom: 28px;
+  margin-bottom: 1.8rem;
 }
 
-/* ---------- CTA — MATCHES HOME & PUPPIES ---------- */
+/* ---------- CTA ---------- */
 
 .page-puppy-detail .btn-primary {
   display: inline-block;
-  padding: 14px 38px;
+  padding: 0.9rem 2.4rem;
   border-radius: 999px;
   background: transparent;
   border: 1px solid #c7a45a;
   color: #1f1f1f;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
@@ -219,16 +220,29 @@
 
 .page-puppy-detail .lux-unavailable {
   display: inline-block;
-  font-size: 14px;
+  font-size: 0.85rem;
   color: #777;
-  margin-top: 12px;
+  margin-top: 0.75rem;
 }
 
-/* ---------- RESPONSIVE ---------- */
+/* ==================================================
+   RESPONSIVE (NO LAYOUT CHANGE)
+================================================== */
 
 @media (max-width: 1024px) {
   .page-puppy-detail .lux-detail-grid {
     grid-template-columns: 1fr;
-    gap: 52px;
+    gap: 3.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-puppy-detail .lux-thumb {
+    width: 60px;
+    height: 60px;
+  }
+
+  .page-puppy-detail .btn-primary {
+    padding: 1rem 2.8rem; /* better tap feel */
   }
 }

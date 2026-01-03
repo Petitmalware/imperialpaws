@@ -1,7 +1,7 @@
 /* ======================================================
    IMPERIALPAWS — MASTER VISITOR STYLESHEET
-   Luxury • Trust • Calm • No Leakage
-   ====================================================== */
+   Luxury • Trust • Calm • Mobile-Correct
+====================================================== */
 
 /* ===============================
    ROOT DESIGN SYSTEM
@@ -9,18 +9,28 @@
 :root {
   --bg-main: #f4f2ee;
   --bg-alt: #ece9e2;
-  --bg-soft: #faf9f6;
+  --bg-soft: #f8f6f1;
+
   --gold: #c7a45a;
   --gold-dark: #b4934c;
+
   --text-main: #1f1f1f;
   --text-soft: #555;
 }
 
 /* ===============================
-   GLOBAL RESET
+   GLOBAL RESET + SAFETY
 ================================ */
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -54,11 +64,11 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  font-size: clamp(2.3rem, 5vw, 3.2rem);
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: clamp(1.7rem, 4vw, 2rem);
   margin-bottom: 1rem;
 }
 
@@ -72,7 +82,7 @@ p {
 }
 
 /* ===============================
-   GLOBAL HERO (ALL NON-HOME)
+   GLOBAL HERO (NON-HOME)
 ================================ */
 .page-hero {
   background: linear-gradient(
@@ -80,13 +90,13 @@ p {
     #f7f5f0 0%,
     #efece4 100%
   );
-  padding: 4.5rem 1.5rem 4rem;
+  padding: 4rem 1.5rem 3.5rem;
   text-align: center;
   border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 .page-hero h1 {
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.75rem;
 }
 
 .page-hero .subtitle,
@@ -94,8 +104,8 @@ p {
 .page-hero .track-note {
   max-width: 720px;
   margin: 0.4rem auto;
+  font-size: 1rem;
   color: #555;
-  font-size: 1.05rem;
 }
 
 /* ===============================
@@ -113,7 +123,7 @@ p {
 
 .home-hero h1 {
   color: #fff;
-  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
   text-shadow: 0 10px 35px rgba(0,0,0,0.35);
 }
 
@@ -132,7 +142,7 @@ p {
 }
 
 /* ===============================
-   BUTTON SYSTEM (GLOBAL)
+   BUTTON SYSTEM
 ================================ */
 .btn-primary {
   display: inline-block;
@@ -192,28 +202,9 @@ p {
 }
 
 /* ===============================
-   FEATURED PUPPIES
+   FEATURED / GRID SYSTEMS
 ================================ */
-.home-featured-lux {
-  background: linear-gradient(180deg, var(--bg-alt), var(--bg-main));
-  padding: 4.5rem 0;
-}
-
-.featured-header {
-  text-align: center;
-  max-width: 640px;
-  margin: 0 auto 3rem;
-}
-
-.featured-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 2.5rem;
-}
-
-/* ===============================
-   FEATURE GRID / EXPECT GRID
-================================ */
+.featured-grid,
 .feature-grid,
 .expect-grid {
   display: grid;
@@ -223,7 +214,7 @@ p {
 }
 
 /* ===============================
-   TESTIMONIALS (HOME)
+   TESTIMONIALS
 ================================ */
 .home-testimonials-lux {
   padding: 4.5rem 0;
@@ -250,13 +241,13 @@ p {
 }
 
 /* ===============================
-   FORMS (ALL)
+   FORMS (GOLD PARCHMENT)
 ================================ */
 form {
-  background: #fff;
-  padding: 2.8rem;
+  background: linear-gradient(180deg, #ffffff, var(--bg-soft));
+  padding: 2.6rem;
   border-radius: 14px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.08);
 }
 
 label {
@@ -268,18 +259,21 @@ label {
   color: #444;
 }
 
-input, textarea {
+input,
+textarea {
   width: 100%;
   padding: 0.75rem;
   border-radius: 8px;
   border: 1px solid #ccc;
   margin-bottom: 1.6rem;
   font-family: inherit;
+  background: #fff;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
-  border-color: #111;
+  border-color: var(--gold);
 }
 
 /* ===============================
@@ -287,19 +281,54 @@ input:focus, textarea:focus {
 ================================ */
 .status-box,
 .tracking-box {
-  background: #fff;
-  padding: 2.6rem;
+  background: linear-gradient(180deg, #ffffff, var(--bg-soft));
+  padding: 2.4rem;
   border-radius: 14px;
-  box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.08);
 }
 
 /* ===============================
-   FOOTER SAFETY
+   FOOTER
 ================================ */
 .site-footer {
   background: #1f1f1f;
   color: rgba(255,255,255,0.85);
   padding: 3.5rem 1.5rem;
+}
+
+/* ===============================
+   MOBILE REFINEMENT
+================================ */
+@media (max-width: 768px) {
+
+  body {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .home-hero {
+    min-height: 65vh;
+    padding: 4rem 1.5rem 3rem;
+  }
+
+  .page-hero {
+    padding: 3.5rem 1.2rem 3rem;
+  }
+
+  .home-section {
+    padding: 3.2rem 0;
+  }
+
+  form,
+  .status-box,
+  .tracking-box {
+    padding: 2rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.9rem 2.2rem;
+  }
 }
 
 /* ===============================

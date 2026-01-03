@@ -1,7 +1,11 @@
-/* ===============================
-   GLOBAL MOBILE SAFETY RESET
-   =============================== */
+/* =====================================
+   IMPERIALPAWS — GLOBAL SAFETY & MOBILE BASE
+   Purpose: Stability, mobile polish, gold tone
+   ===================================== */
 
+/* ===============================
+   UNIVERSAL SAFETY RESET
+   =============================== */
 *,
 *::before,
 *::after {
@@ -14,96 +18,89 @@ body {
   overflow-x: hidden;
 }
 
-/* Prevent layout shift */
 body {
   margin: 0;
   padding: 0;
+  font-size: 16px;
+  line-height: 1.65;
+  background: #f6f4ef; /* warm ivory gold base */
+  color: #2a2a2a;
 }
 
-/* Containers must center properly */
+/* ===============================
+   CONTAINERS (GLOBAL)
+   =============================== */
 .container,
 .container.narrow {
   width: 100%;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.container.narrow {
+  max-width: 860px;
 }
 
 /* ===============================
-   MOBILE LAYOUT FIX
+   GLOBAL SECTION SAFETY
    =============================== */
-@media (max-width: 768px) {
-
-  /* Stop hero from eating the screen */
-  .home-hero,
-  .page-hero {
-    min-height: auto !important;
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-  }
-
-  /* Center all sections properly */
-  section {
-    width: 100%;
-    overflow-x: hidden;
-  }
-
-  /* Fix navbar overflow */
-  .site-header,
-  .header-inner {
-    width: 100%;
-    overflow-x: hidden;
-  }
-
-  .main-nav {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.8rem;
-  }
-
-  /* Text baseline (what you already started) */
-  body {
-    font-size: 16px;
-    line-height: 1.65;
-  }
-
-  h1 {
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-
-  h2 {
-    font-size: 1.6rem;
-  }
-
-  h3 {
-    font-size: 1.2rem;
-  }
-
-  p {
-    font-size: 1rem;
-  }
-
-  /* Buttons must not overflow */
-  .btn-primary,
-  .btn-secondary {
-    max-width: 100%;
-    white-space: normal;
-    text-align: center;
-  }
+section {
+  width: 100%;
+  overflow-x: hidden;
 }
 
+/* ===============================
+   HERO SAFETY (ALL PAGES)
+   =============================== */
+.home-hero,
+.page-hero {
+  background-color: #f3efe7;
+}
 
+/* ===============================
+   TYPOGRAPHY BASELINE
+   =============================== */
+h1 {
+  font-size: 2.6rem;
+  line-height: 1.2;
+}
 
-/* Offset page content for fixed header */
+h2 {
+  font-size: 1.7rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  font-size: 1rem;
+}
+
+/* ===============================
+   BUTTON SAFETY
+   =============================== */
+.btn-primary,
+.btn-secondary {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+/* ===============================
+   FIXED HEADER OFFSET
+   =============================== */
+/* Matches header height so content never hides */
 body {
   padding-top: 72px;
 }
 
-
-
+/* ===============================
+   REVEAL ANIMATIONS (SAFE)
+   =============================== */
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -115,17 +112,51 @@ body {
   transform: translateY(0);
 }
 
+/* ===============================
+   MOBILE OPTIMIZATION
+   =============================== */
+@media (max-width: 768px) {
 
+  /* Typography scale (mobile-friendly but desktop-like) */
+  body {
+    font-size: 16px;
+  }
 
+  h1 {
+    font-size: 2rem;
+  }
 
+  h2 {
+    font-size: 1.5rem;
+  }
 
+  h3 {
+    font-size: 1.15rem;
+  }
 
+  p {
+    font-size: 1rem;
+  }
 
+  /* Hero should NOT dominate mobile */
+  .home-hero,
+  .page-hero {
+    min-height: auto !important;
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
 
+  /* Header + nav overflow safety */
+  .site-header,
+  .header-inner {
+    width: 100%;
+    overflow-x: hidden;
+  }
 
-
-
-
-
-
-
+  /* Tables scroll safely */
+  .admin-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
