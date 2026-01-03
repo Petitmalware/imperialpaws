@@ -1,34 +1,8 @@
-/* =====================================
-   IMPERIALPAWS — HEADER (CLEAN FINAL)
-===================================== */
 
-/* HEADER WRAPPER */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: linear-gradient(
-    to bottom,
-    #f6f4ef,
-    #efece4
-  );
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
-
-/* INNER LAYOUT */
-.header-inner {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 1rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
 /* =====================================
    BRAND
 ===================================== */
-
 .brand {
   display: flex;
   align-items: center;
@@ -37,14 +11,12 @@
   color: #1f1f1f;
 }
 
-/* PAW ICON */
 .brand-icon svg {
   width: 28px;
   height: 28px;
-  fill: #c7a45a; /* refined gold */
+  fill: #c7a45a;
 }
 
-/* TEXT */
 .brand-text strong {
   display: block;
   font-family: "Playfair Display", serif;
@@ -62,137 +34,131 @@
   margin-top: 2px;
 }
 
-/* =====================================
-   NAVIGATION
-===================================== */
 
-.main-nav {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* HEADER */
+.site-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: #f6f4ef;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.header-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
-  gap: 1.6rem;
-  font-size: 0.9rem;
+  justify-content: space-between;
 }
 
-/* LINKS */
+/* BRAND */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: #222;
+}
+
+.brand-icon svg {
+  width: 26px;
+  height: 26px;
+  fill: #c7a45a;
+}
+
+.brand-text strong {
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem;
+}
+
+.brand-text em {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: #777;
+}
+
+/* DESKTOP NAV */
+.main-nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
 .main-nav a {
-  position: relative;
   text-decoration: none;
   color: #2a2a2a;
-  padding: 0.25rem 0;
-  transition: color 0.2s ease;
 }
-
-/* UNDERLINE HOVER */
-.main-nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 100%;
-  height: 1px;
-  background: #c7a45a;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.25s ease;
-}
-
-.main-nav a:hover::after {
-  transform: scaleX(1);
-}
-
-/* =====================================
-   NAV CTA
-===================================== */
 
 .nav-cta {
-  padding: 0.45rem 1rem;
-  border-radius: 999px;
   border: 1px solid #c7a45a;
-  font-size: 0.85rem;
-  color: #2a2a2a;
-  transition: all 0.25s ease;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
 }
 
-.nav-cta:hover {
-  background: #c7a45a;
-  color: #111;
-}
-
-/* =====================================
-   HERO OFFSET FIX
-===================================== */
-
-.home-hero {
-  margin-top: 0;
-}
-
-
-
-
-
-
-/* ===============================
-   MOBILE NAV COLLAPSE
-   =============================== */
-
-#nav-toggle {
+/* HAMBURGER */
+.nav-toggle {
   display: none;
-}
-
-/* Hamburger */
-.nav-toggle-label {
-  display: none;
+  background: none;
+  border: none;
   font-size: 1.8rem;
   cursor: pointer;
-  user-select: none;
-  color: #1f1f1f;
 }
 
-/* Desktop stays untouched */
-@media (min-width: 769px) {
-  .main-nav {
-    display: flex;
-  }
-}
-
-/* Mobile behavior */
+/* MOBILE */
 @media (max-width: 768px) {
-
-  .nav-toggle-label {
+  .nav-toggle {
     display: block;
   }
 
   .main-nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: linear-gradient(
-      to bottom,
-      #f6f4ef,
-      #f1eee7
-    );
+    position: fixed;
+    inset: 0;
+    background: #f6f4ef;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 1.2rem;
-    padding: 1.5rem 0;
-
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease;
-    border-bottom: 1px solid rgba(0,0,0,0.06);
+    gap: 1.5rem;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+    z-index: 2000;
   }
 
-  /* OPEN MENU */
-  #nav-toggle:checked ~ .main-nav {
-    max-height: 500px;
+  .main-nav.open {
+    transform: translateY(0);
   }
 
   .main-nav a {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
-  .nav-cta {
-    margin-top: 0.5rem;
+  .nav-close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
   }
 }
