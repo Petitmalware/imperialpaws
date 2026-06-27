@@ -5,6 +5,7 @@ const { MongoClient } = require("mongodb");
 const DATA_DIR = path.join(__dirname, "../data");
 const MONGODB_URI = process.env.MONGODB_URI || "";
 const MONGODB_DB = process.env.MONGODB_DB || "imperialpaws";
+const MONGODB_TIMEOUT_MS = Number(process.env.MONGODB_TIMEOUT_MS || 10000);
 
 const collections = {
   admins: "admins.json",
@@ -53,10 +54,47 @@ function writeJSONCollection(name, data) {
   fs.writeFileSync(getFile(name), JSON.stringify(data, null, 2));
 }
 
+function scrubMongoMessage(value) {
+  return String(value || "").replace(
+    /mongodb(\+srv)?:\/\/[^@]+@/gi,
+    "mongodb$1://<redacted>@"
+  );
+}
+
+function summarizeMongoError(err) {
+  return {
+    name: err && err.name,
+    code: err && err.code,
+    message: scrubMongoMessage(err && err.message)
+  };
+}
+
+function describeMongoConfig() {
+  if (!usingMongo()) {
+    return "disabled; using local JSON files";
+  }
+
+  try {
+    const parsed = new URL(MONGODB_URI);
+    return `enabled; protocol=${parsed.protocol.replace(":", "")}; host=${parsed.hostname}; db=${MONGODB_DB}`;
+  } catch (err) {
+    return `enabled; invalid URI format; db=${MONGODB_DB}`;
+  }
+}
+
 async function getDb() {
   if (!clientPromise) {
-    const client = new MongoClient(MONGODB_URI);
-    clientPromise = client.connect();
+    const client = new MongoClient(MONGODB_URI, {
+      serverSelectionTimeoutMS: MONGODB_TIMEOUT_MS,
+      connectTimeoutMS: MONGODB_TIMEOUT_MS,
+      socketTimeoutMS: MONGODB_TIMEOUT_MS * 2
+    });
+
+    clientPromise = client.connect().catch(async err => {
+      clientPromise = null;
+      await client.close().catch(() => {});
+      throw err;
+    });
   }
 
   const client = await clientPromise;
@@ -68,12 +106,22 @@ async function getCollection(name) {
   return db.collection(name);
 }
 
-async function loadCollection(name) {
+async function loadCollection(name, options = {}) {
   if (!usingMongo()) return readJSONCollection(name);
 
-  const collection = await getCollection(name);
-  const documents = await collection.find({}, { projection: { _id: 0 } }).toArray();
-  return documents.map(withoutMongoId);
+  try {
+    const collection = await getCollection(name);
+    const documents = await collection.find({}, { projection: { _id: 0 } }).toArray();
+    return documents.map(withoutMongoId);
+  } catch (err) {
+    if (!options.fallbackToLocal) throw err;
+
+    console.error(
+      `MongoDB read failed for ${name}; using local fallback.`,
+      summarizeMongoError(err)
+    );
+    return readJSONCollection(name);
+  }
 }
 
 async function saveCollection(name, records) {
@@ -124,9 +172,11 @@ async function closeDataStore() {
 
 module.exports = {
   closeDataStore,
+  describeMongoConfig,
   loadCollection,
   saveCollection,
   getSettings,
   saveSettings,
+  summarizeMongoError,
   usingMongo
 };

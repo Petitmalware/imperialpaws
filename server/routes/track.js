@@ -13,9 +13,9 @@ router.get("/track/result", asyncHandler(async (req, res) => {
     });
   }
 
-  const applications = await loadCollection("applications");
-  const invoices = await loadCollection("invoices");
-  const puppies = await loadCollection("puppies");
+  const applications = await loadCollection("applications", { fallbackToLocal: true });
+  const invoices = await loadCollection("invoices", { fallbackToLocal: true });
+  const puppies = await loadCollection("puppies", { fallbackToLocal: true });
   const application = applications.find(a => a.id === code);
 
   if (!application) {

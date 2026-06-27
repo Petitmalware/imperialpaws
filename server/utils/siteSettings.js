@@ -1,4 +1,8 @@
-const { getSettings, saveSettings } = require("./dataStore");
+const {
+  getSettings,
+  saveSettings,
+  summarizeMongoError
+} = require("./dataStore");
 
 const DEFAULT_SETTINGS = {
   contact: {
@@ -39,7 +43,7 @@ async function loadSiteSettings() {
     const settings = await getSettings(mergeSettings());
     return mergeSettings(settings);
   } catch (err) {
-    console.error("Failed to load site settings:", err);
+    console.error("Failed to load site settings:", summarizeMongoError(err));
     return mergeSettings();
   }
 }

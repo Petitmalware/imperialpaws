@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "main": "server/app.js",
+  "engines": {
+    "node": ">=20.19.0 <21.0.0"
+  },
   "scripts": {
     "start": "node server/app.js",
     "smoke": "node scripts/smoke-test.js",

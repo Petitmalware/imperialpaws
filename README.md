@@ -43,9 +43,10 @@ Environment: Node
 Build command: npm install
 Start command: npm start
 Plan: Free
-Health check path: /
+Health check path: /healthz
 Environment variables:
   NODE_ENV=production
+  NODE_VERSION=20.19.0
   SESSION_SECRET=<generate a long random value>
   MONGODB_URI=<MongoDB Atlas mongodb+srv:// connection string>
   MONGODB_DB=imperialpaws
@@ -57,6 +58,9 @@ Environment variables:
 ```
 
 ## Production Storage
+
+Render is pinned to Node `20.19.0` in `render.yaml`, `.node-version`, and
+`package.json` so MongoDB Atlas connections use a stable Node LTS runtime.
 
 The app now uses production storage when environment variables are present:
 

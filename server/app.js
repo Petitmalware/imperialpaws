@@ -7,7 +7,11 @@ const expressLayouts = require("express-ejs-layouts");
 const { loadSiteSettings } = require("./utils/siteSettings");
 const { createTestimonial } = require("./utils/testimonialStore");
 const { getCurrencySymbol } = require("./utils/currency");
-const { loadCollection, saveCollection } = require("./utils/dataStore");
+const {
+  describeMongoConfig,
+  loadCollection,
+  saveCollection
+} = require("./utils/dataStore");
 const asyncHandler = require("./utils/asyncHandler");
 const applicantInvoiceRoutes = require("./routes/applicant-invoice");
 const adminRoutes = require("./admin/admin-routes");
@@ -28,6 +32,10 @@ app.set("layout", "layouts/main");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+app.get("/healthz", (req, res) => {
+  res.status(200).json({ ok: true });
+});
 
 app.use(asyncHandler(async (req, res, next) => {
   res.locals.siteSettings = await loadSiteSettings();
@@ -61,10 +69,11 @@ app.use("/admin", adminTestimonialsRoutes);
 app.use("/admin", adminInvoicesRoutes);
 app.use(trackRoutes);
 
-const loadPuppies = () => loadCollection("puppies");
+const loadPuppies = () => loadCollection("puppies", { fallbackToLocal: true });
 const loadApplications = () => loadCollection("applications");
 const saveApplications = data => saveCollection("applications", data);
-const loadTestimonials = () => loadCollection("testimonials");
+const loadTestimonials = () =>
+  loadCollection("testimonials", { fallbackToLocal: true });
 const saveTestimonials = data => saveCollection("testimonials", data);
 
 function isApprovedTestimonial(testimonial) {
@@ -263,5 +272,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, "0.0.0.0", () => {
+  console.log(`MongoDB ${describeMongoConfig()}`);
   console.log(`ImperialPaws running at http://localhost:${PORT}`);
 });

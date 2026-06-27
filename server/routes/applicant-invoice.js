@@ -10,8 +10,8 @@ function canViewInvoice(application) {
 }
 
 async function renderInvoice(req, res, invoiceNumber, trackingCode = null) {
-  const invoices = await loadCollection("invoices");
-  const applications = await loadCollection("applications");
+  const invoices = await loadCollection("invoices", { fallbackToLocal: true });
+  const applications = await loadCollection("applications", { fallbackToLocal: true });
   const invoice = invoices.find(i => i.invoiceNumber === invoiceNumber);
 
   if (!invoice) return res.status(404).send("Invoice not found");
