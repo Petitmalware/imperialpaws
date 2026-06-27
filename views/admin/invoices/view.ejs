@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice <%= invoice.invoiceNumber %></title>
+  <link rel="stylesheet" href="/css/invoice.css">
+</head>
+
+<body>
+<%
+  const buyerEmail = invoice.adoptingParent && invoice.adoptingParent.email;
+  const buyerName = (invoice.adoptingParent && invoice.adoptingParent.name) || "there";
+  const invoicePath = invoice.applicationId
+    ? `/invoice/${encodeURIComponent(invoice.applicationId)}/${encodeURIComponent(invoice.invoiceNumber)}`
+    : `/invoice/${encodeURIComponent(invoice.invoiceNumber)}`;
+  const invoiceUrl = absoluteUrl(invoicePath);
+  const emailSubject = `ImperialPaws invoice ${invoice.invoiceNumber}`;
+  const emailBody = `Hello ${buyerName},\n\nYour ImperialPaws invoice is ready:\n${invoiceUrl}\n\nThank you,\nImperialPaws Pekingese`;
+  let subtotal = 0;
+%>
+
+<div class="invoice-page">
+  <div class="invoice-actions no-print">
+    <button onclick="window.print()" class="btn-print" type="button">
+      Print / Save as PDF
+    </button>
+
+    <% if (buyerEmail) { %>
+      <a
+        class="btn-print"
+        href="mailto:<%= encodeURIComponent(buyerEmail) %>?subject=<%= encodeURIComponent(emailSubject) %>&body=<%= encodeURIComponent(emailBody) %>">
+        Email Buyer
+      </a>
+    <% } %>
+  </div>
+
+  <div class="invoice-header">
+    <div class="logo">
+      <%- include('../../partials/paw-logo') %>
+      <div class="brand-text">
+        <strong>ImperialPaws</strong>
+        <span>PEKINGESE</span>
+      </div>
+    </div>
+
+    <div class="invoice-meta">
+      <h1>INVOICE</h1>
+
+      <% if (invoice.invoiceNumber) { %>
+        <p><strong>Invoice No:</strong> <%= invoice.invoiceNumber %></p>
+      <% } %>
+
+      <% if (invoice.issueDate) { %>
+        <p><strong>Issue Date:</strong> <%= invoice.issueDate %></p>
+      <% } %>
+
+      <% if (invoice.dueDate) { %>
+        <p><strong>Due Date:</strong> <%= invoice.dueDate %></p>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <% if (invoice.adoptingParent && invoice.adoptingParent.name) { %>
+      <div class="card">
+        <h3>ADOPTING PARENT</h3>
+        <p><strong><%= invoice.adoptingParent.name %></strong></p>
+
+        <% if (invoice.adoptingParent.address) { %>
+          <p><%= invoice.adoptingParent.address %></p>
+        <% } %>
+
+        <% if (invoice.adoptingParent.city || invoice.adoptingParent.state) { %>
+          <p>
+            <%= invoice.adoptingParent.city || "" %>
+            <%= invoice.adoptingParent.state || "" %>
+            <%= invoice.adoptingParent.zip || "" %>
+          </p>
+        <% } %>
+
+        <% if (invoice.adoptingParent.phone) { %>
+          <p>Phone: <%= invoice.adoptingParent.phone %></p>
+        <% } %>
+
+        <% if (invoice.adoptingParent.email) { %>
+          <p>Email: <%= invoice.adoptingParent.email %></p>
+        <% } %>
+      </div>
+    <% } %>
+
+    <% if (invoice.applicationId) { %>
+      <div class="card">
+        <h3>APPLICATION</h3>
+        <p>ID: <%= invoice.applicationId %></p>
+      </div>
+    <% } %>
+  </div>
+
+  <table class="items">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (invoice.items && invoice.items.length) { %>
+        <% invoice.items.forEach(function(item) {
+             const lineTotal = Number(item.qty || 0) * Number(item.unitPrice || 0);
+             subtotal += lineTotal;
+        %>
+          <tr>
+            <td><%= item.description %></td>
+            <td><%= item.qty %></td>
+            <td><%= invoice.currency %><%= Number(item.unitPrice || 0).toFixed(2) %></td>
+            <td><%= invoice.currency %><%= lineTotal.toFixed(2) %></td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="4">No invoice items listed.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <%
+    const tax = invoice.taxRate ? subtotal * Number(invoice.taxRate) : 0;
+    const total = subtotal + tax;
+  %>
+
+  <div class="totals">
+    <p>
+      Subtotal
+      <span><%= invoice.currency %><%= subtotal.toFixed(2) %></span>
+    </p>
+
+    <% if (invoice.taxRate) { %>
+      <p>
+        Tax (<%= Number(invoice.taxRate) * 100 %>%)
+        <span><%= invoice.currency %><%= tax.toFixed(2) %></span>
+      </p>
+    <% } %>
+
+    <p class="grand">
+      Total Due
+      <span><%= invoice.currency %><%= total.toFixed(2) %></span>
+    </p>
+  </div>
+
+  <div class="footer">
+    <% if (invoice.notes) { %>
+      <div class="invoice-note">
+        <h3>Adoption Note</h3>
+        <p><%= invoice.notes %></p>
+      </div>
+    <% } %>
+
+    <% if (invoice.seller && invoice.seller.name) { %>
+      <div class="seller-card">
+        <strong><%= invoice.seller.name %></strong>
+
+        <% if (invoice.seller.address) { %>
+          <p><%= invoice.seller.address %></p>
+        <% } %>
+
+        <% if (invoice.seller.phone) { %>
+          <p><%= invoice.seller.phone %></p>
+        <% } %>
+
+        <% if (invoice.seller.email) { %>
+          <p><%= invoice.seller.email %></p>
+        <% } %>
+
+        <% if (invoice.seller.website) { %>
+          <p><%= invoice.seller.website %></p>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>
+</body>
+</html>

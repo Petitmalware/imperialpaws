@@ -1,0 +1,69 @@
+<section class="admin-page">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <span class="paw">🐾</span>
+      <div>
+        <strong>ImperialPaws</strong>
+        <em>Admin Panel</em>
+      </div>
+    </div>
+
+    <nav class="admin-menu">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications">Applications</a>
+      <a href="/admin/puppies">Puppies</a>
+      <a href="/admin/testimonials">Testimonials</a>
+      <a href="/admin/invoices" class="active">Invoices</a>
+      <a href="/admin/settings">Site Settings</a>
+      <a href="/admin/admins">Admins</a>
+    </nav>
+
+    <div class="admin-logout">
+      <a href="/admin/logout">Logout</a>
+    </div>
+  </aside>
+
+  <h1>Create Invoice</h1>
+
+  <form method="POST" action="/admin/invoices/add">
+    <input type="hidden" name="applicationId" value="<%= application.id %>">
+    <input type="hidden" name="puppyId" value="<%= puppy?.id || '' %>">
+
+    <h3>Seller</h3>
+    <input name="sellerName" placeholder="Business Name" value="ImperialPaws Pekingese">
+    <input name="sellerAddress" placeholder="Address" value="<%= settings.contact.location || '' %>">
+    <input name="sellerPhone" placeholder="Phone" value="<%= settings.contact.phone || '' %>">
+    <input name="sellerEmail" placeholder="Email" value="<%= settings.contact.email || '' %>">
+    <input name="sellerWebsite" placeholder="Website">
+
+    <h3>Adopting Parent</h3>
+    <input name="parentName" value="<%= application.name %>">
+    <input name="parentAddress" placeholder="Address">
+    <input name="parentCity" placeholder="City">
+    <input name="parentState" placeholder="State">
+    <input name="parentZip" placeholder="ZIP / Postal Code">
+    <input name="parentPhone" placeholder="Phone" value="<%= application.phone || '' %>">
+    <input name="parentEmail" placeholder="Email" value="<%= application.email %>">
+
+    <h3>Invoice Info</h3>
+    <input name="issueDate" type="date">
+    <input name="dueDate" type="date">
+    <select name="currency">
+      <option value="$" <%= puppyCurrency === "$" ? "selected" : "" %>>$ USD / CAD</option>
+      <option value="&euro;" <%= puppyCurrency === "\u20ac" ? "selected" : "" %>>&euro; EUR</option>
+      <option value="&pound;" <%= puppyCurrency === "\u00a3" ? "selected" : "" %>>&pound; GBP</option>
+    </select>
+
+    <h3>Line Item</h3>
+    <input name="itemDescription" value="<%= puppy ? puppy.name + ' - Puppy Adoption Fee' : 'Puppy Adoption Fee' %>">
+    <input name="itemQty" type="number" value="1" min="1">
+    <input name="itemPrice" type="number" step="0.01" min="0" value="<%= puppy?.price || '' %>">
+
+    <h3>Tax & Notes</h3>
+    <input name="taxRate" type="number" step="0.01" min="0" placeholder="0.00">
+    <textarea name="notes"><%= defaultInvoiceNote %></textarea>
+
+    <br>
+    <button class="btn-primary" type="submit">Create Invoice</button>
+  </form>
+</section>

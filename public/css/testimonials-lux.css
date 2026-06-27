@@ -1,0 +1,83 @@
+/* ==============================
+   TESTIMONIALS — LUXURY
+============================== */
+
+.home-testimonials-lux,
+.testimonials-lux-grid {
+  padding: 5rem 0;
+  background: #fff;
+}
+
+/* HEADER */
+.testimonials-header {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 3.5rem;
+}
+
+.testimonials-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: .8rem;
+}
+
+.testimonials-header p {
+  color: #555;
+  font-size: 1rem;
+}
+
+/* GRID */
+.testimonials-grid,
+.testimonials-lux-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+}
+
+/* CARD */
+.testimonial-card {
+  background: #fafafa;
+  border-radius: 18px;
+  padding: 2.2rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,.06);
+  position: relative;
+}
+
+.testimonial-card::before {
+  content: "“";
+  position: absolute;
+  top: -18px;
+  left: 18px;
+  font-size: 4rem;
+  color: #e5e5e5;
+  font-family: serif;
+}
+
+/* MESSAGE */
+.testimonial-message {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 1.6rem;
+  color: #333;
+}
+
+/* AUTHOR */
+.testimonial-author strong {
+  display: block;
+  font-size: .95rem;
+}
+
+.testimonial-author span {
+  font-size: .85rem;
+  color: #777;
+}
+
+/* FOOTER LINKS */
+.testimonials-footer {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.testimonials-footer .divider {
+  margin: 0 .8rem;
+  color: #aaa;
+}

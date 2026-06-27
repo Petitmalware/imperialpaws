@@ -1,0 +1,117 @@
+<div class="admin-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+
+    <div class="admin-logo">
+      <span class="paw">🐾</span>
+      <div>
+        <strong>ImperialPaws</strong>
+        <em>Admin Panel</em>
+      </div>
+    </div>
+
+    <nav class="admin-menu">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications">Applications</a>
+      <a href="/admin/puppies">Puppies</a>
+      <a href="/admin/testimonials" class="active">Testimonials</a>
+      <a href="/admin/invoices">Invoices</a>
+      <a href="/admin/settings">Site Settings</a>
+      <a href="/admin/admins">Admins</a>
+    </nav>
+
+    <div class="admin-logout">
+      <a href="/admin/logout">Logout</a>
+    </div>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-content">
+
+    <h1>Manage Testimonials</h1>
+
+    <% if (!testimonials || testimonials.length === 0) { %>
+      <p class="admin-empty">No testimonials submitted yet.</p>
+    <% } else { %>
+
+      <div class="admin-table-wrap">
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Message</th>
+              <th>Status</th>
+              <th>Featured</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% testimonials.forEach(testimonial => { %>
+              <tr>
+
+                <td>
+                  <strong><%= testimonial.name %></strong><br>
+                  <small><%= testimonial.location || "" %></small>
+                </td>
+
+                <td class="testimonial-message">
+                  <%= testimonial.message %>
+                </td>
+
+                <td>
+                  <span class="status-pill <%= testimonial.approved ? 'approved' : 'pending' %>">
+                    <%= testimonial.approved ? 'Approved' : 'Pending' %>
+                  </span>
+                </td>
+
+                <td>
+                  <span class="status-pill <%= testimonial.featured ? 'featured' : 'neutral' %>">
+                    <%= testimonial.featured ? 'Yes' : 'No' %>
+                  </span>
+                </td>
+
+                <td class="action-buttons">
+
+                  <!-- APPROVE -->
+                  <form method="post"
+                        action="/admin/testimonials/<%= testimonial.id %>/approve">
+                    <button class="btn-small">
+                      <%= testimonial.approved ? "Unapprove" : "Approve" %>
+                    </button>
+                  </form>
+
+                  <!-- FEATURE -->
+                  <form method="post"
+                        action="/admin/testimonials/<%= testimonial.id %>/feature">
+                    <button class="btn-small">
+                      <%= testimonial.featured ? "Unfeature" : "Feature" %>
+                    </button>
+                  </form>
+
+                  <!-- DELETE -->
+                  <form method="post"
+                        action="/admin/testimonials/<%= testimonial.id %>/delete"
+                        onsubmit="return confirm('Delete this testimonial?');">
+                    <button class="btn-danger">
+                      Delete
+                    </button>
+                  </form>
+
+                </td>
+
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+
+      </div>
+
+    <% } %>
+
+  </main>
+
+</div>

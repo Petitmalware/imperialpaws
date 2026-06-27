@@ -1,0 +1,177 @@
+
+
+/* =====================================
+   BRAND
+===================================== */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: #1f1f1f;
+}
+
+.brand-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: #c7a45a;
+}
+
+.brand-text strong {
+  display: block;
+  font-family: "Playfair Display", serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.05em;
+}
+
+.brand-text em {
+  display: block;
+  font-style: normal;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #777;
+  margin-top: 2px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===============================
+   HEADER BASE
+================================ */
+.site-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: linear-gradient(to bottom, #f6f4ef, #efece4);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* space for fixed header */
+body {
+  padding-top: 72px;
+}
+
+.header-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===============================
+   BRAND
+================================ */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: #1f1f1f;
+}
+
+.brand-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: #c7a45a;
+}
+
+.brand-text strong {
+  font-family: "Playfair Display", serif;
+  font-size: 1.15rem;
+}
+
+.brand-text em {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #777;
+}
+
+/* ===============================
+   NAV (DESKTOP)
+================================ */
+.main-nav {
+  display: flex;
+  gap: 1.6rem;
+  font-size: 0.9rem;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #2a2a2a;
+  position: relative;
+}
+
+.nav-cta {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #c7a45a;
+}
+
+/* ===============================
+   HAMBURGER
+================================ */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #2a2a2a;
+  margin: 5px 0;
+}
+
+/* ===============================
+   MOBILE NAV
+================================ */
+@media (max-width: 768px) {
+
+  .nav-toggle {
+    display: block;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    width: 100%;
+    background: #f6f4ef;
+
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+
+    padding: 1.5rem 0;
+
+    transform: translateY(-120%);
+    transition: transform 0.35s ease;
+  }
+
+  .main-nav.open {
+    transform: translateY(0);
+  }
+}

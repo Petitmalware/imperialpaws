@@ -1,0 +1,22 @@
+{
+  "name": "imperialpaws",
+  "version": "1.0.0",
+  "private": true,
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "smoke": "node scripts/smoke-test.js",
+    "migrate:mongo": "node scripts/migrate-json-to-mongo.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.3",
+    "mongodb": "^7.4.0",
+    "multer": "^2.0.0"
+  }
+}

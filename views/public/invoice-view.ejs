@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice <%= invoice.invoiceNumber %></title>
+  <link rel="stylesheet" href="/css/invoice.css">
+</head>
+
+<body>
+<%
+  const items = invoice.items || [];
+  const subtotal = items.reduce((sum, item) => {
+    return sum + Number(item.qty || 0) * Number(item.unitPrice || 0);
+  }, 0);
+  const tax = invoice.taxRate ? subtotal * Number(invoice.taxRate) : 0;
+  const total = subtotal + tax;
+%>
+
+<div class="invoice-page">
+  <div class="invoice-header">
+    <div class="logo">
+      <%- include("../partials/paw-logo") %>
+      <div class="brand-text">
+        <strong>ImperialPaws</strong>
+        <span>PEKINGESE</span>
+      </div>
+    </div>
+
+    <div class="invoice-meta">
+      <h1>INVOICE</h1>
+      <% if (invoice.invoiceNumber) { %>
+        <p><strong>Invoice No:</strong> <%= invoice.invoiceNumber %></p>
+      <% } %>
+      <% if (invoice.issueDate || invoice.createdAt) { %>
+        <p>
+          <strong>Date:</strong>
+          <%= invoice.issueDate || new Date(invoice.createdAt).toLocaleDateString() %>
+        </p>
+      <% } %>
+      <% if (invoice.dueDate) { %>
+        <p><strong>Due Date:</strong> <%= invoice.dueDate %></p>
+      <% } %>
+    </div>
+  </div>
+
+  <% if (invoice.adoptingParent) { %>
+    <div class="card">
+      <h3>ADOPTING PARENT</h3>
+      <% if (invoice.adoptingParent.name) { %>
+        <p><strong><%= invoice.adoptingParent.name %></strong></p>
+      <% } %>
+      <% if (invoice.adoptingParent.email) { %>
+        <p><%= invoice.adoptingParent.email %></p>
+      <% } %>
+      <% if (invoice.adoptingParent.phone) { %>
+        <p><%= invoice.adoptingParent.phone %></p>
+      <% } %>
+    </div>
+  <% } %>
+
+  <table class="items">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Unit</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (items.length) { %>
+        <% items.forEach(item => {
+             const line = Number(item.qty || 0) * Number(item.unitPrice || 0);
+        %>
+          <tr>
+            <td><%= item.description %></td>
+            <td><%= item.qty %></td>
+            <td><%= invoice.currency %><%= Number(item.unitPrice || 0).toFixed(2) %></td>
+            <td><%= invoice.currency %><%= line.toFixed(2) %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="4">No invoice items listed.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <p>
+      Subtotal
+      <span><%= invoice.currency %><%= subtotal.toFixed(2) %></span>
+    </p>
+
+    <% if (invoice.taxRate) { %>
+      <p>
+        Tax (<%= Number(invoice.taxRate) * 100 %>%)
+        <span><%= invoice.currency %><%= tax.toFixed(2) %></span>
+      </p>
+    <% } %>
+
+    <p class="grand">
+      Total
+      <span><%= invoice.currency %><%= total.toFixed(2) %></span>
+    </p>
+  </div>
+
+  <% if (invoice.notes) { %>
+    <div class="footer">
+      <div class="invoice-note">
+        <h3>Adoption Note</h3>
+        <p><%= invoice.notes %></p>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="invoice-actions no-print">
+    <button onclick="window.print()" class="btn-primary" type="button">
+      Print / Save as PDF
+    </button>
+  </div>
+</div>
+</body>
+</html>

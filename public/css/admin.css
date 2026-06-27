@@ -1,0 +1,496 @@
+/* ======================================================
+   IMPERIALPAWS — ADMIN MASTER STYLES
+   Mobile-safe • Gold • No Layout Breakage
+====================================================== */
+
+/* ===============================
+   GLOBAL ADMIN SAFETY
+================================ */
+.admin-shell,
+.admin-layout,
+.admin-page,
+.admin-settings {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ===============================
+   PAGE BACKGROUNDS
+================================ */
+.admin-page,
+.admin-settings {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f4f2ee, #edeae3);
+  padding: 3rem 1.5rem;
+}
+
+/* ===============================
+   ADMIN CARDS (UNIFIED)
+================================ */
+.admin-card {
+  background: linear-gradient(180deg, #ffffff, #f8f6f1);
+  border-radius: 14px;
+  padding: 2.6rem 2.4rem;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+  width: 100%;
+}
+
+.admin-card.wide {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ===============================
+   HEADINGS
+================================ */
+.admin-card h1,
+.admin-card h2,
+.admin-content h1 {
+  font-family: "Playfair Display", serif;
+  color: #1f1f1f;
+}
+
+.admin-card h2 {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 0.6rem;
+}
+
+.admin-subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+/* ===============================
+   FORMS (ADMIN)
+================================ */
+.admin-form,
+.admin-card form {
+  width: 100%;
+}
+
+.admin-form label,
+.admin-card label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 0.4rem;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select,
+.admin-card input,
+.admin-card textarea,
+.admin-card select {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  background: #fafafa;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus,
+.admin-form select:focus {
+  outline: none;
+  border-color: #c7a45a;
+  background: #fff;
+}
+
+/* ===============================
+   PRIMARY BUTTON (ADMIN)
+================================ */
+.btn-admin-primary,
+.admin-settings .btn-admin-primary {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 999px;
+  background: #1f1f1f;
+  color: #fff;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-admin-primary:hover {
+  background: #000;
+  transform: translateY(-1px);
+}
+
+/* ===============================
+   ADMIN LAYOUT
+================================ */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f3f1ed;
+}
+
+/* Sidebar */
+.admin-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 240px;
+  background: #1e1e1e;
+  color: #fff;
+  padding: 1.8rem 1.4rem;
+  z-index: 100;
+}
+
+/* Content */
+.admin-content {
+  margin-left: 240px;
+  padding: 2.8rem 3rem;
+  width: calc(100% - 240px);
+}
+
+/* ===============================
+   ADMIN TABLES (CRITICAL FIX)
+================================ */
+.admin-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1.6rem;
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.9rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.admin-table th {
+  background: #f6f4ef;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.admin-table tr:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+/* ===============================
+   STATUS PILLS
+================================ */
+.status-pill {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.status-pill.pending { background: #f1e6c8; color: #7a5b00; }
+.status-pill.approved { background: #d9efe0; color: #215c3a; }
+.status-pill.rejected { background: #f4d6d6; color: #7b1e1e; }
+.status-pill.sold { background: #e0e0e0; color: #444; }
+
+/* ===============================
+   ACTION BUTTONS
+================================ */
+.btn-danger {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #7b1e1e;
+  background: transparent;
+  color: #7b1e1e;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.btn-danger:hover {
+  background: #7b1e1e;
+  color: #fff;
+}
+
+/* ===============================
+   IMAGE MANAGER GRID
+================================ */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.4rem;
+}
+
+/* ===============================
+   MOBILE ADMIN FIXES
+================================ */
+@media (max-width: 900px) {
+
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .admin-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 2rem 1.4rem;
+  }
+
+  .admin-table {
+    min-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .admin-card {
+    padding: 2rem 1.6rem;
+  }
+
+  .admin-card h2 {
+    font-size: 1.4rem;
+  }
+
+  .btn-admin-primary {
+    font-size: 0.7rem;
+  }
+}
+
+
+
+
+
+
+
+
+/* =========================================
+   ADMIN SIDEBAR — IMPERIALPAWS (PRO)
+========================================= */
+
+/* ===== LAYOUT SHELL ===== */
+.admin-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f3f1ed;
+}
+
+/* ===== SIDEBAR ===== */
+.admin-sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1c1c1c, #151515);
+  color: #fff;
+  padding: 2.2rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+}
+
+/* ===== BRAND ===== */
+.admin-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2.6rem;
+}
+
+.admin-logo .paw {
+  font-size: 1.6rem;
+  color: #c7a45a;
+}
+
+.admin-logo strong {
+  display: block;
+  font-family: "Playfair Display", serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.05em;
+}
+
+.admin-logo em {
+  display: block;
+  font-style: normal;
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #c7a45a;
+  margin-top: 2px;
+}
+
+/* ===== MENU ===== */
+.admin-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-menu a {
+  display: block;
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.85);
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.admin-menu a:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+/* Active */
+.admin-menu a.active {
+  background: #c7a45a;
+  color: #111;
+  font-weight: 600;
+}
+
+/* ===== LOGOUT ===== */
+.admin-logout {
+  margin-top: auto;
+  padding-top: 1.8rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.admin-logout a {
+  display: block;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #f0bcbc;
+  transition: color 0.2s ease;
+}
+
+.admin-logout a:hover {
+  color: #fff;
+}
+
+/* ===== CONTENT ===== */
+.admin-content {
+  flex: 1;
+  padding: 3rem 3.5rem;
+  background: linear-gradient(180deg, #f4f2ee, #edeae3);
+}
+
+/* ===== PAGE TITLE ===== */
+.admin-content h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 2.2rem;
+  margin-bottom: 0.8rem;
+  color: #1f1f1f;
+}
+
+.admin-content p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 900px) {
+  .admin-shell {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    position: relative;
+    min-height: auto;
+  }
+
+  .admin-content {
+    padding: 2.2rem 1.5rem;
+  }
+}
+
+
+
+/* ============================
+   ADMIN TABLE TOOLBAR
+============================ */
+
+.admin-table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1.4rem;
+}
+
+/* Create Invoice Button */
+.btn-create-invoice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  background: #c7a45a;
+  color: #111;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.btn-create-invoice:hover {
+  background: #b4934c;
+  transform: translateY(-1px);
+}
+/* ============================
+   ADMIN TABLE TOOLBAR
+============================ */
+
+.admin-table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1.4rem;
+}
+
+/* Create Invoice Button */
+.btn-create-invoice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  background: #c7a45a;
+  color: #111;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.btn-create-invoice:hover {
+  background: #b4934c;
+  transform: translateY(-1px);
+}

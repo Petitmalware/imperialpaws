@@ -1,0 +1,112 @@
+<div class="admin-layout">
+
+  <!-- SIDEBAR (same as other admin pages) -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <span class="paw">🐾</span>
+      <strong>ImperialPaws</strong>
+      <em>Admin</em>
+    </div>
+
+    <nav class="admin-nav">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications">Applications</a>
+      <a href="/admin/puppies" class="active">Puppies</a>
+      <a href="/admin/testimonials">Testimonials</a>
+      <a href="/admin/invoices">Invoices</a>
+      <a href="/admin/settings">Settings</a>
+      <a href="/admin/admins">Admins</a>
+      <a href="/admin/logout" class="logout">Logout</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-content">
+
+    <section class="admin-page admin-images">
+
+      <header class="admin-header">
+        <h1>Manage Images</h1>
+        <p class="admin-subtitle">
+          Puppy: <strong><%= puppy.name %></strong>
+        </p>
+
+        <a href="/admin/puppies" class="btn-secondary">
+          ← Back to Puppies
+        </a>
+      </header>
+
+      <!-- UPLOAD CARD -->
+      <section class="admin-card">
+        <h3>Upload New Image</h3>
+
+        <form
+          action="/admin/puppies/images/upload"
+          method="POST"
+          enctype="multipart/form-data"
+          class="admin-form"
+        >
+          <input type="hidden" name="puppyId" value="<%= puppy.id %>">
+
+          <div class="form-group">
+            <label>Select Image</label>
+            <input type="file" name="image" required>
+          </div>
+
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" name="isCover">
+              Set as cover image
+            </label>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            Upload Image
+          </button>
+        </form>
+      </section>
+
+      <!-- GALLERY -->
+      <section class="admin-card">
+        <h3>Existing Images</h3>
+
+        <% if (!puppy.images || !puppy.images.length) { %>
+          <p class="admin-muted">No images uploaded yet.</p>
+        <% } else { %>
+
+          <div class="image-grid">
+            <% puppy.images.forEach(img => { %>
+
+              <div class="image-card">
+                <img src="<%= img.path %>" alt="Puppy image">
+
+                <span class="image-badge <%= img.isCover ? 'cover' : 'gallery' %>">
+                  <%= img.isCover ? "Cover Image" : "Gallery Image" %>
+                </span>
+
+                <form
+                  action="/admin/puppies/images/delete"
+                  method="POST"
+                  onsubmit="return confirm('Delete this image?');"
+                >
+                  <input type="hidden" name="puppyId" value="<%= puppy.id %>">
+                  <input type="hidden" name="imageId" value="<%= img.id %>">
+
+                  <button type="submit" class="btn-danger small">
+                    Delete
+                  </button>
+                </form>
+              </div>
+
+            <% }) %>
+          </div>
+
+        <% } %>
+
+      </section>
+
+    </section>
+
+  </main>
+
+</div>

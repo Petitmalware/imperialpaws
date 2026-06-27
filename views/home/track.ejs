@@ -1,0 +1,43 @@
+<div class="page-track reveal">
+
+  <section class="page-hero reveal">
+    <div class="container">
+      <h1>Track Your Application</h1>
+
+      <p class="track-intro reveal">
+        Enter the tracking code you received after submitting your adoption
+        application to view its current status.
+      </p>
+
+      <p class="track-note reveal">
+        Status updates are posted here as decisions are made.
+      </p>
+    </div>
+  </section>
+
+  <section class="page-content reveal">
+    <div class="container narrow reveal">
+
+      <% if (error) { %>
+        <div class="error-box"><%= error %></div>
+      <% } %>
+
+      <form method="GET" action="/track/result" class="track-form">
+
+        <% const trackingCode = typeof code !== "undefined" ? code : ""; %>
+
+        <div class="form-group">
+          <label>Tracking Code</label>
+          <input type="text" name="code" value="<%= trackingCode %>" required>
+        </div>
+
+        <button class="btn-primary" type="submit">
+          Check Status
+        </button>
+
+      </form>
+
+    </div>
+  </section>
+
+</div>
