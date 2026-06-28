@@ -1,32 +1,38 @@
 <div class="page-puppies reveal">
-
   <section class="page-hero reveal">
     <div class="container">
-      <h1>Our Puppies</h1>
+      <h1>Available Pekingese Puppies</h1>
       <p class="subtitle">
-        Available Pekingese puppies raised with care, intention, and transparency.
+        Browse current ImperialPaws puppies with clear status labels,
+        thoughtful details, and an application-first adoption process.
       </p>
     </div>
   </section>
 
   <section class="page-content reveal">
     <div class="container reveal">
+      <div class="trust-panel">
+        <h2>Before You Apply</h2>
+        <ul class="trust-list">
+          <li>Review the puppy profile, photos, and availability status carefully.</li>
+          <li>Submit one accurate application for the puppy you are interested in.</li>
+          <li>No invoice or payment request is created until after application approval.</li>
+        </ul>
+      </div>
 
       <% if (!puppies.length) { %>
-        <p class="center">No puppies available at the moment.</p>
+        <p class="center">No puppies are available at the moment. Please check back for updates.</p>
       <% } else { %>
-
         <div class="premium-puppy-grid">
-
           <% puppies.forEach(puppy => { %>
             <article class="premium-puppy-card">
-
-              <!-- IMAGE -->
               <div class="puppy-image-wrap">
                 <% if (puppy.images && puppy.images.length) { %>
                   <img
                     src="<%= puppy.images.find(i => i.isCover)?.path || puppy.images[0].path %>"
-                    alt="<%= puppy.name %>">
+                    alt="<%= puppy.name %>"
+                    loading="lazy"
+                    decoding="async">
                 <% } else { %>
                   <div class="image-placeholder">No Image</div>
                 <% } %>
@@ -36,39 +42,36 @@
                 </span>
               </div>
 
-              <!-- CONTENT -->
               <div class="puppy-card-body">
                 <h3><%= puppy.name %></h3>
 
                 <p class="meta">
-                  <%= puppy.gender || "—" %>
-                  <% if (puppy.color) { %> • <%= puppy.color %> <% } %>
+                  <%= puppy.gender || "-" %>
+                  <% if (puppy.color) { %> &bull; <%= puppy.color %><% } %>
                 </p>
 
                 <% if (puppy.price) { %>
                   <div class="price">
-                    <%= currencySymbol(puppy.currency) %>
-                    <%= Number(puppy.price).toFixed(2) %>
+                    <%= currencySymbol(puppy.currency) %><%= Number(puppy.price).toFixed(2) %>
                   </div>
                 <% } %>
+
+                <p class="card-note">
+                  View full details before applying. Placement is based on review, not speed.
+                </p>
 
                 <a href="/puppies/<%= puppy.id %>" class="btn-secondary">
                   View Details
                 </a>
               </div>
-
             </article>
           <% }) %>
-
         </div>
-
       <% } %>
 
       <p class="closing-note center">
-        Availability updates as placement decisions are made.
+        Availability updates as applications are reviewed and placement decisions are made.
       </p>
-
     </div>
   </section>
-
 </div>

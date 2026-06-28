@@ -4,7 +4,8 @@
     <div class="container">
       <h1>Adoption Application</h1>
       <p class="subtitle">
-        Please complete the form below to apply for this puppy.
+        Apply for <strong><%= puppy.name %></strong> through a careful review
+        process built around responsible placement.
       </p>
     </div>
   </section>
@@ -17,6 +18,14 @@
       <% if (typeof error !== "undefined" && error) { %>
         <div class="error-box"><%= error %></div>
       <% } %>
+
+      <div class="notice-box">
+        <p>
+          No payment is requested by this form. If your application is approved,
+          you will receive clear next steps and any invoice will be tied to your
+          private tracking code.
+        </p>
+      </div>
 
       <form method="POST" action="/apply" class="application-form">
 
@@ -74,6 +83,16 @@
           Our goal is thoughtful, responsible placement rather than rushed decisions.
         </p>
 
+      </div>
+
+      <div class="trust-panel">
+        <h2>What Happens After Submission</h2>
+        <ul class="trust-list">
+          <li>You receive a tracking code for this application.</li>
+          <li>We review your information and may follow up if more context is needed.</li>
+          <li>If you already applied for this puppy with the same email or phone, the site will reuse your original tracking code.</li>
+          <li>Approved buyers can receive a clear invoice through the tracking flow.</li>
+        </ul>
       </div>
 
     </div>

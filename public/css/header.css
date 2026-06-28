@@ -69,12 +69,14 @@ body {
 }
 
 .header-inner {
-  max-width: 1180px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 1rem 1.5rem;
+  min-height: 72px;
+  padding: 0.85rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1.2rem;
 }
 
 /* ===============================
@@ -111,20 +113,24 @@ body {
 ================================ */
 .main-nav {
   display: flex;
-  gap: 1.6rem;
-  font-size: 0.9rem;
+  align-items: center;
+  gap: 1.05rem;
+  font-size: 0.86rem;
+  white-space: nowrap;
 }
 
 .main-nav a {
   text-decoration: none;
   color: #2a2a2a;
   position: relative;
+  font-weight: 600;
 }
 
 .nav-cta {
-  padding: 0.4rem 1rem;
-  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
   border: 1px solid #c7a45a;
+  background: rgba(199, 164, 90, 0.1);
 }
 
 /* ===============================
@@ -165,10 +171,11 @@ body {
     align-items: center;
     gap: 1.2rem;
 
-    padding: 1.5rem 0;
+    padding: 1.5rem;
 
     transform: translateY(-120%);
     transition: transform 0.35s ease;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
   }
 
   .main-nav.open {

@@ -334,3 +334,133 @@ textarea:focus {
 /* ===============================
    END OF FILE
 ================================ */
+
+/* ===============================
+   TRUST COMPONENTS
+================================ */
+.trust-panel,
+.safety-panel,
+.process-panel,
+.contact-panel {
+  margin: 2.4rem 0;
+  padding: 1.5rem;
+  border: 1px solid rgba(31, 31, 31, 0.1);
+  border-radius: 8px;
+  background: #fffdf8;
+  box-shadow: 0 12px 28px rgba(31, 31, 31, 0.05);
+}
+
+.trust-panel h2,
+.safety-panel h2,
+.process-panel h2,
+.contact-panel h2 {
+  margin-top: 0;
+}
+
+.trust-grid-page,
+.assurance-grid,
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.trust-card,
+.assurance-card,
+.process-card {
+  min-height: 100%;
+  padding: 1.1rem;
+  border: 1px solid rgba(31, 31, 31, 0.1);
+  border-radius: 8px;
+  background: #fffdf8;
+}
+
+.trust-card strong,
+.assurance-card strong,
+.process-card strong {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: #1f1f1f;
+  font-size: 0.8rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.trust-card p,
+.assurance-card p,
+.process-card p {
+  margin: 0;
+  color: #56534c;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.trust-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trust-list li {
+  position: relative;
+  padding-left: 1.4rem;
+  color: #34342f;
+  line-height: 1.7;
+}
+
+.trust-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #c7a45a;
+}
+
+.notice-box {
+  margin: 1.4rem 0;
+  padding: 1rem 1.1rem;
+  border-left: 4px solid #c7a45a;
+  border-radius: 8px;
+  background: #fffaf0;
+  color: #3e382b;
+}
+
+.notice-box p {
+  margin: 0;
+}
+
+.contact-details {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+
+.contact-details p {
+  margin: 0;
+}
+
+.contact-details a {
+  color: #6d520f;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .trust-grid-page,
+  .assurance-grid,
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trust-panel,
+  .safety-panel,
+  .process-panel,
+  .contact-panel {
+    padding: 1.2rem;
+  }
+}

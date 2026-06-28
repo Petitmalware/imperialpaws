@@ -2,90 +2,83 @@
   <div class="container">
     <h1>Contact ImperialPaws Pekingese</h1>
     <p class="subtitle">
-      Thoughtful communication focused on responsible placement.
+      Thoughtful communication for puppy availability, applications, and
+      responsible placement questions.
     </p>
   </div>
 </section>
 
 <section class="page-content reveal">
   <div class="container narrow reveal">
-
     <p>
       Thank you for your interest in ImperialPaws Pekingese. We welcome
       thoughtful inquiries from individuals and families who are genuinely
-      interested in learning more about our puppies and adoption process.
+      interested in our puppies, adoption process, and care expectations.
     </p>
 
-    <h2>Before Reaching Out</h2>
-    <p>
-      For questions related to a specific puppy, we kindly encourage visitors
-      to review the puppy’s detail page, our adoption process, and our frequently
-      asked questions before contacting us.
-    </p>
-
-    <p>
-      Many common questions regarding availability, health care, and placement
-      are answered throughout the site.
-    </p>
+    <div class="contact-panel">
+      <h2>Best First Step</h2>
+      <p>
+        For questions about a specific puppy, please review that puppy's detail
+        page, the adoption process, and the FAQ before contacting us. Most
+        availability, application, tracking, and invoice questions are explained
+        on the site.
+      </p>
+    </div>
 
     <h2>Adoption Applications</h2>
     <p>
-      If you are interested in a particular puppy, the first step is to submit
-      an adoption application directly from that puppy’s detail page.
-    </p>
-
-    <p>
-      If you have already submitted an application, you may track the status of
-      your application at any time using the tracking code provided after submission.
+      If you are interested in a particular puppy, submit an application from
+      that puppy's detail page. If you already applied, use your tracking code
+      to check the current status before sending a new message.
     </p>
 
     <h2>General Inquiries</h2>
     <p>
-      For general questions that are not addressed elsewhere on the site, you may
-      contact us using the information provided below. We strive to respond within
-      a reasonable timeframe and appreciate your patience.
+      For general questions that are not addressed elsewhere, use the contact
+      information below when available. We prioritize active applications,
+      approved placements, and questions related to current puppy listings.
     </p>
- 
-<section class="page-content">
-  <div class="container">
 
     <% if (
       siteSettings.contact.email ||
       siteSettings.contact.phone ||
       siteSettings.contact.location
     ) { %>
-
       <div class="contact-details">
-
         <% if (siteSettings.contact.email) { %>
-          <p><strong>Email:</strong> <%= siteSettings.contact.email %></p>
+          <p><strong>Email:</strong> <a href="mailto:<%= siteSettings.contact.email %>"><%= siteSettings.contact.email %></a></p>
         <% } %>
 
         <% if (siteSettings.contact.phone) { %>
-          <p><strong>Phone:</strong> <%= siteSettings.contact.phone %></p>
+          <p><strong>Phone:</strong> <a href="tel:<%= siteSettings.contact.phone.replace(/[^0-9+]/g, '') %>"><%= siteSettings.contact.phone %></a></p>
         <% } %>
 
         <% if (siteSettings.contact.location) { %>
           <p><strong>Location:</strong> <%= siteSettings.contact.location %></p>
         <% } %>
-
       </div>
-
     <% } else { %>
-      <p>
-        Contact information will be provided to approved applicants
-        during the adoption process.
-      </p>
+      <div class="notice-box">
+        <p>
+          Public contact information has not been posted yet. Contact details
+          may be provided to approved applicants during the adoption process.
+        </p>
+      </div>
     <% } %>
 
-  </div>
-</section>
-
+    <div class="safety-panel">
+      <h2>Buyer Safety Reminder</h2>
+      <ul class="trust-list">
+        <li>Do not send payment for a public listing before application review and approval.</li>
+        <li>Keep your tracking code private.</li>
+        <li>Confirm any invoice matches the puppy, buyer details, and agreed amount.</li>
+      </ul>
+    </div>
 
     <p class="closing-note">
-      Please note that we prioritize inquiries related to active applications and
-      available puppies. Messages outside of these topics may receive limited responses.
+      We appreciate patient, respectful communication. Responsible placement is
+      careful work, and every inquiry is handled with the puppy's well-being in mind.
     </p>
-
   </div>
 </section>

@@ -1,16 +1,17 @@
 <div class="page-tracking-result reveal">
-
   <section class="page-hero reveal">
     <div class="container">
       <h1>Application Status</h1>
+      <p class="subtitle">
+        Review your private application status, puppy details, and approved
+        invoice link when available.
+      </p>
     </div>
   </section>
 
   <section class="page-content reveal">
     <div class="container narrow">
-
       <div class="status-box">
-
         <div class="status-row">
           <span class="label">Tracking Code</span>
           <span class="value"><%= application.id %></span>
@@ -29,13 +30,11 @@
             <%= new Date(application.createdAt).toLocaleDateString() %>
           </span>
         </div>
-
       </div>
 
       <div class="tracking-divider"></div>
 
       <div class="puppy-summary">
-
         <h2>Puppy Information</h2>
 
         <% if (puppy) { %>
@@ -56,38 +55,39 @@
             details.
           </p>
         <% } %>
-
-
-        
-
-<% if (["Approved", "Sold"].includes(application.status) && invoice) { %>
-  <hr>
-
-  <div class="invoice-box">
-    <h3>Invoice</h3>
-
-    <p>
-      <strong>Invoice Number:</strong>
-      <%= invoice.invoiceNumber %>
-    </p>
-
-    <p>
-      <strong>Status:</strong>
-      <%= invoice.paid ? "Paid" : "Pending" %>
-    </p>
-
-    <a href="/invoice/<%= application.id %>/<%= invoice.invoiceNumber %>" class="btn-primary">
-      View Invoice
-    </a>
-  </div>
-<% } %>
-
-
-
-
       </div>
 
+      <% if (["Approved", "Sold"].includes(application.status) && invoice) { %>
+        <div class="invoice-box trust-panel">
+          <h2>Invoice</h2>
+
+          <p>
+            <strong>Invoice Number:</strong>
+            <%= invoice.invoiceNumber %>
+          </p>
+
+          <p>
+            <strong>Status:</strong>
+            <%= invoice.paid ? "Paid" : "Pending" %>
+          </p>
+
+          <p>
+            Please review the invoice carefully and confirm it matches your
+            approved puppy, buyer details, and agreed amount.
+          </p>
+
+          <a href="/invoice/<%= application.id %>/<%= invoice.invoiceNumber %>" class="btn-primary">
+            View Invoice
+          </a>
+        </div>
+      <% } %>
+
+      <div class="notice-box">
+        <p>
+          Keep this page and tracking code private. Status information is meant
+          for the applicant connected to this application.
+        </p>
+      </div>
     </div>
   </section>
-
 </div>

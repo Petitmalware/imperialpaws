@@ -1,12 +1,11 @@
 <div class="page-puppy-detail">
-
   <section class="page-hero reveal">
     <div class="container">
-<h1 class="hero-title"><%= puppy.name %></h1>
+      <h1 class="hero-title"><%= puppy.name %></h1>
 
       <p class="puppy-intro">
-        Raised in a home environment with daily care,
-        early socialization, and ongoing health monitoring.
+        Raised in a home environment with daily care, early socialization,
+        and ongoing health monitoring.
       </p>
 
       <p class="subtitle">Pekingese Puppy Details</p>
@@ -15,10 +14,7 @@
 
   <section class="detail-content reveal">
     <div class="lux-detail-grid">
-
-      <!-- IMAGE SLIDER -->
       <div class="lux-slider">
-
         <div class="lux-main-image">
           <% if (puppy.images && puppy.images.length) { %>
             <img
@@ -45,17 +41,14 @@
             <% }) %>
           </div>
         <% } %>
-
       </div>
 
-      <!-- DETAILS -->
       <div class="lux-details">
-
         <span class="lux-breed">
           <%= puppy.breed || "Pekingese" %>
         </span>
 
-<h2 class="lux-name"><%= puppy.name %></h2>
+        <h2 class="lux-name"><%= puppy.name %></h2>
 
         <span class="lux-status <%= statusClass(puppy.status) %>">
           <%= puppy.status || "Available" %>
@@ -82,9 +75,11 @@
           <% if (puppy.damName) { %><li><strong>Dam:</strong> <%= puppy.damName %></li><% } %>
         </ul>
 
-        <div class="lux-price-large">
-          <%= currencySymbol(puppy.currency) %><%= Number(puppy.price || 0).toFixed(2) %>
-        </div>
+        <% if (puppy.price) { %>
+          <div class="lux-price-large">
+            <%= currencySymbol(puppy.currency) %><%= Number(puppy.price || 0).toFixed(2) %>
+          </div>
+        <% } %>
 
         <% if (String(puppy.status || "Available").toLowerCase() === "available") { %>
           <a href="/apply/<%= puppy.id %>" class="btn-primary">
@@ -93,10 +88,34 @@
         <% } else { %>
           <span class="lux-unavailable">Currently Not Available</span>
         <% } %>
+      </div>
+    </div>
 
+    <div class="container narrow">
+      <div class="safety-panel">
+        <h2>Safe Adoption Notes</h2>
+        <ul class="trust-list">
+          <li>Applying does not guarantee approval or reserve this puppy.</li>
+          <li>No payment is requested through the public page before review and approval.</li>
+          <li>If approved, your invoice should match this puppy, your buyer details, and the agreed amount.</li>
+          <li>Keep your tracking code private so only you can view status and approved invoice links.</li>
+        </ul>
       </div>
 
+      <div class="process-grid">
+        <div class="process-card">
+          <strong>Review Details</strong>
+          <p>Read the profile, photos, health notes, and current status before applying.</p>
+        </div>
+        <div class="process-card">
+          <strong>Submit Once</strong>
+          <p>The system reuses your existing tracking code if you already applied for this puppy.</p>
+        </div>
+        <div class="process-card">
+          <strong>Wait For Approval</strong>
+          <p>Invoices and final next steps are handled only after application review.</p>
+        </div>
+      </div>
     </div>
   </section>
-
 </div>
