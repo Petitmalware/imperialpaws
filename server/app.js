@@ -38,6 +38,8 @@ app.get("/healthz", (req, res) => {
 });
 
 app.use(asyncHandler(async (req, res, next) => {
+  res.locals.currentPath = req.path;
+  res.locals.isAdminPage = req.path.startsWith("/admin");
   res.locals.siteSettings = await loadSiteSettings();
   res.locals.currencySymbol = getCurrencySymbol;
   res.locals.absoluteUrl = urlPath =>
@@ -58,6 +60,13 @@ app.use(
     }
   })
 );
+
+app.use((req, res, next) => {
+  res.locals.adminUser = req.session && req.session.admin
+    ? req.session.admin
+    : null;
+  next();
+});
 
 app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 app.use(express.static(path.join(__dirname, "../public")));
@@ -268,6 +277,16 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err);
+
+  if (
+    err.code === "PERSISTENT_DATA_STORE_REQUIRED" ||
+    err.code === "PERSISTENT_IMAGE_STORAGE_REQUIRED"
+  ) {
+    return res.status(503).send(
+      "Production storage is not configured. Please check MongoDB and Cloudinary environment variables before saving data."
+    );
+  }
+
   res.status(500).send("Something went wrong. Please try again.");
 });
 

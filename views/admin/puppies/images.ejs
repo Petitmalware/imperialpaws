@@ -1,112 +1,74 @@
-<div class="admin-layout">
+<div class="admin-shell">
+  <%- include("../../partials/admin-sidebar", { active: "puppies" }) %>
 
-  <!-- SIDEBAR (same as other admin pages) -->
-  <aside class="admin-sidebar">
-    <div class="admin-brand">
-      <span class="paw">🐾</span>
-      <strong>ImperialPaws</strong>
-      <em>Admin</em>
-    </div>
-
-    <nav class="admin-nav">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/applications">Applications</a>
-      <a href="/admin/puppies" class="active">Puppies</a>
-      <a href="/admin/testimonials">Testimonials</a>
-      <a href="/admin/invoices">Invoices</a>
-      <a href="/admin/settings">Settings</a>
-      <a href="/admin/admins">Admins</a>
-      <a href="/admin/logout" class="logout">Logout</a>
-    </nav>
-  </aside>
-
-  <!-- MAIN CONTENT -->
   <main class="admin-content">
+    <header class="admin-page-header">
+      <div>
+        <p class="admin-eyebrow">Gallery</p>
+        <h1>Manage Photos</h1>
+        <p class="admin-subtitle">Puppy: <strong><%= puppy.name %></strong></p>
+      </div>
+      <a href="/admin/puppies" class="btn-secondary">Back to Puppies</a>
+    </header>
 
-    <section class="admin-page admin-images">
+    <section class="admin-grid two">
+      <div class="admin-card">
+        <h2>Upload Photos</h2>
+        <p class="admin-muted">Select one or more images. The first uploaded image becomes the cover when requested.</p>
 
-      <header class="admin-header">
-        <h1>Manage Images</h1>
-        <p class="admin-subtitle">
-          Puppy: <strong><%= puppy.name %></strong>
-        </p>
-
-        <a href="/admin/puppies" class="btn-secondary">
-          ← Back to Puppies
-        </a>
-      </header>
-
-      <!-- UPLOAD CARD -->
-      <section class="admin-card">
-        <h3>Upload New Image</h3>
-
-        <form
-          action="/admin/puppies/images/upload"
-          method="POST"
-          enctype="multipart/form-data"
-          class="admin-form"
-        >
+        <form action="/admin/puppies/images/upload" method="POST" enctype="multipart/form-data" class="admin-form">
           <input type="hidden" name="puppyId" value="<%= puppy.id %>">
 
           <div class="form-group">
-            <label>Select Image</label>
-            <input type="file" name="image" required>
+            <label>Select Images</label>
+            <input type="file" name="images" accept="image/*" multiple required>
           </div>
 
           <div class="form-group checkbox">
             <label>
               <input type="checkbox" name="isCover">
-              Set as cover image
+              Set the first selected image as cover
             </label>
           </div>
 
-          <button type="submit" class="btn-primary">
-            Upload Image
-          </button>
+          <button type="submit" class="btn-primary">Upload Photos</button>
         </form>
-      </section>
+      </div>
 
-      <!-- GALLERY -->
-      <section class="admin-card">
-        <h3>Existing Images</h3>
-
-        <% if (!puppy.images || !puppy.images.length) { %>
-          <p class="admin-muted">No images uploaded yet.</p>
-        <% } else { %>
-
-          <div class="image-grid">
-            <% puppy.images.forEach(img => { %>
-
-              <div class="image-card">
-                <img src="<%= img.path %>" alt="Puppy image">
-
-                <span class="image-badge <%= img.isCover ? 'cover' : 'gallery' %>">
-                  <%= img.isCover ? "Cover Image" : "Gallery Image" %>
-                </span>
-
-                <form
-                  action="/admin/puppies/images/delete"
-                  method="POST"
-                  onsubmit="return confirm('Delete this image?');"
-                >
-                  <input type="hidden" name="puppyId" value="<%= puppy.id %>">
-                  <input type="hidden" name="imageId" value="<%= img.id %>">
-
-                  <button type="submit" class="btn-danger small">
-                    Delete
-                  </button>
-                </form>
-              </div>
-
-            <% }) %>
-          </div>
-
-        <% } %>
-
-      </section>
-
+      <div class="admin-card">
+        <h2>Photo Count</h2>
+        <p class="admin-subtitle">
+          <strong><%= puppy.images && puppy.images.length ? puppy.images.length : 0 %></strong>
+          images are currently attached to this listing.
+        </p>
+      </div>
     </section>
 
-  </main>
+    <section class="admin-card admin-section-gap">
+      <div class="admin-section-title">
+        <h2>Existing Photos</h2>
+      </div>
 
+      <% if (!puppy.images || !puppy.images.length) { %>
+        <p class="admin-empty">No images uploaded yet.</p>
+      <% } else { %>
+        <div class="image-grid">
+          <% puppy.images.forEach(img => { %>
+            <div class="image-card">
+              <img src="<%= img.path %>" alt="<%= puppy.name %> photo">
+              <span class="status-pill <%= img.isCover ? 'featured' : 'neutral' %>">
+                <%= img.isCover ? "Cover Image" : "Gallery Image" %>
+              </span>
+
+              <form action="/admin/puppies/images/delete" method="POST" onsubmit="return confirm('Delete this image?');">
+                <input type="hidden" name="puppyId" value="<%= puppy.id %>">
+                <input type="hidden" name="imageId" value="<%= img.id %>">
+                <button type="submit" class="btn-danger">Delete</button>
+              </form>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </section>
+  </main>
 </div>

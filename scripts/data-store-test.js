@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 process.env.MONGODB_URI = "mongodb://127.0.0.1:1/?directConnection=true";
+process.env.NODE_ENV = "test";
 process.env.MONGODB_DB = "imperialpaws";
 process.env.MONGODB_TIMEOUT_MS = "250";
 process.env.MONGODB_RETRY_COOLDOWN_MS = "500";

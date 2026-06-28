@@ -11,25 +11,26 @@
   
   
   
+<% if (isAdminPage) { %>
+  <link rel="stylesheet" href="/css/admin.css">
+<% } else { %>
   <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-/>
-<link rel="stylesheet" href="/css/invoice.css">
-<link rel="stylesheet" href="/css/puppies.css">
-<link rel="stylesheet" href="/css/puppy-details.css">
-<link rel="stylesheet" href="/css/home-featured.css">
-<link rel="stylesheet" href="/css/testimonials-lux.css">
-<link rel="stylesheet" href="/css/header.css">
-<link rel="stylesheet" href="/css/footer.css">
-<link rel="stylesheet" href="/css/admin.css">
-<link rel="stylesheet" href="/css/main.css">
-<link rel="stylesheet" href="/css/about.css">
-
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+  <link rel="stylesheet" href="/css/invoice.css">
+  <link rel="stylesheet" href="/css/puppies.css">
+  <link rel="stylesheet" href="/css/puppy-details.css">
+  <link rel="stylesheet" href="/css/home-featured.css">
+  <link rel="stylesheet" href="/css/testimonials-lux.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/about.css">
   <link rel="stylesheet" href="/css/home-index.css">
-<link rel="stylesheet" href="/css/adoption-process.css">
-
-<link rel="stylesheet" href="/css/sub-pages.css">
+  <link rel="stylesheet" href="/css/adoption-process.css">
+  <link rel="stylesheet" href="/css/sub-pages.css">
+<% } %>
 
 
 
@@ -39,14 +40,18 @@
 
 </head>
 
-<body class="<%= typeof pageClass !== 'undefined' ? pageClass : '' %>">
-  <%- include("../partials/header") %>
+<body class="<%= typeof pageClass !== 'undefined' ? pageClass : '' %><%= isAdminPage ? ' admin-body' : '' %>">
+  <% if (!isAdminPage) { %>
+    <%- include("../partials/header") %>
+  <% } %>
 
-  <main class="main-content">
+  <main class="<%= isAdminPage ? 'admin-root' : 'main-content' %>">
     <%- body %>
   </main>
 
-  <%- include("../partials/footer") %>
+  <% if (!isAdminPage) { %>
+    <%- include("../partials/footer") %>
+  <% } %>
 
 
   <script>

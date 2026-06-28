@@ -1,14 +1,17 @@
-<div class="admin-page admin-auth-setup">
+<section class="admin-login">
+  <div class="admin-login-card">
+    <div class="admin-logo admin-login-brand">
+      <span class="admin-mark">IP</span>
+      <div>
+        <strong>ImperialPaws</strong>
+        <em>Admin Setup</em>
+      </div>
+    </div>
 
-  <div class="admin-card">
+    <h1>Create Admin Account</h1>
+    <p class="admin-subtitle">Complete the invited administrator account before entering the dashboard.</p>
 
-    <h2>Admin Account Setup</h2>
-    <p class="admin-subtitle">
-      Complete your administrator account to access the ImperialPaws admin panel.
-    </p>
-
-    <form method="post" action="/admin/admins/signup">
-
+    <form method="post" action="/admin/admins/signup" class="admin-form">
       <input type="hidden" name="email" value="<%= email %>">
       <input type="hidden" name="code" value="<%= code %>">
 
@@ -19,15 +22,10 @@
 
       <div class="form-group">
         <label>Create Password</label>
-        <input type="password" name="password" required>
+        <input type="password" name="password" minlength="8" required>
       </div>
 
-      <button type="submit" class="btn-admin-primary">
-        Create Admin Account
-      </button>
-
+      <button type="submit" class="btn-primary">Create Account</button>
     </form>
-
   </div>
-
-</div>
+</section>

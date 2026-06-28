@@ -101,6 +101,7 @@ async function main() {
     cwd: appRoot,
     env: {
       ...process.env,
+      NODE_ENV: "test",
       PORT: String(port),
       MONGODB_URI: "mongodb://127.0.0.1:1/?directConnection=true",
       MONGODB_DB: "imperialpaws",

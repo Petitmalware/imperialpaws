@@ -1,0 +1,42 @@
+<%
+  const activeSection = typeof active !== "undefined" ? active : "";
+  const admin = typeof adminUser !== "undefined" ? adminUser : null;
+  const links = [
+    ["dashboard", "Dashboard", "/admin/dashboard"],
+    ["applications", "Applications", "/admin/applications"],
+    ["puppies", "Puppies", "/admin/puppies"],
+    ["testimonials", "Testimonials", "/admin/testimonials"],
+    ["invoices", "Invoices", "/admin/invoices"],
+    ["settings", "Site Settings", "/admin/settings"],
+    ["admins", "Admins", "/admin/admins"]
+  ];
+%>
+
+<aside class="admin-sidebar">
+  <div class="admin-logo">
+    <span class="admin-mark">IP</span>
+    <div>
+      <strong>ImperialPaws</strong>
+      <em>Admin Panel</em>
+    </div>
+  </div>
+
+  <nav class="admin-menu" aria-label="Admin navigation">
+    <% links.forEach(([key, label, href]) => { %>
+      <a href="<%= href %>" class="<%= activeSection === key ? 'active' : '' %>">
+        <span><%= label %></span>
+      </a>
+    <% }) %>
+  </nav>
+
+  <div class="admin-sidebar-footer">
+    <% if (admin) { %>
+      <div class="admin-user">
+        Signed in as<br>
+        <strong><%= admin.username %></strong>
+      </div>
+    <% } %>
+
+    <a href="/admin/logout" class="admin-logout-link">Logout</a>
+  </div>
+</aside>

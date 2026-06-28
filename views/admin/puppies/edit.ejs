@@ -1,51 +1,52 @@
-<div class="admin-layout">
+<div class="admin-shell">
+  <%- include("../../partials/admin-sidebar", { active: "puppies" }) %>
 
-  <!-- SIDEBAR -->
-  <aside class="admin-sidebar">
-    <div class="admin-brand">
-      <span class="paw">🐾</span>
-      <strong>ImperialPaws</strong>
-      <em>Admin</em>
-    </div>
-
-    <nav class="admin-nav">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/applications">Applications</a>
-      <a href="/admin/puppies" class="active">Puppies</a>
-      <a href="/admin/testimonials">Testimonials</a>
-      <a href="/admin/invoices">Invoices</a>
-      <a href="/admin/settings">Settings</a>
-      <a href="/admin/admins">Admins</a>
-      <a href="/admin/logout" class="logout">Logout</a>
-    </nav>
-  </aside>
-
-  <!-- MAIN CONTENT -->
   <main class="admin-content">
-
-    <section class="admin-page admin-edit-puppy">
-
-      <header class="admin-header">
+    <header class="admin-page-header">
+      <div>
+        <p class="admin-eyebrow">Listings</p>
         <h1>Edit Puppy</h1>
-        <p class="admin-subtitle">
-          Editing profile for <strong><%= puppy.name %></strong>
-        </p>
-      </header>
+        <p class="admin-subtitle">Update the public profile for <strong><%= puppy.name %></strong>.</p>
+      </div>
+      <div class="admin-actions">
+        <a href="/admin/puppies/images?id=<%= puppy.id %>" class="btn-small">Photos</a>
+        <a href="/admin/puppies" class="btn-secondary">Back to Puppies</a>
+      </div>
+    </header>
 
-      <form
-        method="POST"
-        action="/admin/puppies/edit/<%= puppy.id %>"
-        class="admin-form-wide"
-      >
-
-        <!-- BASIC INFO -->
-        <section class="admin-card">
-          <h3>Basic Information</h3>
+    <form method="POST" action="/admin/puppies/edit/<%= puppy.id %>" class="admin-form-wide">
+      <section class="admin-grid two">
+        <div class="admin-card">
+          <h2>Basic Information</h2>
 
           <div class="form-grid">
             <div class="form-group">
               <label>Name *</label>
-              <input type="text" name="name" value="<%= puppy.name %>" required>
+              <input type="text" name="name" value="<%= puppy.name || '' %>" required>
+            </div>
+
+            <div class="form-group">
+              <label>Breed</label>
+              <input type="text" name="breed" value="<%= puppy.breed || 'Pekingese' %>">
+            </div>
+
+            <div class="form-group">
+              <label>Gender</label>
+              <select name="gender">
+                <option value="" <%= !puppy.gender ? "selected" : "" %>>Select gender</option>
+                <option value="Male" <%= puppy.gender === "Male" ? "selected" : "" %>>Male</option>
+                <option value="Female" <%= puppy.gender === "Female" ? "selected" : "" %>>Female</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Color</label>
+              <input type="text" name="color" value="<%= puppy.color || '' %>">
+            </div>
+
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" name="dob" value="<%= puppy.dob || '' %>">
             </div>
 
             <div class="form-group">
@@ -61,124 +62,95 @@
           <div class="form-group checkbox">
             <label>
               <input type="checkbox" name="featured" <%= puppy.featured ? "checked" : "" %>>
-              Featured Puppy
+              Featured listing
             </label>
           </div>
-        </section>
+        </div>
 
-        <!-- DETAILS -->
-        <section class="admin-card">
-          <h3>Details</h3>
-
-          <div class="form-grid">
-            <div class="form-group">
-              <label>Gender</label>
-              <input type="text" name="gender" value="<%= puppy.gender || "" %>">
-            </div>
-
-            <div class="form-group">
-              <label>Color</label>
-              <input type="text" name="color" value="<%= puppy.color || "" %>">
-            </div>
-
-            <div class="form-group">
-              <label>Date of Birth</label>
-              <input type="date" name="dob" value="<%= puppy.dob || "" %>">
-            </div>
-
-            <div class="form-group">
-              <label>Vaccination</label>
-              <input type="text" name="vaccinationStatus" value="<%= puppy.vaccinationStatus || puppy.vaccination || "" %>">
-            </div>
-          </div>
-
-          <div class="form-group checkbox">
-            <label>
-              <input type="checkbox" name="vetChecked" <%= puppy.vetChecked ? "checked" : "" %>>
-              Vet Checked
-            </label>
-          </div>
-        </section>
-
-        <!-- REGISTRATION -->
-        <section class="admin-card">
-          <h3>Registration</h3>
-
-          <div class="form-group">
-            <label>Registration Type</label>
-            <input type="text" name="registrationType" value="<%= puppy.registrationType || puppy.registration || "" %>">
-          </div>
-
-          <div class="form-group">
-            <label>Registration Notes</label>
-            <textarea name="registrationNotes" rows="4"><%= puppy.registrationNotes || "" %></textarea>
-          </div>
-        </section>
-
-        <!-- PARENTS -->
-        <section class="admin-card">
-          <h3>Parents</h3>
-
-          <div class="form-grid">
-            <div class="form-group">
-              <label>Sire Name</label>
-              <input type="text" name="sireName" value="<%= puppy.sireName || "" %>">
-            </div>
-
-            <div class="form-group">
-              <label>Dam Name</label>
-              <input type="text" name="damName" value="<%= puppy.damName || "" %>">
-            </div>
-          </div>
-        </section>
-
-        <!-- DESCRIPTION -->
-        <section class="admin-card">
-          <h3>Description</h3>
-
-          <textarea
-            name="description"
-            rows="5"
-            placeholder="Describe temperament, personality, and any important notes"
-          ><%= puppy.description || "" %></textarea>
-        </section>
-
-        <section class="admin-card">
-          <h3>Pricing</h3>
+        <div class="admin-card">
+          <h2>Pricing</h2>
 
           <div class="form-grid">
             <div class="form-group">
               <label>Price</label>
-              <input type="number" step="0.01" name="price" value="<%= puppy.price || "" %>">
+              <input type="number" step="0.01" min="0" name="price" value="<%= puppy.price || '' %>">
             </div>
 
             <div class="form-group">
               <label>Currency</label>
               <select name="currency">
-                <option value="USD" <%= puppy.currency === "USD" ? "selected" : "" %>>$ USD</option>
-                <option value="CAD" <%= puppy.currency === "CAD" ? "selected" : "" %>>$ CAD</option>
-                <option value="EUR" <%= puppy.currency === "EUR" ? "selected" : "" %>>&euro; EUR</option>
-                <option value="GBP" <%= puppy.currency === "GBP" ? "selected" : "" %>>&pound; GBP</option>
+                <option value="USD" <%= puppy.currency === "USD" ? "selected" : "" %>>USD</option>
+                <option value="CAD" <%= puppy.currency === "CAD" ? "selected" : "" %>>CAD</option>
+                <option value="EUR" <%= puppy.currency === "EUR" ? "selected" : "" %>>EUR</option>
+                <option value="GBP" <%= puppy.currency === "GBP" ? "selected" : "" %>>GBP</option>
               </select>
             </div>
           </div>
-        </section>
 
-        <!-- ACTIONS -->
-        <div class="admin-actions">
-          <button type="submit" class="btn-primary">
-            Save Changes
-          </button>
+          <p class="admin-muted">Use the Photos button to upload multiple images or adjust the gallery.</p>
+        </div>
+      </section>
 
-          <a href="/admin/puppies" class="btn-secondary">
-            Cancel
-          </a>
+      <section class="admin-grid two">
+        <div class="admin-card">
+          <h2>Health</h2>
+
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" name="vetChecked" <%= puppy.vetChecked ? "checked" : "" %>>
+              Vet checked
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>Vaccination Status</label>
+            <input type="text" name="vaccinationStatus" value="<%= puppy.vaccinationStatus || puppy.vaccination || '' %>">
+          </div>
         </div>
 
-      </form>
+        <div class="admin-card">
+          <h2>Registration</h2>
 
-    </section>
+          <div class="form-group">
+            <label>Registration Type</label>
+            <input type="text" name="registrationType" value="<%= puppy.registrationType || puppy.registration || '' %>">
+          </div>
 
+          <div class="form-group">
+            <label>Registration Notes</label>
+            <textarea name="registrationNotes" rows="4"><%= puppy.registrationNotes || '' %></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-card">
+        <h2>Parents</h2>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Sire Name</label>
+            <input type="text" name="sireName" value="<%= puppy.sireName || '' %>">
+          </div>
+
+          <div class="form-group">
+            <label>Dam Name</label>
+            <input type="text" name="damName" value="<%= puppy.damName || '' %>">
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-card">
+        <h2>Description</h2>
+        <div class="form-group">
+          <label>Public Description</label>
+          <textarea name="description" rows="5"><%= puppy.description || '' %></textarea>
+        </div>
+      </section>
+
+      <div class="admin-actions">
+        <button type="submit" class="btn-primary">Save Changes</button>
+        <a href="/admin/puppies" class="btn-secondary">Cancel</a>
+      </div>
+    </form>
   </main>
-
 </div>

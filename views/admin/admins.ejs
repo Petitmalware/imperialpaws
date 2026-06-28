@@ -1,59 +1,43 @@
 <div class="admin-shell">
-  <aside class="admin-sidebar">
-    <div class="admin-logo">
-      <span class="paw">🐾</span>
-      <div>
-        <strong>ImperialPaws</strong>
-        <em>Admin Panel</em>
-      </div>
-    </div>
-
-    <nav class="admin-menu">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/applications">Applications</a>
-      <a href="/admin/puppies">Puppies</a>
-      <a href="/admin/testimonials">Testimonials</a>
-      <a href="/admin/invoices">Invoices</a>
-      <a href="/admin/settings">Site Settings</a>
-      <a href="/admin/admins" class="active">Admins</a>
-    </nav>
-
-    <div class="admin-logout">
-      <a href="/admin/logout">Logout</a>
-    </div>
-  </aside>
+  <%- include("../partials/admin-sidebar", { active: "admins" }) %>
 
   <main class="admin-content">
-    <h1>Manage Admins</h1>
+    <header class="admin-page-header">
+      <div>
+        <p class="admin-eyebrow">Access</p>
+        <h1>Admins</h1>
+        <p class="admin-subtitle">Owners can add administrators, reset passwords, and remove non-owner accounts.</p>
+      </div>
+    </header>
 
-    <p class="admin-note">
-      Owners can add administrators, reset passwords, and remove non-owner
-      accounts. Admins can manage puppies, applications, testimonials, and
-      invoices.
-    </p>
+    <section class="admin-grid two">
+      <div class="admin-card">
+        <h2>Add New Admin</h2>
+        <form method="POST" action="/admin/admins/add" class="admin-form">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" required>
+          </div>
 
-    <section class="admin-card">
-      <h2>Add New Admin</h2>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" minlength="8" required>
+          </div>
 
-      <form method="POST" action="/admin/admins/add" class="admin-form">
-        <div class="form-row">
-          <label>Username</label>
-          <input type="text" name="username" required>
-        </div>
+          <button type="submit" class="btn-primary">Add Admin</button>
+        </form>
+      </div>
 
-        <div class="form-row">
-          <label>Password</label>
-          <input type="password" name="password" minlength="8" required>
-        </div>
-
-        <button type="submit" class="btn-primary">
-          Add Admin
-        </button>
-      </form>
+      <div class="admin-card">
+        <h2>Admin Rules</h2>
+        <p class="admin-muted">Admins can manage puppies, applications, testimonials, invoices, and settings. Only owner accounts can manage other admins.</p>
+      </div>
     </section>
 
-    <section class="admin-card">
-      <h2>Existing Admins</h2>
+    <section class="admin-card admin-section-gap">
+      <div class="admin-section-title">
+        <h2>Existing Admins</h2>
+      </div>
 
       <% if (!admins || admins.length === 0) { %>
         <p class="admin-empty">No admins found.</p>
@@ -79,32 +63,15 @@
                       <%= admin.active ? 'Active' : 'Inactive' %>
                     </span>
                   </td>
-                  <td>
-                    <form
-                      method="POST"
-                      action="/admin/admins/<%= admin.id %>/password"
-                      style="display:inline-flex;gap:0.5rem;align-items:center;margin-right:0.5rem;">
-                      <input
-                        type="password"
-                        name="password"
-                        placeholder="New password"
-                        minlength="8"
-                        required
-                        style="max-width:150px;">
-                      <button type="submit" class="btn-primary">
-                        Update Password
-                      </button>
+                  <td class="admin-actions">
+                    <form method="POST" action="/admin/admins/<%= admin.id %>/password" class="status-form">
+                      <input type="password" name="password" placeholder="New password" minlength="8" required>
+                      <button type="submit">Update Password</button>
                     </form>
 
                     <% if (admin.role !== "owner") { %>
-                      <form
-                        method="POST"
-                        action="/admin/admins/<%= admin.id %>/delete"
-                        style="display:inline"
-                        onsubmit="return confirm('Remove this admin?');">
-                        <button type="submit" class="btn-danger">
-                          Remove
-                        </button>
+                      <form method="POST" action="/admin/admins/<%= admin.id %>/delete" onsubmit="return confirm('Remove this admin?');">
+                        <button type="submit" class="btn-danger">Remove</button>
                       </form>
                     <% } else { %>
                       <span class="admin-muted">Owner</span>

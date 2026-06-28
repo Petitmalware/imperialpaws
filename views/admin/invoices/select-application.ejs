@@ -1,43 +1,46 @@
-<section class="admin-page">
-  <aside class="admin-sidebar">
-    <div class="admin-logo">
-      <span class="paw">🐾</span>
+<div class="admin-shell">
+  <%- include("../../partials/admin-sidebar", { active: "invoices" }) %>
+
+  <main class="admin-content">
+    <header class="admin-page-header">
       <div>
-        <strong>ImperialPaws</strong>
-        <em>Admin Panel</em>
+        <p class="admin-eyebrow">Invoices</p>
+        <h1>Select Application</h1>
+        <p class="admin-subtitle">Choose an approved adoption application to generate an invoice.</p>
       </div>
-    </div>
+      <a href="/admin/invoices" class="btn-secondary">Back to Invoices</a>
+    </header>
 
-    <nav class="admin-menu">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/applications">Applications</a>
-      <a href="/admin/puppies">Puppies</a>
-      <a href="/admin/testimonials">Testimonials</a>
-      <a href="/admin/invoices" class="active">Invoices</a>
-      <a href="/admin/settings">Site Settings</a>
-      <a href="/admin/admins">Admins</a>
-    </nav>
-
-    <div class="admin-logout">
-      <a href="/admin/logout">Logout</a>
-    </div>
-  </aside>
-
-  <h1>Select Approved Application</h1>
-
-  <% if (!applications.length) { %>
-    <p>No approved applications yet.</p>
-  <% } else { %>
-    <ul>
-      <% applications.forEach(app => { %>
-        <li style="margin-bottom:12px;">
-          <strong><%= app.name %></strong>
-          <% if (app.email) { %>(<%= app.email %>)<% } %>
-          for <%= app.puppyName %>
-          &mdash;
-          <a href="/admin/invoices/add/<%= app.id %>">Create Invoice</a>
-        </li>
-      <% }) %>
-    </ul>
-  <% } %>
-</section>
+    <% if (!applications.length) { %>
+      <section class="admin-empty-state">
+        <strong>No approved applications yet.</strong>
+        <p class="admin-muted">Approve an application before creating an invoice.</p>
+      </section>
+    <% } else { %>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Applicant</th>
+              <th>Email</th>
+              <th>Puppy</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% applications.forEach(app => { %>
+              <tr>
+                <td><strong><%= app.name %></strong></td>
+                <td><%= app.email || "No email" %></td>
+                <td><%= app.puppyName %></td>
+                <td>
+                  <a class="admin-link-button" href="/admin/invoices/add/<%= app.id %>">Create Invoice</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </main>
+</div>

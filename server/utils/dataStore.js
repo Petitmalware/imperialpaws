@@ -9,7 +9,14 @@ const MONGODB_TIMEOUT_MS = Number(process.env.MONGODB_TIMEOUT_MS || 2500);
 const MONGODB_RETRY_COOLDOWN_MS = Number(
   process.env.MONGODB_RETRY_COOLDOWN_MS || 30000
 );
-const LOCAL_FALLBACK_ENABLED = process.env.DATA_STORE_LOCAL_FALLBACK !== "false";
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const ALLOW_LOCAL_PRODUCTION =
+  process.env.DATA_STORE_ALLOW_LOCAL_PRODUCTION === "true";
+const LOCAL_FALLBACK_ENABLED =
+  (!IS_PRODUCTION || ALLOW_LOCAL_PRODUCTION) &&
+  process.env.DATA_STORE_LOCAL_FALLBACK !== "false";
+const PRODUCTION_REQUIRES_MONGO =
+  IS_PRODUCTION && !ALLOW_LOCAL_PRODUCTION;
 
 const collections = {
   admins: "admins.json",
@@ -30,6 +37,21 @@ function usingMongo() {
 
 function canUseLocalFallback(options = {}) {
   return LOCAL_FALLBACK_ENABLED && options.fallbackToLocal !== false;
+}
+
+function createPersistentStoreRequiredError(operation) {
+  const err = new Error(
+    `Production ${operation} requires MongoDB. Set MONGODB_URI or disable production mode for local testing.`
+  );
+  err.name = "PersistentDataStoreRequiredError";
+  err.code = "PERSISTENT_DATA_STORE_REQUIRED";
+  return err;
+}
+
+function assertMongoAvailableForProduction(operation) {
+  if (PRODUCTION_REQUIRES_MONGO && !usingMongo()) {
+    throw createPersistentStoreRequiredError(operation);
+  }
 }
 
 function getFile(name) {
@@ -97,6 +119,31 @@ function describeMongoConfig() {
   }
 }
 
+function getDataStoreStatus() {
+  const cooldownRemainingMs = mongoCooldownRemainingMs();
+  const fallbackCollections = Array.from(localFallbackCollections);
+  let mode = "mongo";
+
+  if (PRODUCTION_REQUIRES_MONGO && !usingMongo()) {
+    mode = "missing-mongo";
+  } else if (!usingMongo()) {
+    mode = "local-json";
+  } else if (fallbackCollections.length || cooldownRemainingMs > 0) {
+    mode = LOCAL_FALLBACK_ENABLED ? "local-fallback" : "mongo-unavailable";
+  }
+
+  return {
+    cooldownRemainingMs,
+    fallbackCollections,
+    fallbackEnabled: LOCAL_FALLBACK_ENABLED,
+    isProduction: IS_PRODUCTION,
+    mode,
+    mongoConfigured: usingMongo(),
+    mongoDatabase: MONGODB_DB,
+    productionRequiresMongo: PRODUCTION_REQUIRES_MONGO
+  };
+}
+
 function mongoCooldownRemainingMs() {
   return Math.max(0, mongoUnavailableUntil - Date.now());
 }
@@ -116,7 +163,9 @@ function createCooldownError() {
 function markMongoUnavailable(err) {
   mongoUnavailableUntil = Date.now() + MONGODB_RETRY_COOLDOWN_MS;
   console.error(
-    `MongoDB unavailable; local fallback active for ${MONGODB_RETRY_COOLDOWN_MS}ms.`,
+    `MongoDB unavailable; ${
+      LOCAL_FALLBACK_ENABLED ? "local fallback active" : "local fallback disabled"
+    } for ${MONGODB_RETRY_COOLDOWN_MS}ms.`,
     summarizeMongoError(err)
   );
 }
@@ -158,7 +207,10 @@ async function getCollection(name) {
 }
 
 async function loadCollection(name, options = {}) {
-  if (!usingMongo()) return readJSONCollection(name);
+  if (!usingMongo()) {
+    assertMongoAvailableForProduction(`read for ${name}`);
+    return readJSONCollection(name);
+  }
   if (localFallbackCollections.has(name)) return readJSONCollection(name);
 
   if (isMongoCoolingDown()) {
@@ -180,6 +232,7 @@ async function loadCollection(name, options = {}) {
 
 async function saveCollection(name, records, options = {}) {
   if (!usingMongo()) {
+    assertMongoAvailableForProduction(`write for ${name}`);
     writeJSONCollection(name, records);
     return;
   }
@@ -207,6 +260,7 @@ async function saveCollection(name, records, options = {}) {
 
 async function getSettings(defaultSettings, options = {}) {
   if (!usingMongo()) {
+    assertMongoAvailableForProduction("settings read");
     const settings = readJSONCollection("settings");
     return Array.isArray(settings) ? defaultSettings : settings;
   }
@@ -237,6 +291,7 @@ async function getSettings(defaultSettings, options = {}) {
 
 async function saveSettings(settings, options = {}) {
   if (!usingMongo()) {
+    assertMongoAvailableForProduction("settings write");
     writeJSONCollection("settings", settings);
     return;
   }
@@ -272,6 +327,7 @@ async function closeDataStore() {
 module.exports = {
   closeDataStore,
   describeMongoConfig,
+  getDataStoreStatus,
   loadCollection,
   saveCollection,
   getSettings,

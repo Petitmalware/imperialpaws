@@ -1,71 +1,44 @@
 <div class="admin-shell">
+  <%- include("../../partials/admin-sidebar", { active: "puppies" }) %>
 
- 
-  <!-- SIDEBAR (same as dashboard, DO NOT CHANGE) -->
-  <aside class="admin-sidebar">
-
-    <div class="admin-logo">
-      <span class="paw">🐾</span>
-      <div>
-        <strong>ImperialPaws</strong>
-        <em>Admin Panel</em>
-      </div>
-    </div>
-
-    <nav class="admin-menu">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/applications" class="active">Applications</a>
-      <a href="/admin/puppies">Puppies</a>
-      <a href="/admin/testimonials">Testimonials</a>
-      <a href="/admin/invoices">Invoices</a>
-      <a href="/admin/settings">Site Settings</a>
-      <a href="/admin/admins">Admins</a>
-    </nav>
-
-    <div class="admin-logout">
-      <a href="/admin/logout">Logout</a>
-    </div>
-
-  </aside>
-
-  <!-- MAIN CONTENT -->
   <main class="admin-content">
+    <header class="admin-page-header">
+      <div>
+        <p class="admin-eyebrow">Listings</p>
+        <h1>Puppies</h1>
+        <p class="admin-subtitle">Create listings, update availability, and manage each puppy gallery.</p>
+      </div>
+      <a href="/admin/puppies/add" class="admin-link-button">Add Puppy</a>
+    </header>
 
-    <section class="admin-page">
-      <h1>Manage Puppies</h1>
-
-      <a href="/admin/puppies/add" class="btn-primary">
-        Add New Puppy
-      </a>
-
-      <br><br>
-
-      <% if (!puppies || !puppies.length) { %>
-        <p>No puppies added yet.</p>
-      <% } else { %>
-
+    <% if (!puppies || !puppies.length) { %>
+      <section class="admin-empty-state">
+        <strong>No puppies added yet.</strong>
+        <p class="admin-muted">Create the first puppy listing to begin accepting applications.</p>
+      </section>
+    <% } else { %>
+      <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
               <th>Name</th>
               <th>Status</th>
               <th>Featured</th>
+              <th>Photos</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <% puppies.forEach(puppy => { %>
               <tr>
-                <td><%= puppy.name %></td>
-                <td><%= puppy.status %></td>
+                <td><strong><%= puppy.name %></strong></td>
+                <td><span class="status-pill <%= statusClass(puppy.status || 'Available') %>"><%= puppy.status || "Available" %></span></td>
                 <td><%= puppy.featured ? "Yes" : "No" %></td>
-                <td class="actions">
-                  <a href="/admin/puppies/edit?id=<%= puppy.id %>">Edit</a>
-                  <a href="/admin/puppies/images?id=<%= puppy.id %>">Images</a>
-                  <form
-                    action="/admin/puppies/delete"
-                    method="POST"
-                    onsubmit="return confirm('Delete this puppy?');">
+                <td><%= puppy.images && puppy.images.length ? puppy.images.length : 0 %></td>
+                <td class="admin-actions">
+                  <a class="btn-small" href="/admin/puppies/edit?id=<%= puppy.id %>">Edit</a>
+                  <a class="btn-small" href="/admin/puppies/images?id=<%= puppy.id %>">Photos</a>
+                  <form action="/admin/puppies/delete" method="POST" onsubmit="return confirm('Delete this puppy?');">
                     <input type="hidden" name="id" value="<%= puppy.id %>">
                     <button type="submit" class="btn-danger">Delete</button>
                   </form>
@@ -74,10 +47,7 @@
             <% }) %>
           </tbody>
         </table>
-
-      <% } %>
-    </section>
-
+      </div>
+    <% } %>
   </main>
-
 </div>

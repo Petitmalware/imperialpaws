@@ -1,37 +1,146 @@
 <div class="admin-shell">
+  <%- include("../partials/admin-sidebar", { active: "dashboard" }) %>
 
-  <!-- LEFT SIDEBAR -->
-  <aside class="admin-sidebar">
-
-    <div class="admin-logo">
-      <span class="paw">🐾</span>
-      <div>
-        <strong>ImperialPaws</strong>
-        <em>Admin Panel</em>
-      </div>
-    </div>
-
-    <nav class="admin-menu">
-      <a href="/admin/dashboard" class="active">Dashboard</a>
-      <a href="/admin/applications">Applications</a>
-      <a href="/admin/puppies">Puppies</a>
-      <a href="/admin/testimonials">Testimonials</a>
-      <a href="/admin/invoices">Invoices</a>
-      
-      <a href="/admin/settings">Site Settings</a>
-      <a href="/admin/admins">Admins</a>
-    </nav>
-
-    <div class="admin-logout">
-      <a href="/admin/logout">Logout</a>
-    </div>
-
-  </aside>
-
-  <!-- RIGHT CONTENT -->
   <main class="admin-content">
-    <h1>Admin Dashboard</h1>
-    <p>Select an item from the sidebar to manage the site.</p>
-  </main>
+    <header class="admin-page-header">
+      <div>
+        <p class="admin-eyebrow">Operations</p>
+        <h1>Dashboard</h1>
+        <p class="admin-subtitle">
+          Review adoption activity, invoice follow-ups, listing readiness, and system status.
+        </p>
+      </div>
+      <a href="/admin/puppies/add" class="admin-link-button">Add Puppy</a>
+    </header>
 
+    <section class="admin-grid four">
+      <article class="metric-card">
+        <span>Pending Applications</span>
+        <strong><%= stats.pendingApplications %></strong>
+        <small><%= stats.applications %> total applications</small>
+      </article>
+
+      <article class="metric-card">
+        <span>Available Puppies</span>
+        <strong><%= stats.availablePuppies %></strong>
+        <small><%= stats.reservedPuppies %> reserved, <%= stats.soldPuppies %> sold</small>
+      </article>
+
+      <article class="metric-card">
+        <span>Invoice Follow-Up</span>
+        <strong><%= stats.unpaidInvoices %></strong>
+        <small><%= stats.overdueInvoices %> overdue</small>
+      </article>
+
+      <article class="metric-card">
+        <span>Notifications</span>
+        <strong><%= stats.notifications %></strong>
+        <small><%= stats.pendingTestimonials %> reviews waiting</small>
+      </article>
+    </section>
+
+    <section class="admin-grid two admin-section-gap">
+      <div class="admin-panel">
+        <div class="admin-section-title">
+          <h2>Notifications</h2>
+          <span class="status-pill <%= storageStatus.mode === 'mongo' ? 'approved' : 'urgent' %>">
+            <%= storageStatus.mode === "mongo" ? "MongoDB Active" : "Fallback Storage" %>
+          </span>
+        </div>
+
+        <% if (!notifications.length) { %>
+          <div class="admin-empty-state">
+            <strong>No active notifications.</strong>
+            <p class="admin-muted">Core adoption workflows look clear right now.</p>
+          </div>
+        <% } else { %>
+          <ul class="notification-list">
+            <% notifications.forEach(notification => { %>
+              <li class="notification-card <%= notification.tone %>">
+                <strong><%= notification.title %></strong>
+                <p><%= notification.detail %></p>
+                <a href="<%= notification.href %>" class="btn-small"><%= notification.action %></a>
+              </li>
+            <% }) %>
+          </ul>
+        <% } %>
+      </div>
+
+      <div class="admin-panel">
+        <div class="admin-section-title">
+          <h2>Recent Applications</h2>
+          <a href="/admin/applications" class="btn-small">View All</a>
+        </div>
+
+        <% if (!recentApplications.length) { %>
+          <p class="admin-empty">No applications submitted yet.</p>
+        <% } else { %>
+          <ul class="activity-list">
+            <% recentApplications.forEach(application => { %>
+              <li class="activity-item">
+                <div class="activity-main">
+                  <strong><%= application.name || "Unknown Applicant" %></strong>
+                  <small><%= application.puppyName %> - <%= application.email || "No email" %></small>
+                </div>
+                <span class="status-pill <%= statusClass(application.status) %>">
+                  <%= application.status || "Pending" %>
+                </span>
+              </li>
+            <% }) %>
+          </ul>
+        <% } %>
+      </div>
+    </section>
+
+    <section class="admin-grid two admin-section-gap">
+      <div class="admin-panel">
+        <div class="admin-section-title">
+          <h2>Invoice Follow-Ups</h2>
+          <a href="/admin/invoices" class="btn-small">View Invoices</a>
+        </div>
+
+        <% if (!invoiceFollowUps.length) { %>
+          <p class="admin-empty">No unpaid invoices need attention.</p>
+        <% } else { %>
+          <ul class="activity-list">
+            <% invoiceFollowUps.forEach(invoice => { %>
+              <li class="activity-item">
+                <div class="activity-main">
+                  <strong><%= invoice.invoiceNumber %></strong>
+                  <small>
+                    <%= invoice.adoptingParent && invoice.adoptingParent.name ? invoice.adoptingParent.name : "Unknown buyer" %>
+                    <% if (invoice.dueDate) { %> - Due <%= invoice.dueDate %><% } %>
+                  </small>
+                </div>
+                <a href="/admin/invoices/view/<%= invoice.invoiceNumber %>" class="btn-small">Open</a>
+              </li>
+            <% }) %>
+          </ul>
+        <% } %>
+      </div>
+
+      <div class="admin-panel">
+        <div class="admin-section-title">
+          <h2>Listing Readiness</h2>
+          <a href="/admin/puppies" class="btn-small">Manage Puppies</a>
+        </div>
+
+        <% if (!puppyCareList.length) { %>
+          <p class="admin-empty">All puppy listings have at least one image.</p>
+        <% } else { %>
+          <ul class="activity-list">
+            <% puppyCareList.forEach(puppy => { %>
+              <li class="activity-item">
+                <div class="activity-main">
+                  <strong><%= puppy.name %></strong>
+                  <small>No gallery images uploaded yet.</small>
+                </div>
+                <a href="/admin/puppies/images?id=<%= encodeURIComponent(puppy.id) %>" class="btn-small">Add Photos</a>
+              </li>
+            <% }) %>
+          </ul>
+        <% } %>
+      </div>
+    </section>
+  </main>
 </div>

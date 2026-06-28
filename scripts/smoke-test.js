@@ -95,8 +95,11 @@ async function main() {
     cwd: appRoot,
     env: {
       ...process.env,
+      NODE_ENV: "test",
       PORT: String(port),
       MONGODB_URI: "",
+      DATA_STORE_LOCAL_FALLBACK: "true",
+      IMAGE_STORAGE_LOCAL_FALLBACK: "true",
       CLOUDINARY_CLOUD_NAME: "",
       CLOUDINARY_API_KEY: "",
       CLOUDINARY_API_SECRET: "",
@@ -249,7 +252,8 @@ async function main() {
   const uploadForm = new FormData();
   uploadForm.set("puppyId", puppy.id);
   uploadForm.set("isCover", "on");
-  uploadForm.set("image", new Blob([imageData], { type: "image/png" }), "smoke.png");
+  uploadForm.append("images", new Blob([imageData], { type: "image/png" }), "smoke-1.png");
+  uploadForm.append("images", new Blob([imageData], { type: "image/png" }), "smoke-2.png");
   const upload = await fetch(`${baseUrl}/admin/puppies/images/upload`, {
     method: "POST",
     redirect: "manual",
@@ -258,7 +262,11 @@ async function main() {
   });
   assert(upload.status === 302, "Image upload should redirect.");
   puppy = readJSON(puppiesFile).find(item => item.id === puppy.id);
-  assert(puppy.images.length === 1, "Uploaded image should be stored.");
+  assert(puppy.images.length === 2, "Uploaded images should be stored.");
+  assert(
+    puppy.images.filter(image => image.isCover).length === 1,
+    "One uploaded image should be marked as cover."
+  );
   createdUploadDir = path.join(appRoot, "public", "uploads", "puppies", puppy.id);
   assert(fs.existsSync(createdUploadDir), "Uploaded image directory should exist.");
 
@@ -269,7 +277,11 @@ async function main() {
   );
   assert(imageDelete.status === 302, "Image delete should redirect.");
   puppy = readJSON(puppiesFile).find(item => item.id === puppy.id);
-  assert(puppy.images.length === 0, "Deleted image should be removed from data.");
+  assert(puppy.images.length === 1, "Deleted image should be removed from data.");
+  assert(
+    puppy.images.some(image => image.isCover),
+    "Remaining image should become cover after deleting the cover image."
+  );
 
   const apply = await postForm("/apply", {
     puppyId: puppy.id,

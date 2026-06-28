@@ -80,6 +80,19 @@ p {
   font-size: 1rem;
 }
 
+.center {
+  text-align: center;
+}
+
+.error-box {
+  margin-bottom: 1.4rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid #e0b9b9;
+  border-radius: 8px;
+  background: #fff6f5;
+  color: #8a2424;
+}
+
 /* ===============================
    BUTTON SAFETY
    =============================== */

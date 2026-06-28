@@ -22,7 +22,9 @@ services:
       - key: MONGODB_RETRY_COOLDOWN_MS
         value: 30000
       - key: DATA_STORE_LOCAL_FALLBACK
-        value: true
+        value: false
+      - key: IMAGE_STORAGE_LOCAL_FALLBACK
+        value: false
       - key: OWNER_USERNAME
         sync: false
       - key: OWNER_PASSWORD

@@ -52,7 +52,8 @@ Environment variables:
   MONGODB_DB=imperialpaws
   MONGODB_TIMEOUT_MS=2500
   MONGODB_RETRY_COOLDOWN_MS=30000
-  DATA_STORE_LOCAL_FALLBACK=true
+  DATA_STORE_LOCAL_FALLBACK=false
+  IMAGE_STORAGE_LOCAL_FALLBACK=false
   OWNER_USERNAME=<owner admin username>
   OWNER_PASSWORD=<strong owner admin password>
   CLOUDINARY_CLOUD_NAME=<Cloudinary cloud name>
@@ -65,11 +66,11 @@ Environment variables:
 Render is pinned to Node `20.19.0` in `render.yaml`, `.node-version`, and
 `package.json` so MongoDB Atlas connections use a stable Node LTS runtime.
 
-If MongoDB Atlas is temporarily unreachable, the app uses the local JSON data
-store as a fallback so public pages, admin login, applications, testimonials,
-and invoices keep responding instead of showing a generic server error. Fix the
-Atlas connection as soon as possible because Render's local filesystem is
-ephemeral and should not be treated as the long-term production database.
+In production, local JSON and local image upload fallbacks are disabled by
+default. This prevents the app from pretending data was saved to Render's
+temporary filesystem and then losing it after a restart. If MongoDB or
+Cloudinary is missing, production save/upload actions fail with a storage
+configuration message instead of writing unsafe temporary data.
 
 The app now uses production storage when environment variables are present:
 
@@ -79,7 +80,8 @@ The app now uses production storage when environment variables are present:
   stores puppy images in Cloudinary.
 
 If those variables are not set, the app falls back to local JSON files and local
-uploads for development.
+uploads only for development and tests. Do not enable local fallbacks on Render
+unless you intentionally accept temporary data loss.
 
 ### MongoDB Atlas Setup
 

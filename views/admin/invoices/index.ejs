@@ -1,100 +1,76 @@
-<section class="admin-shell">
-  <aside class="admin-sidebar">
-    <div class="admin-logo">
-      <span class="paw">🐾</span>
-      <div>
-        <strong>ImperialPaws</strong>
-        <em>Admin Panel</em>
-      </div>
-    </div>
-
-    <nav class="admin-menu">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/applications">Applications</a>
-      <a href="/admin/puppies">Puppies</a>
-      <a href="/admin/testimonials">Testimonials</a>
-      <a href="/admin/invoices" class="active">Invoices</a>
-      <a href="/admin/settings">Site Settings</a>
-      <a href="/admin/admins">Admins</a>
-    </nav>
-
-    <div class="admin-logout">
-      <a href="/admin/logout">Logout</a>
-    </div>
-  </aside>
+<div class="admin-shell">
+  <%- include("../../partials/admin-sidebar", { active: "invoices" }) %>
 
   <main class="admin-content">
-    <h1>Invoices</h1>
-
-    <div class="admin-table-toolbar">
-      <a href="/admin/invoices/select-application" class="btn-create-invoice">
-        + Create Invoice
-      </a>
-    </div>
+    <header class="admin-page-header">
+      <div>
+        <p class="admin-eyebrow">Payments</p>
+        <h1>Invoices</h1>
+        <p class="admin-subtitle">Create adoption invoices, track payment status, and email buyers their invoice links.</p>
+      </div>
+      <a href="/admin/invoices/select-application" class="admin-link-button">Create Invoice</a>
+    </header>
 
     <% if (!invoices.length) { %>
-      <p>No invoices created yet.</p>
+      <section class="admin-empty-state">
+        <strong>No invoices created yet.</strong>
+        <p class="admin-muted">Approve an application, then create the buyer invoice from this section.</p>
+      </section>
     <% } else { %>
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Invoice</th>
-            <th>Buyer</th>
-            <th>Status</th>
-            <th>Paid</th>
-            <th>Created</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% invoices.forEach(inv => { %>
-            <%
-              const buyerEmail = inv.adoptingParent && inv.adoptingParent.email;
-              const buyerName = (inv.adoptingParent && inv.adoptingParent.name) || "there";
-              const invoicePath = inv.applicationId
-                ? `/invoice/${encodeURIComponent(inv.applicationId)}/${encodeURIComponent(inv.invoiceNumber)}`
-                : `/invoice/${encodeURIComponent(inv.invoiceNumber)}`;
-              const invoiceUrl = absoluteUrl(invoicePath);
-              const emailSubject = `ImperialPaws invoice ${inv.invoiceNumber}`;
-              const emailBody = `Hello ${buyerName},\n\nYour ImperialPaws invoice is ready:\n${invoiceUrl}\n\nThank you,\nImperialPaws Pekingese`;
-            %>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
             <tr>
-              <td><%= inv.invoiceNumber %></td>
-              <td>
-                <%= buyerName === "there" ? "Unknown" : buyerName %>
-                <% if (buyerEmail) { %><br><small><%= buyerEmail %></small><% } %>
-              </td>
-              <td>
-                <span class="status-badge <%= inv.paid ? 'paid' : 'pending' %>">
-                  <%= inv.paid ? "Paid" : "Pending" %>
-                </span>
-              </td>
-              <td><%= inv.paid ? "Yes" : "No" %></td>
-              <td><%= new Date(inv.createdAt).toLocaleDateString() %></td>
-              <td style="white-space:nowrap">
-                <a href="/admin/invoices/view/<%= inv.invoiceNumber %>">View</a>
-                |
-                <a href="/admin/invoices/edit/<%= inv.invoiceNumber %>">Edit</a>
-                <% if (buyerEmail) { %>
-                  |
-                  <a href="mailto:<%= encodeURIComponent(buyerEmail) %>?subject=<%= encodeURIComponent(emailSubject) %>&body=<%= encodeURIComponent(emailBody) %>">
-                    Email Buyer
-                  </a>
-                <% } %>
-                <form
-                  method="POST"
-                  action="/admin/invoices/<%= inv.invoiceNumber %>/toggle-paid"
-                  style="display:inline"
-                >
-                  <button type="submit">
-                    <%= inv.paid ? "Mark Unpaid" : "Mark Paid" %>
-                  </button>
-                </form>
-              </td>
+              <th>Invoice</th>
+              <th>Buyer</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
             </tr>
-          <% }) %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% invoices.forEach(inv => { %>
+              <%
+                const buyerEmail = inv.adoptingParent && inv.adoptingParent.email;
+                const buyerName = (inv.adoptingParent && inv.adoptingParent.name) || "there";
+                const invoicePath = inv.applicationId
+                  ? `/invoice/${encodeURIComponent(inv.applicationId)}/${encodeURIComponent(inv.invoiceNumber)}`
+                  : `/invoice/${encodeURIComponent(inv.invoiceNumber)}`;
+                const invoiceUrl = absoluteUrl(invoicePath);
+                const emailSubject = `ImperialPaws invoice ${inv.invoiceNumber}`;
+                const emailBody = `Hello ${buyerName},\n\nYour ImperialPaws invoice is ready:\n${invoiceUrl}\n\nThank you,\nImperialPaws Pekingese`;
+              %>
+              <tr>
+                <td><strong><%= inv.invoiceNumber %></strong></td>
+                <td>
+                  <%= buyerName === "there" ? "Unknown" : buyerName %>
+                  <% if (buyerEmail) { %><br><small><%= buyerEmail %></small><% } %>
+                </td>
+                <td>
+                  <span class="status-badge <%= inv.paid ? 'paid' : 'pending' %>">
+                    <%= inv.paid ? "Paid" : "Pending" %>
+                  </span>
+                </td>
+                <td><%= inv.createdAt ? new Date(inv.createdAt).toLocaleDateString() : "Unknown" %></td>
+                <td class="admin-actions">
+                  <a class="btn-small" href="/admin/invoices/view/<%= inv.invoiceNumber %>">View</a>
+                  <a class="btn-small" href="/admin/invoices/edit/<%= inv.invoiceNumber %>">Edit</a>
+                  <% if (buyerEmail) { %>
+                    <a class="btn-small" href="mailto:<%= encodeURIComponent(buyerEmail) %>?subject=<%= encodeURIComponent(emailSubject) %>&body=<%= encodeURIComponent(emailBody) %>">
+                      Email Buyer
+                    </a>
+                  <% } %>
+                  <form method="POST" action="/admin/invoices/<%= inv.invoiceNumber %>/toggle-paid">
+                    <button type="submit" class="btn-small">
+                      <%= inv.paid ? "Mark Unpaid" : "Mark Paid" %>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
     <% } %>
   </main>
-</section>
+</div>

@@ -1,69 +1,134 @@
-<section class="admin-page">
-  <aside class="admin-sidebar">
-    <div class="admin-logo">
-      <span class="paw">🐾</span>
+<div class="admin-shell">
+  <%- include("../../partials/admin-sidebar", { active: "invoices" }) %>
+
+  <main class="admin-content">
+    <header class="admin-page-header">
       <div>
-        <strong>ImperialPaws</strong>
-        <em>Admin Panel</em>
+        <p class="admin-eyebrow">Invoices</p>
+        <h1>Create Invoice</h1>
+        <p class="admin-subtitle">Invoice for <strong><%= application.name %></strong><% if (puppy) { %> adopting <strong><%= puppy.name %></strong><% } %>.</p>
       </div>
-    </div>
+      <a href="/admin/invoices/select-application" class="btn-secondary">Change Application</a>
+    </header>
 
-    <nav class="admin-menu">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/applications">Applications</a>
-      <a href="/admin/puppies">Puppies</a>
-      <a href="/admin/testimonials">Testimonials</a>
-      <a href="/admin/invoices" class="active">Invoices</a>
-      <a href="/admin/settings">Site Settings</a>
-      <a href="/admin/admins">Admins</a>
-    </nav>
+    <form method="POST" action="/admin/invoices/add" class="admin-form-wide">
+      <input type="hidden" name="applicationId" value="<%= application.id %>">
+      <input type="hidden" name="puppyId" value="<%= puppy?.id || '' %>">
 
-    <div class="admin-logout">
-      <a href="/admin/logout">Logout</a>
-    </div>
-  </aside>
+      <section class="admin-grid two">
+        <div class="admin-card">
+          <h2>Seller</h2>
+          <div class="form-group">
+            <label>Business Name</label>
+            <input name="sellerName" value="ImperialPaws Pekingese">
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <input name="sellerAddress" value="<%= settings.contact.location || '' %>">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Phone</label>
+              <input name="sellerPhone" value="<%= settings.contact.phone || '' %>">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input name="sellerEmail" value="<%= settings.contact.email || '' %>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Website</label>
+            <input name="sellerWebsite">
+          </div>
+        </div>
 
-  <h1>Create Invoice</h1>
+        <div class="admin-card">
+          <h2>Adopting Parent</h2>
+          <div class="form-group">
+            <label>Name</label>
+            <input name="parentName" value="<%= application.name %>">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Phone</label>
+              <input name="parentPhone" value="<%= application.phone || '' %>">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input name="parentEmail" value="<%= application.email %>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <input name="parentAddress">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>City</label>
+              <input name="parentCity">
+            </div>
+            <div class="form-group">
+              <label>State</label>
+              <input name="parentState">
+            </div>
+            <div class="form-group">
+              <label>ZIP / Postal Code</label>
+              <input name="parentZip">
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <form method="POST" action="/admin/invoices/add">
-    <input type="hidden" name="applicationId" value="<%= application.id %>">
-    <input type="hidden" name="puppyId" value="<%= puppy?.id || '' %>">
+      <section class="admin-card">
+        <h2>Invoice Details</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Issue Date</label>
+            <input name="issueDate" type="date">
+          </div>
+          <div class="form-group">
+            <label>Due Date</label>
+            <input name="dueDate" type="date">
+          </div>
+          <div class="form-group">
+            <label>Currency</label>
+            <select name="currency">
+              <option value="$" <%= puppyCurrency === "$" ? "selected" : "" %>>$ USD / CAD</option>
+              <option value="&euro;" <%= puppyCurrency === "\u20ac" ? "selected" : "" %>>&euro; EUR</option>
+              <option value="&pound;" <%= puppyCurrency === "\u00a3" ? "selected" : "" %>>&pound; GBP</option>
+            </select>
+          </div>
+        </div>
 
-    <h3>Seller</h3>
-    <input name="sellerName" placeholder="Business Name" value="ImperialPaws Pekingese">
-    <input name="sellerAddress" placeholder="Address" value="<%= settings.contact.location || '' %>">
-    <input name="sellerPhone" placeholder="Phone" value="<%= settings.contact.phone || '' %>">
-    <input name="sellerEmail" placeholder="Email" value="<%= settings.contact.email || '' %>">
-    <input name="sellerWebsite" placeholder="Website">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Line Item</label>
+            <input name="itemDescription" value="<%= puppy ? puppy.name + ' - Puppy Adoption Fee' : 'Puppy Adoption Fee' %>">
+          </div>
+          <div class="form-group">
+            <label>Quantity</label>
+            <input name="itemQty" type="number" value="1" min="1">
+          </div>
+          <div class="form-group">
+            <label>Price</label>
+            <input name="itemPrice" type="number" step="0.01" min="0" value="<%= puppy?.price || '' %>">
+          </div>
+          <div class="form-group">
+            <label>Tax Rate</label>
+            <input name="taxRate" type="number" step="0.01" min="0" placeholder="0.00">
+          </div>
+        </div>
 
-    <h3>Adopting Parent</h3>
-    <input name="parentName" value="<%= application.name %>">
-    <input name="parentAddress" placeholder="Address">
-    <input name="parentCity" placeholder="City">
-    <input name="parentState" placeholder="State">
-    <input name="parentZip" placeholder="ZIP / Postal Code">
-    <input name="parentPhone" placeholder="Phone" value="<%= application.phone || '' %>">
-    <input name="parentEmail" placeholder="Email" value="<%= application.email %>">
+        <div class="form-group">
+          <label>Adoption Note</label>
+          <textarea name="notes"><%= defaultInvoiceNote %></textarea>
+        </div>
+      </section>
 
-    <h3>Invoice Info</h3>
-    <input name="issueDate" type="date">
-    <input name="dueDate" type="date">
-    <select name="currency">
-      <option value="$" <%= puppyCurrency === "$" ? "selected" : "" %>>$ USD / CAD</option>
-      <option value="&euro;" <%= puppyCurrency === "\u20ac" ? "selected" : "" %>>&euro; EUR</option>
-      <option value="&pound;" <%= puppyCurrency === "\u00a3" ? "selected" : "" %>>&pound; GBP</option>
-    </select>
-
-    <h3>Line Item</h3>
-    <input name="itemDescription" value="<%= puppy ? puppy.name + ' - Puppy Adoption Fee' : 'Puppy Adoption Fee' %>">
-    <input name="itemQty" type="number" value="1" min="1">
-    <input name="itemPrice" type="number" step="0.01" min="0" value="<%= puppy?.price || '' %>">
-
-    <h3>Tax & Notes</h3>
-    <input name="taxRate" type="number" step="0.01" min="0" placeholder="0.00">
-    <textarea name="notes"><%= defaultInvoiceNote %></textarea>
-
-    <br>
-    <button class="btn-primary" type="submit">Create Invoice</button>
-  </form>
-</section>
+      <div class="admin-actions">
+        <button class="btn-primary" type="submit">Create Invoice</button>
+        <a href="/admin/invoices" class="btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </main>
+</div>

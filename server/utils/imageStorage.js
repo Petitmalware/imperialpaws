@@ -3,6 +3,12 @@ const path = require("path");
 const cloudinary = require("cloudinary").v2;
 
 const UPLOAD_ROOT = path.join(__dirname, "../../public/uploads/puppies");
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const ALLOW_LOCAL_PRODUCTION =
+  process.env.IMAGE_STORAGE_ALLOW_LOCAL_PRODUCTION === "true";
+const LOCAL_IMAGE_FALLBACK_ENABLED =
+  (!IS_PRODUCTION || ALLOW_LOCAL_PRODUCTION) &&
+  process.env.IMAGE_STORAGE_LOCAL_FALLBACK !== "false";
 
 const cloudinaryReady =
   Boolean(process.env.CLOUDINARY_CLOUD_NAME) &&
@@ -24,6 +30,31 @@ function safeSegment(value) {
 
 function usingCloudinary() {
   return cloudinaryReady;
+}
+
+function getImageStorageStatus() {
+  let mode = "cloudinary";
+
+  if (!usingCloudinary()) {
+    mode = LOCAL_IMAGE_FALLBACK_ENABLED ? "local" : "missing-cloudinary";
+  }
+
+  return {
+    cloudinaryConfigured: usingCloudinary(),
+    fallbackEnabled: LOCAL_IMAGE_FALLBACK_ENABLED,
+    isProduction: IS_PRODUCTION,
+    mode,
+    productionRequiresCloudinary: IS_PRODUCTION && !ALLOW_LOCAL_PRODUCTION
+  };
+}
+
+function createPersistentImageStorageError() {
+  const err = new Error(
+    "Production image uploads require Cloudinary. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET."
+  );
+  err.name = "PersistentImageStorageRequiredError";
+  err.code = "PERSISTENT_IMAGE_STORAGE_REQUIRED";
+  return err;
 }
 
 function uploadToCloudinary(buffer, { puppyId, imageId }) {
@@ -73,6 +104,10 @@ async function savePuppyImage(file, { puppyId, imageId }) {
     return uploadToCloudinary(file.buffer, { puppyId, imageId });
   }
 
+  if (!LOCAL_IMAGE_FALLBACK_ENABLED) {
+    throw createPersistentImageStorageError();
+  }
+
   return uploadToLocal(file, { puppyId, imageId });
 }
 
@@ -100,6 +135,7 @@ async function deletePuppyImage(image) {
 
 module.exports = {
   deletePuppyImage,
+  getImageStorageStatus,
   savePuppyImage,
   usingCloudinary
 };

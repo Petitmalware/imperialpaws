@@ -6,12 +6,199 @@ const asyncHandler = require("../utils/asyncHandler");
 const { requireAdmin, requireOwner } = require("./admin-auth");
 const { loadAdmins, saveAdmins } = require("../utils/adminStore");
 const { loadSiteSettings, saveSiteSettings } = require("../utils/siteSettings");
-const { loadCollection, saveCollection } = require("../utils/dataStore");
-const { deletePuppyImage, savePuppyImage } = require("../utils/imageStorage");
+const {
+  getDataStoreStatus,
+  loadCollection,
+  saveCollection
+} = require("../utils/dataStore");
+const {
+  deletePuppyImage,
+  getImageStorageStatus,
+  savePuppyImage
+} = require("../utils/imageStorage");
 const { hashPassword, verifyPassword } = require("../utils/passwords");
 
 function clean(value) {
   return String(value || "").trim();
+}
+
+function normalizeStatus(value) {
+  return clean(value).toLowerCase();
+}
+
+function isPending(value) {
+  return normalizeStatus(value) === "pending";
+}
+
+function isApproved(value) {
+  return normalizeStatus(value) === "approved";
+}
+
+function isSold(value) {
+  return normalizeStatus(value) === "sold";
+}
+
+function byCreatedDesc(a, b) {
+  return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+}
+
+function hasInvoice(application, invoices) {
+  return invoices.some(invoice => invoice.applicationId === application.id);
+}
+
+function isInvoiceOverdue(invoice) {
+  if (invoice.paid || !invoice.dueDate) return false;
+  const due = new Date(invoice.dueDate);
+  if (Number.isNaN(due.getTime())) return false;
+  due.setHours(23, 59, 59, 999);
+  return due < new Date();
+}
+
+function buildDashboard({
+  applications,
+  invoices,
+  puppies,
+  settings,
+  imageStorageStatus,
+  storageStatus,
+  testimonials
+}) {
+  const pendingApplications = applications.filter(app => isPending(app.status));
+  const approvedWithoutInvoice = applications.filter(
+    app => isApproved(app.status) && !hasInvoice(app, invoices)
+  );
+  const pendingTestimonials = testimonials.filter(
+    testimonial => testimonial.approved !== true
+  );
+  const availablePuppies = puppies.filter(
+    puppy => normalizeStatus(puppy.status || "Available") === "available"
+  );
+  const reservedPuppies = puppies.filter(
+    puppy => normalizeStatus(puppy.status) === "reserved"
+  );
+  const soldPuppies = puppies.filter(puppy => isSold(puppy.status));
+  const puppiesMissingImages = puppies.filter(
+    puppy => !puppy.images || puppy.images.length === 0
+  );
+  const unpaidInvoices = invoices.filter(invoice => !invoice.paid);
+  const overdueInvoices = invoices.filter(isInvoiceOverdue);
+
+  const notifications = [];
+
+  if (storageStatus.mode !== "mongo") {
+    notifications.push({
+      tone: "urgent",
+      title: "Database is not persisting to MongoDB",
+      detail:
+        storageStatus.mode === "local-fallback"
+          ? "The app is using emergency local fallback because MongoDB is unreachable. Data can reset after a Render restart."
+          : "The app is using local JSON files. Connect MongoDB before using the site for real buyers.",
+      href: "/admin/settings",
+      action: "Check settings"
+    });
+  }
+
+  if (imageStorageStatus.mode !== "cloudinary") {
+    notifications.push({
+      tone: imageStorageStatus.isProduction ? "urgent" : "warning",
+      title: "Cloudinary image storage is not active",
+      detail: imageStorageStatus.isProduction
+        ? "Production puppy photo uploads are blocked until Cloudinary is configured, so photos cannot disappear after a Render restart."
+        : "Local image uploads are fine for testing, but production needs Cloudinary so puppy photos survive restarts.",
+      href: "/admin/puppies",
+      action: "Review photos"
+    });
+  }
+
+  if (pendingApplications.length) {
+    notifications.push({
+      tone: "warning",
+      title: `${pendingApplications.length} application${pendingApplications.length === 1 ? "" : "s"} awaiting review`,
+      detail: "Review new buyer applications and approve, reject, or keep them pending.",
+      href: "/admin/applications",
+      action: "Review applications"
+    });
+  }
+
+  if (approvedWithoutInvoice.length) {
+    notifications.push({
+      tone: "urgent",
+      title: `${approvedWithoutInvoice.length} approved adoption${approvedWithoutInvoice.length === 1 ? "" : "s"} need invoices`,
+      detail: "Create invoices so approved buyers can receive their adoption fee note.",
+      href: "/admin/invoices/select-application",
+      action: "Create invoices"
+    });
+  }
+
+  if (pendingTestimonials.length) {
+    notifications.push({
+      tone: "info",
+      title: `${pendingTestimonials.length} testimonial${pendingTestimonials.length === 1 ? "" : "s"} awaiting moderation`,
+      detail: "Approve strong reviews or remove submissions that do not belong on the site.",
+      href: "/admin/testimonials",
+      action: "Moderate reviews"
+    });
+  }
+
+  if (puppiesMissingImages.length) {
+    notifications.push({
+      tone: "warning",
+      title: `${puppiesMissingImages.length} puppy listing${puppiesMissingImages.length === 1 ? "" : "s"} missing photos`,
+      detail: "Listings convert better when each puppy has at least one clear cover photo.",
+      href: "/admin/puppies",
+      action: "Manage puppies"
+    });
+  }
+
+  if (overdueInvoices.length) {
+    notifications.push({
+      tone: "urgent",
+      title: `${overdueInvoices.length} invoice${overdueInvoices.length === 1 ? " is" : "s are"} overdue`,
+      detail: "Follow up with buyers or update payment status after confirmation.",
+      href: "/admin/invoices",
+      action: "View invoices"
+    });
+  }
+
+  if (!settings.contact || !settings.contact.email) {
+    notifications.push({
+      tone: "info",
+      title: "Public contact email is not set",
+      detail: "Add a contact email so buyer inquiries have a clear destination.",
+      href: "/admin/settings",
+      action: "Update settings"
+    });
+  }
+
+  const recentApplications = applications
+    .slice()
+    .sort(byCreatedDesc)
+    .slice(0, 5)
+    .map(application => ({
+      ...application,
+      puppyName:
+        (puppies.find(puppy => puppy.id === application.puppyId) || {}).name ||
+        "Unknown Puppy"
+    }));
+
+  return {
+    invoiceFollowUps: unpaidInvoices.slice().sort(byCreatedDesc).slice(0, 5),
+    notifications,
+    puppyCareList: puppiesMissingImages.slice(0, 5),
+    recentApplications,
+    storageStatus,
+    stats: {
+      applications: applications.length,
+      availablePuppies: availablePuppies.length,
+      notifications: notifications.length,
+      overdueInvoices: overdueInvoices.length,
+      pendingApplications: pendingApplications.length,
+      pendingTestimonials: pendingTestimonials.length,
+      reservedPuppies: reservedPuppies.length,
+      soldPuppies: soldPuppies.length,
+      unpaidInvoices: unpaidInvoices.length
+    }
+  };
 }
 
 async function loadPuppies() {
@@ -77,11 +264,29 @@ router.get("/logout", (req, res) => {
   req.session.destroy(() => res.redirect("/"));
 });
 
-router.get("/dashboard", requireAdmin, (req, res) => {
+router.get("/dashboard", requireAdmin, asyncHandler(async (req, res) => {
+  const [applications, invoices, puppies, settings, testimonials] =
+    await Promise.all([
+      loadCollection("applications"),
+      loadCollection("invoices"),
+      loadCollection("puppies"),
+      loadSiteSettings(),
+      loadCollection("testimonials")
+    ]);
+
   res.render("admin/dashboard", {
-    admin: req.session.admin
+    admin: req.session.admin,
+    ...buildDashboard({
+      applications,
+      invoices,
+      puppies,
+      settings,
+      imageStorageStatus: getImageStorageStatus(),
+      storageStatus: getDataStoreStatus(),
+      testimonials
+    })
   });
-});
+}));
 
 router.get("/settings", requireAdmin, asyncHandler(async (req, res) => {
   const settings = await loadSiteSettings();
@@ -230,33 +435,38 @@ const upload = multer({
 router.post(
   "/puppies/images/upload",
   requireAdmin,
-  upload.single("image"),
+  upload.array("images", 12),
   asyncHandler(async (req, res) => {
     const puppies = await loadPuppies();
     const puppy = puppies.find(p => p.id === req.body.puppyId);
+    const files = req.files || [];
 
-    if (!puppy || !req.file) return res.redirect("/admin/puppies");
+    if (!puppy || !files.length) return res.redirect("/admin/puppies");
 
     puppy.images = puppy.images || [];
-    const imageId = "img-" + Date.now();
-    const shouldBeCover =
-      req.body.isCover === "on" || puppy.images.length === 0;
-    const storedImage = await savePuppyImage(req.file, {
-      puppyId: puppy.id,
-      imageId
-    });
+    const shouldSetRequestedCover = req.body.isCover === "on";
 
-    if (shouldBeCover) {
+    if (shouldSetRequestedCover || puppy.images.length === 0) {
       puppy.images.forEach(image => {
         image.isCover = false;
       });
     }
 
-    puppy.images.push({
-      id: imageId,
-      ...storedImage,
-      isCover: shouldBeCover
-    });
+    for (let index = 0; index < files.length; index += 1) {
+      const imageId = `img-${Date.now()}-${index}`;
+      const storedImage = await savePuppyImage(files[index], {
+        puppyId: puppy.id,
+        imageId
+      });
+
+      puppy.images.push({
+        id: imageId,
+        ...storedImage,
+        isCover:
+          (shouldSetRequestedCover && index === 0) ||
+          (!shouldSetRequestedCover && puppy.images.length === 0)
+      });
+    }
 
     await savePuppies(puppies);
     res.redirect(`/admin/puppies/images?id=${encodeURIComponent(puppy.id)}`);

@@ -1,44 +1,46 @@
-<body class="page-testimonial-submit">
+<div class="admin-shell">
+  <%- include("../../partials/admin-sidebar", { active: "testimonials" }) %>
 
-<section class="page-hero">
-  <div class="container">
-    <h1>Share Your Experience</h1>
-    <p class="subtitle">
-      Your feedback helps future families feel confident.
-    </p>
-  </div>
-</section>
+  <main class="admin-content">
+    <header class="admin-page-header">
+      <div>
+        <p class="admin-eyebrow">Reviews</p>
+        <h1>Add Testimonial</h1>
+        <p class="admin-subtitle">Create a testimonial manually when a buyer sends feedback directly.</p>
+      </div>
+      <a href="/admin/testimonials" class="btn-secondary">Back to Reviews</a>
+    </header>
 
-<section class="page-content">
-  <div class="container">
+    <section class="admin-card">
+      <% if (typeof error !== "undefined" && error) { %>
+        <div class="error-box"><%= error %></div>
+      <% } %>
 
-<% if (typeof error !== "undefined" && error) { %>
-  <p class="error center"><%= error %></p>
-<% } %>
+      <form method="post" action="/admin/testimonials/add" class="admin-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name">
+          </div>
 
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email">
+          </div>
+        </div>
 
-    <form method="post" action="/admin/testimonials/add" class="form">
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" name="location">
+        </div>
 
-      <label>Name *</label>
-      <input type="text" name="name" required>
+        <div class="form-group">
+          <label>Experience</label>
+          <textarea name="message" rows="5" required></textarea>
+        </div>
 
-      <label>Email *</label>
-      <input type="email" name="email" required>
-
-      <label>Location (optional)</label>
-      <input type="text" name="location">
-
-
-
-      <label>Your Experience *</label>
-      <textarea name="message" rows="5" required></textarea>
-
-      <button type="submit" class="btn-primary">
-        Submit Testimonial
-      </button>
-
-    </form>
-
-  </div>
-</section>
-</body>
+        <button type="submit" class="btn-primary">Save Testimonial</button>
+      </form>
+    </section>
+  </main>
+</div>
