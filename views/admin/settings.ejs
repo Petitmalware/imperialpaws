@@ -52,6 +52,41 @@
           </div>
         </section>
 
+        <section class="admin-section">
+          <h2>SEO & Trust Signals</h2>
+          <p class="admin-muted">
+            These values control search snippets, social previews, canonical URLs, and the public business schema.
+          </p>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Site Name</label>
+              <input type="text" name="siteName" value="<%= settings.meta.siteName || 'ImperialPaws Pekingese' %>">
+            </div>
+            <div class="form-group">
+              <label>Public Site URL</label>
+              <input type="url" name="siteUrl" value="<%= settings.meta.siteUrl || '' %>" placeholder="https://imperialpaws-pekingese.onrender.com">
+            </div>
+            <div class="form-group">
+              <label>SEO Title</label>
+              <input type="text" name="metaTitle" value="<%= settings.meta.title || 'ImperialPaws Pekingese' %>">
+            </div>
+            <div class="form-group">
+              <label>Share Image</label>
+              <input type="text" name="metaImage" value="<%= settings.meta.image || '/images/hero-pekingese.jpg' %>" placeholder="/images/hero-pekingese.jpg">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Meta Description</label>
+            <textarea name="metaDescription"><%= settings.meta.description || '' %></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Search Keywords</label>
+            <textarea name="metaKeywords"><%= settings.meta.keywords || '' %></textarea>
+          </div>
+        </section>
+
         <div class="admin-actions">
           <button type="submit" class="btn-primary">Save Settings</button>
           <% if (settings.meta && settings.meta.lastUpdated) { %>

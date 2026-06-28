@@ -15,10 +15,17 @@
       <div class="tracking-box">
         <h2>Your Tracking Code</h2>
 
-        <p class="confirmation-message">
-          We review each application individually and may reach out if additional
-          information is needed.
-        </p>
+        <% if (existingApplication) { %>
+          <p class="confirmation-message">
+            We found an existing application for this puppy and buyer contact.
+            Use the tracking code below to follow that original application.
+          </p>
+        <% } else { %>
+          <p class="confirmation-message">
+            We review each application individually and may reach out if additional
+            information is needed.
+          </p>
+        <% } %>
 
         <p class="tracking-code">
           <strong><%= trackingCode %></strong>

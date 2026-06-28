@@ -309,6 +309,34 @@ router.post("/settings", requireAdmin, asyncHandler(async (req, res) => {
     tiktok: clean(req.body.tiktok)
   };
 
+  settings.meta = {
+    ...settings.meta,
+    description:
+      Object.prototype.hasOwnProperty.call(req.body, "metaDescription")
+        ? clean(req.body.metaDescription)
+        : settings.meta.description,
+    image:
+      Object.prototype.hasOwnProperty.call(req.body, "metaImage")
+        ? clean(req.body.metaImage)
+        : settings.meta.image,
+    keywords:
+      Object.prototype.hasOwnProperty.call(req.body, "metaKeywords")
+        ? clean(req.body.metaKeywords)
+        : settings.meta.keywords,
+    siteName:
+      Object.prototype.hasOwnProperty.call(req.body, "siteName")
+        ? clean(req.body.siteName) || "ImperialPaws Pekingese"
+        : settings.meta.siteName,
+    siteUrl:
+      Object.prototype.hasOwnProperty.call(req.body, "siteUrl")
+        ? clean(req.body.siteUrl)
+        : settings.meta.siteUrl,
+    title:
+      Object.prototype.hasOwnProperty.call(req.body, "metaTitle")
+        ? clean(req.body.metaTitle) || "ImperialPaws Pekingese"
+        : settings.meta.title
+  };
+
   await saveSiteSettings(settings);
   res.redirect("/admin/settings");
 }));

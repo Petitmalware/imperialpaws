@@ -32,8 +32,12 @@ router.get("/invoices", requireAdmin, asyncHandler(async (req, res) => {
 
 router.get("/invoices/select-application", requireAdmin, asyncHandler(async (req, res) => {
   const puppies = await loadCollection("puppies");
+  const invoices = await loadCollection("invoices");
   const applications = (await loadCollection("applications"))
-    .filter(a => a.status === "Approved")
+    .filter(a =>
+      a.status === "Approved" &&
+      !invoices.some(invoice => invoice.applicationId === a.id)
+    )
     .map(application => {
       const puppy = puppies.find(p => p.id === application.puppyId);
       return {
@@ -48,10 +52,16 @@ router.get("/invoices/select-application", requireAdmin, asyncHandler(async (req
 router.get("/invoices/add/:applicationId", requireAdmin, asyncHandler(async (req, res) => {
   const applications = await loadCollection("applications");
   const puppies = await loadCollection("puppies");
+  const invoices = await loadCollection("invoices");
   const application = applications.find(a => a.id === req.params.applicationId);
 
   if (!application || application.status !== "Approved") {
     return res.redirect("/admin/invoices/select-application");
+  }
+
+  const existingInvoice = invoices.find(invoice => invoice.applicationId === application.id);
+  if (existingInvoice) {
+    return res.redirect(`/admin/invoices/view/${existingInvoice.invoiceNumber}`);
   }
 
   const puppy = puppies.find(p => p.id === application.puppyId);
@@ -68,6 +78,14 @@ router.get("/invoices/add/:applicationId", requireAdmin, asyncHandler(async (req
 
 router.post("/invoices/add", requireAdmin, asyncHandler(async (req, res) => {
   const invoices = await loadCollection("invoices");
+  const existingInvoice = invoices.find(
+    invoice => invoice.applicationId && invoice.applicationId === req.body.applicationId
+  );
+
+  if (existingInvoice) {
+    return res.redirect(`/admin/invoices/view/${existingInvoice.invoiceNumber}`);
+  }
+
   const invoice = {
     invoiceNumber: generateInvoiceNumber(invoices),
     status: "Pending",

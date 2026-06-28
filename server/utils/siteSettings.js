@@ -3,6 +3,14 @@ const {
   saveSettings,
   summarizeMongoError
 } = require("./dataStore");
+const {
+  DEFAULT_DESCRIPTION,
+  DEFAULT_IMAGE,
+  DEFAULT_KEYWORDS,
+  DEFAULT_SITE_NAME
+} = require("./seo");
+
+const CACHE_TTL_MS = Number(process.env.SITE_SETTINGS_CACHE_TTL_MS || 60000);
 
 const DEFAULT_SETTINGS = {
   contact: {
@@ -16,8 +24,19 @@ const DEFAULT_SETTINGS = {
     twitter: "",
     tiktok: ""
   },
-  meta: {}
+  meta: {
+    description: DEFAULT_DESCRIPTION,
+    image: DEFAULT_IMAGE,
+    keywords: DEFAULT_KEYWORDS,
+    lastUpdated: "",
+    siteName: DEFAULT_SITE_NAME,
+    siteUrl: "",
+    title: DEFAULT_SITE_NAME
+  }
 };
+
+let cachedSettings = null;
+let cachedAt = 0;
 
 function mergeSettings(settings = {}) {
   return {
@@ -38,13 +57,21 @@ function mergeSettings(settings = {}) {
   };
 }
 
-async function loadSiteSettings() {
+async function loadSiteSettings({ force = false } = {}) {
+  if (!force && cachedSettings && Date.now() - cachedAt < CACHE_TTL_MS) {
+    return mergeSettings(cachedSettings);
+  }
+
   try {
     const settings = await getSettings(mergeSettings());
-    return mergeSettings(settings);
+    cachedSettings = mergeSettings(settings);
+    cachedAt = Date.now();
+    return mergeSettings(cachedSettings);
   } catch (err) {
     console.error("Failed to load site settings:", summarizeMongoError(err));
-    return mergeSettings();
+    cachedSettings = mergeSettings();
+    cachedAt = Date.now();
+    return mergeSettings(cachedSettings);
   }
 }
 
@@ -52,6 +79,8 @@ async function saveSiteSettings(settings) {
   const nextSettings = mergeSettings(settings);
   nextSettings.meta.lastUpdated = new Date().toISOString();
   await saveSettings(nextSettings);
+  cachedSettings = nextSettings;
+  cachedAt = Date.now();
 }
 
 module.exports = {

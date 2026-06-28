@@ -27,6 +27,11 @@ async function renderInvoice(req, res, invoiceNumber, trackingCode = null) {
 
   res.render("public/invoice-view", {
     invoice,
+    pageMeta: res.locals.buildPageMeta({
+      canonicalPath: req.path,
+      robots: "noindex, nofollow",
+      title: `Invoice ${invoice.invoiceNumber}`
+    }),
     layout: false
   });
 }

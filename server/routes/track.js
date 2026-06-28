@@ -9,7 +9,12 @@ router.get("/track/result", asyncHandler(async (req, res) => {
   if (!code) {
     return res.status(400).render("home/track", {
       error: "Tracking code required.",
-      code: ""
+      code: "",
+      pageMeta: res.locals.buildPageMeta({
+        canonicalPath: "/track",
+        robots: "noindex, follow",
+        title: "Track Your Application"
+      })
     });
   }
 
@@ -21,7 +26,12 @@ router.get("/track/result", asyncHandler(async (req, res) => {
   if (!application) {
     return res.status(404).render("home/track", {
       error: "Invalid tracking code.",
-      code
+      code,
+      pageMeta: res.locals.buildPageMeta({
+        canonicalPath: "/track",
+        robots: "noindex, follow",
+        title: "Track Your Application"
+      })
     });
   }
 
@@ -31,6 +41,11 @@ router.get("/track/result", asyncHandler(async (req, res) => {
 
   res.render("home/track-result", {
     application,
+    pageMeta: res.locals.buildPageMeta({
+      canonicalPath: "/track/result",
+      robots: "noindex, nofollow",
+      title: "Application Status"
+    }),
     puppy,
     invoice
   });

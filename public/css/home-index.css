@@ -105,6 +105,45 @@ p {
   color: rgba(255, 255, 255, 0.75);
 }
 
+/* ---------- TRUST STRIP ---------- */
+.home-trust-strip {
+  border-bottom: 1px solid rgba(31, 31, 31, 0.08);
+  background: #fffdf8;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.trust-grid div {
+  display: grid;
+  gap: 0.35rem;
+  min-height: 104px;
+  padding: 1.2rem 1rem;
+  border-left: 1px solid rgba(31, 31, 31, 0.08);
+}
+
+.trust-grid div:last-child {
+  border-right: 1px solid rgba(31, 31, 31, 0.08);
+}
+
+.trust-grid strong {
+  color: #1f1f1f;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.trust-grid span {
+  color: #5d5b53;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
 /* ---------- SECTIONS ---------- */
 .home-section {
   padding: 3.8rem 0;
@@ -222,6 +261,15 @@ p {
   .hero-trust {
     font-size: 0.7rem;
     margin-top: 1.2rem;
+  }
+
+  .trust-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trust-grid div {
+    min-height: auto;
+    border-right: 1px solid rgba(31, 31, 31, 0.08);
   }
 
   /* SECTION SPACING */
