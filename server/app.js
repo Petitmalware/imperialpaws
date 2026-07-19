@@ -32,6 +32,7 @@ const adminApplicationsRoutes = require("./admin/admin-applications");
 const adminTestimonialsRoutes = require("./admin/admin-testimonials");
 const adminInvoicesRoutes = require("./admin/admin-invoices");
 const trackRoutes = require("./routes/track");
+const adminContractsRoutes = require("./admin/admin-contracts");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -196,6 +197,7 @@ app.use("/admin", adminRoutes);
 app.use("/admin", adminApplicationsRoutes);
 app.use("/admin", adminTestimonialsRoutes);
 app.use("/admin", adminInvoicesRoutes);
+app.use("/admin", adminContractsRoutes);
 app.use(trackRoutes);
 
 const loadPuppies = () => loadCollection("puppies", { fallbackToLocal: true });

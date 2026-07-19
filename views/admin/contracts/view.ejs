@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title><%= contract.title %> – ImperialPaws</title>
+  <style>
+    /* ── Contract Print / View Styles ── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Georgia", serif;
+      font-size: 13pt;
+      line-height: 1.8;
+      color: #1a1a1a;
+      background: #fff;
+    }
+
+    .contract-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2.5rem;
+    }
+
+    /* No-print actions bar */
+    .contract-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem 2.5rem;
+      background: #f6f4ef;
+      border-bottom: 1px solid #e0ddd6;
+    }
+
+    .btn-print {
+      padding: 0.55rem 1.4rem;
+      background: #c7a45a;
+      color: #111;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-print:hover { background: #b4934c; }
+
+    .btn-back {
+      padding: 0.55rem 1.4rem;
+      background: transparent;
+      color: #555;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-back:hover { background: #eee; }
+
+    /* Fill-in field */
+    .fill-form {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-left: auto;
+      font-size: 0.82rem;
+      color: #555;
+      flex-wrap: wrap;
+    }
+
+    .fill-form input {
+      padding: 0.4rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      color: #1a1a1a;
+      width: 200px;
+    }
+
+    .fill-form button {
+      padding: 0.4rem 1rem;
+      background: #e0ddd6;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+
+    /* Contract content */
+    .contract-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid #c7a45a;
+    }
+
+    .contract-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .contract-logo svg {
+      width: 36px;
+      height: 36px;
+      fill: #c7a45a;
+    }
+
+    .contract-logo strong {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.05em;
+    }
+
+    .contract-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0.5rem 0 0;
+      letter-spacing: 0.03em;
+    }
+
+    .contract-body {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 11pt;
+      line-height: 1.9;
+      color: #222;
+    }
+
+    /* Signature block */
+    .signature-block {
+      margin-top: 3.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .sig-line {
+      border-top: 1px solid #333;
+      padding-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .sig-line strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: #1a1a1a;
+    }
+
+    /* Print media */
+    @media print {
+      .contract-actions { display: none !important; }
+      body { padding: 0; }
+      .contract-page { padding: 1.5cm 2cm; max-width: none; }
+      .signature-block { break-inside: avoid; }
+    }
+
+    @media (max-width: 600px) {
+      .contract-page { padding: 1.5rem 1rem; }
+      .contract-actions { flex-wrap: wrap; }
+      .fill-form { width: 100%; margin-left: 0; }
+      .fill-form input { width: 100%; }
+      .signature-block { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <%
+    const today = new Date().toLocaleDateString("en-US", {
+      year: "numeric", month: "long", day: "numeric"
+    });
+  %>
+
+  <!-- Actions bar (hidden when printing) -->
+  <div class="contract-actions no-print">
+    <button onclick="window.print()" class="btn-print" type="button">
+      🖨 Print / Save as PDF
+    </button>
+    <a href="/admin/contracts" class="btn-back">← Back</a>
+
+    <!-- Live buyer-name fill -->
+    <form class="fill-form" onsubmit="fillBuyer(event)">
+      <label for="buyerInput">Buyer Name:</label>
+      <input
+        id="buyerInput"
+        type="text"
+        value="<%= buyerName %>"
+        placeholder="Adopting Parent Name"
+      >
+      <button type="submit">Apply</button>
+    </form>
+  </div>
+
+  <div class="contract-page">
+    <!-- Header -->
+    <div class="contract-header">
+      <div class="contract-logo">
+        <svg viewBox="0 0 512 512" aria-hidden="true">
+          <path d="M256 224c-70.7 0-128 57.3-128 128 0 53 32 99 78 118 11 5 18 16 18 28v14h64v-14c0-12 7-23 18-28 46-19 78-65 78-118 0-70.7-57.3-128-128-128z"/>
+          <circle cx="144" cy="176" r="48"/>
+          <circle cx="368" cy="176" r="48"/>
+          <circle cx="208" cy="96" r="48"/>
+          <circle cx="304" cy="96" r="48"/>
+        </svg>
+        <strong>ImperialPaws Pekingese</strong>
+      </div>
+      <div class="contract-title"><%= contract.title %></div>
+    </div>
+
+    <!-- Body -->
+    <div class="contract-body" id="contractBody"><%- contract.filledBody.replace(/</g, '&lt;').replace(/>/g, '&gt;') %></div>
+
+    <!-- Signature Block -->
+    <div class="signature-block">
+      <div>
+        <div class="sig-line">
+          <strong>Breeder / Seller</strong>
+          ImperialPaws Pekingese
+          <br><br>
+          Signature: ________________________
+          <br>Date: ___________________________
+        </div>
+      </div>
+      <div>
+        <div class="sig-line">
+          <strong>Adopting Parent</strong>
+          <span id="buyerSig"><%= buyerName %></span>
+          <br><br>
+          Signature: ________________________
+          <br>Date: ___________________________
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Live buyer name substitution
+    function fillBuyer(e) {
+      e.preventDefault();
+      const name = document.getElementById("buyerInput").value.trim() || "[Adopting Parent Name]";
+      const body = document.getElementById("contractBody");
+      const sig  = document.getElementById("buyerSig");
+      // Replace placeholder text
+      body.innerHTML = body.innerHTML.replace(/\[Adopting Parent Name\]|\[BUYER_NAME\]/gi, name);
+      sig.textContent = name;
+    }
+  </script>
+</body>
+</html>

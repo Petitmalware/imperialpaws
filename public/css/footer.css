@@ -92,3 +92,34 @@
   font-size: 0.75rem;
   color: rgba(255,255,255,0.6);
 }
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .site-footer {
+    padding: 3rem 1.25rem 1.5rem;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer-links ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 1.5rem;
+  }
+
+  .social-icons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-links ul {
+    grid-template-columns: 1fr;
+  }
+}
+

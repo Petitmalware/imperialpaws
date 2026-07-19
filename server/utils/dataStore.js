@@ -23,6 +23,7 @@ const PRODUCTION_REQUIRES_MONGO =
 const collections = {
   admins: "admins.json",
   applications: "applications.json",
+  contracts: "contracts.json",
   invoices: "invoices.json",
   puppies: "puppies.json",
   settings: "site-settings.json",

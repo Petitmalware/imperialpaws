@@ -1,0 +1,88 @@
+<div class="admin-shell">
+  <%- include("../../partials/admin-sidebar", { active: "contracts" }) %>
+
+  <main class="admin-content">
+    <header class="admin-page-header">
+      <div>
+        <p class="admin-eyebrow">Contracts</p>
+        <h1><%= contract ? "Edit Contract" : "New Contract Template" %></h1>
+        <p class="admin-subtitle">
+          Write your adoption agreement below. Use
+          <code>[BUYER_NAME]</code> and <code>[DATE]</code> as placeholders—
+          they will be auto-filled when you preview or print.
+        </p>
+      </div>
+      <a href="/admin/contracts" class="btn-secondary">← Back to Contracts</a>
+    </header>
+
+    <% if (error) { %>
+      <div class="admin-alert admin-alert-error"><%= error %></div>
+    <% } %>
+
+    <form
+      method="POST"
+      action="<%= contract
+        ? '/admin/contracts/' + encodeURIComponent(contract.id) + '/edit'
+        : '/admin/contracts/new' %>"
+      class="admin-form-wide"
+    >
+      <section class="admin-card">
+        <h2>Contract Details</h2>
+
+        <div class="form-group">
+          <label for="contract-title">Template Title</label>
+          <input
+            id="contract-title"
+            name="title"
+            type="text"
+            value="<%= contract ? contract.title : '' %>"
+            placeholder="e.g. Standard Adoption Agreement"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="contract-body">Contract Body</label>
+          <p style="font-size:0.8rem;color:#888;margin-bottom:0.5rem;">
+            Write your full adoption agreement here. Supported placeholders:
+            <code>[BUYER_NAME]</code>, <code>[DATE]</code>.
+            Line breaks are preserved.
+          </p>
+          <textarea
+            id="contract-body"
+            name="body"
+            rows="28"
+            placeholder="ADOPTION AGREEMENT
+
+This Adoption Agreement ("Agreement") is entered into on [DATE], between ImperialPaws Pekingese ("Breeder") and [BUYER_NAME] ("Adopting Parent").
+
+1. PUPPY DESCRIPTION
+The Breeder agrees to transfer ownership of one (1) Pekingese puppy as described in the accompanying invoice.
+
+2. ADOPTION FEE
+The Adopting Parent agrees to pay the adoption fee as stated in the invoice. All fees are non-refundable once paid.
+
+3. HEALTH GUARANTEE
+..."
+            required
+            style="font-family: 'Courier New', monospace; font-size: 0.92rem; line-height: 1.7;"
+          ><%= contract ? contract.body : '' %></textarea>
+        </div>
+      </section>
+
+      <div class="admin-actions">
+        <button class="btn-primary" type="submit">
+          <%= contract ? "Save Changes" : "Create Template" %>
+        </button>
+        <% if (contract) { %>
+          <a
+            href="/admin/contracts/<%= encodeURIComponent(contract.id) %>/view"
+            target="_blank"
+            class="btn-secondary"
+          >Preview / Print</a>
+        <% } %>
+        <a href="/admin/contracts" class="btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </main>
+</div>

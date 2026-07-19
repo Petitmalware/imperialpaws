@@ -1,0 +1,81 @@
+<div class="admin-shell">
+  <%- include("../../partials/admin-sidebar", { active: "contracts" }) %>
+
+  <main class="admin-content">
+    <header class="admin-page-header">
+      <div>
+        <p class="admin-eyebrow">Documents</p>
+        <h1>Contract Templates</h1>
+        <p class="admin-subtitle">
+          Create and manage reusable adoption agreement templates.
+          Use <code>[BUYER_NAME]</code> and <code>[DATE]</code> as
+          placeholders—they auto-fill when printing.
+        </p>
+      </div>
+      <a href="/admin/contracts/new" class="btn-primary">+ New Template</a>
+    </header>
+
+    <% if (flash) { %>
+      <div class="admin-alert admin-alert-<%= flash.type %>">
+        <%= flash.message %>
+      </div>
+    <% } %>
+
+    <% if (!contracts.length) { %>
+      <div class="admin-card" style="text-align:center; padding: 3rem 2rem;">
+        <p style="font-size:1rem; color:#777; margin-bottom:1.5rem;">
+          No contract templates yet. Create your first adoption agreement below.
+        </p>
+        <a href="/admin/contracts/new" class="btn-primary">Create First Template</a>
+      </div>
+    <% } else { %>
+      <div class="admin-card" style="overflow:hidden; padding:0;">
+        <table class="admin-table" style="min-width:0;">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Last Updated</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% contracts.forEach(contract => { %>
+              <tr>
+                <td>
+                  <strong><%= contract.title %></strong>
+                </td>
+                <td style="color:#777; font-size:0.85rem; white-space:nowrap;">
+                  <%= new Date(contract.updatedAt || contract.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric", month: "short", day: "numeric"
+                  }) %>
+                </td>
+                <td style="text-align:right;">
+                  <div style="display:flex; gap:0.5rem; justify-content:flex-end; flex-wrap:wrap;">
+                    <a
+                      href="/admin/contracts/<%= encodeURIComponent(contract.id) %>/view"
+                      target="_blank"
+                      class="btn-small btn-secondary"
+                      title="Preview / Print"
+                    >Preview</a>
+                    <a
+                      href="/admin/contracts/<%= encodeURIComponent(contract.id) %>/edit"
+                      class="btn-small btn-secondary"
+                    >Edit</a>
+                    <form
+                      method="POST"
+                      action="/admin/contracts/<%= encodeURIComponent(contract.id) %>/delete"
+                      style="margin:0;"
+                      onsubmit="return confirm('Delete this contract template? This cannot be undone.');"
+                    >
+                      <button type="submit" class="btn-small btn-danger">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </main>
+</div>
