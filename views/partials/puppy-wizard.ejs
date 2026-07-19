@@ -1,0 +1,228 @@
+<!-- ============================================
+     IMPERIALPAWS — INTERACTIVE PUPPY MATCHER WIZARD
+============================================ -->
+<div class="puppy-wizard-card reveal">
+  <div class="wizard-header">
+    <span class="wizard-badge">PUPPY MATCHMAKER</span>
+    <h2>Find Your Perfect Pekingese Match</h2>
+    <p>Answer 3 quick questions to discover which puppy best matches your home & lifestyle.</p>
+  </div>
+
+  <div class="wizard-container" id="puppyWizard">
+    <!-- STEP 1 -->
+    <div class="wizard-step active" data-step="1">
+      <h3>1. What is your preferred gender?</h3>
+      <div class="wizard-options">
+        <button type="button" class="wizard-opt" onclick="selectWizard(1, 'gender', 'Male')">
+          <span class="opt-icon">🐾</span>
+          <strong>Male</strong>
+          <small>Affectionate, playful, & loyal</small>
+        </button>
+        <button type="button" class="wizard-opt" onclick="selectWizard(1, 'gender', 'Female')">
+          <span class="opt-icon">🎀</span>
+          <strong>Female</strong>
+          <small>Independent, sweet, & gentle</small>
+        </button>
+        <button type="button" class="wizard-opt" onclick="selectWizard(1, 'gender', 'Either')">
+          <span class="opt-icon">✨</span>
+          <strong>No Preference</strong>
+          <small>Open to the best personality match</small>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="wizard-step" data-step="2" style="display:none;">
+      <h3>2. What color or coat style do you love?</h3>
+      <div class="wizard-options">
+        <button type="button" class="wizard-opt" onclick="selectWizard(2, 'color', 'Fawn')">
+          <span class="opt-icon">🦁</span>
+          <strong>Classic Red / Fawn</strong>
+          <small>Traditional lion-like coat</small>
+        </button>
+        <button type="button" class="wizard-opt" onclick="selectWizard(2, 'color', 'White')">
+          <span class="opt-icon">❄️</span>
+          <strong>White / Cream</strong>
+          <small>Elegant light coat</small>
+        </button>
+        <button type="button" class="wizard-opt" onclick="selectWizard(2, 'color', 'Black')">
+          <span class="opt-icon">🖤</span>
+          <strong>Black & Tan / Dark</strong>
+          <small>Striking, royal contrast</small>
+        </button>
+        <button type="button" class="wizard-opt" onclick="selectWizard(2, 'color', 'Any')">
+          <span class="opt-icon">👑</span>
+          <strong>Any Color</strong>
+          <small>Health & temperament first</small>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="wizard-step" data-step="3" style="display:none;">
+      <h3>3. Describe your home environment:</h3>
+      <div class="wizard-options">
+        <button type="button" class="wizard-opt" onclick="selectWizard(3, 'environment', 'Apartment')">
+          <span class="opt-icon">🏙️</span>
+          <strong>Apartment / City Living</strong>
+          <small>Calm indoor puppy friendly</small>
+        </button>
+        <button type="button" class="wizard-opt" onclick="selectWizard(3, 'environment', 'Family')">
+          <span class="opt-icon">🏡</span>
+          <strong>Family House with Yard</strong>
+          <small>Socialized & playful</small>
+        </button>
+        <button type="button" class="wizard-opt" onclick="selectWizard(3, 'environment', 'Companion')">
+          <span class="opt-icon">🛋️</span>
+          <strong>Quiet Companion Home</strong>
+          <small>Lap dog & relaxed cuddle buddy</small>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="wizard-result" id="wizardResult" style="display:none;">
+      <div class="result-box">
+        <span class="result-badge">YOUR MATCH RECOMMENDATION</span>
+        <h3 id="resultTitle">Perfect Pekingese Match Found!</h3>
+        <p id="resultText">Based on your preferences, a calm, home-raised Pekingese puppy is an ideal fit for your lifestyle.</p>
+        <div class="result-actions">
+          <a href="/puppies" class="btn-primary" id="resultCta">View Available Puppies</a>
+          <button type="button" class="btn-secondary" onclick="resetWizard()">Start Over</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .puppy-wizard-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
+    border: 1px solid #e8e4dc;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    margin: 3.5rem auto;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+    max-width: 860px;
+    text-align: center;
+  }
+
+  .wizard-badge {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c7a45a;
+    font-weight: 700;
+  }
+
+  .wizard-header h2 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 1.8rem;
+    margin: 0.4rem 0 0.5rem;
+    color: #1f1f1f;
+  }
+
+  .wizard-header p {
+    color: #666;
+    font-size: 0.95rem;
+    max-width: 580px;
+    margin: 0 auto 2rem;
+  }
+
+  .wizard-step h3 {
+    font-size: 1.15rem;
+    color: #2a2a2a;
+    margin-bottom: 1.5rem;
+  }
+
+  .wizard-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .wizard-opt {
+    background: #fffdf9;
+    border: 1.5px solid #e5e0d4;
+    border-radius: 12px;
+    padding: 1.4rem 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .wizard-opt:hover {
+    border-color: #c7a45a;
+    background: #faf6ed;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(199, 164, 90, 0.15);
+  }
+
+  .opt-icon { font-size: 1.8rem; margin-bottom: 0.2rem; }
+  .wizard-opt strong { font-size: 1rem; color: #1f1f1f; }
+  .wizard-opt small { font-size: 0.8rem; color: #777; }
+
+  .result-box {
+    background: #faf7f0;
+    border: 1.5px solid #c7a45a;
+    border-radius: 14px;
+    padding: 2.2rem 1.8rem;
+    margin-top: 1rem;
+  }
+
+  .result-badge {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: #7a5c1e;
+    font-weight: 700;
+  }
+
+  .result-box h3 { font-family: "Playfair Display", serif; font-size: 1.5rem; color: #1f1f1f; margin: 0.4rem 0 0.8rem; }
+  .result-box p { font-size: 0.98rem; color: #444; max-width: 580px; margin: 0 auto 1.6rem; }
+  .result-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 600px) {
+    .puppy-wizard-card { padding: 1.8rem 1.2rem; }
+    .wizard-options { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const wizardAnswers = {};
+
+  function selectWizard(step, key, val) {
+    wizardAnswers[key] = val;
+    const currentStep = document.querySelector('.wizard-step[data-step="' + step + '"]');
+    const nextStep = document.querySelector('.wizard-step[data-step="' + (step + 1) + '"]');
+
+    if (currentStep) currentStep.style.display = 'none';
+
+    if (nextStep) {
+      nextStep.style.display = 'block';
+    } else {
+      showWizardResult();
+    }
+  }
+
+  function showWizardResult() {
+    const result = document.getElementById('wizardResult');
+    const title = document.getElementById('resultTitle');
+    const text = document.getElementById('resultText');
+
+    title.textContent = `Matched: ${wizardAnswers.gender || ''} ${wizardAnswers.color !== 'Any' ? wizardAnswers.color : ''} Pekingese`;
+    text.textContent = `Great choice! A ${wizardAnswers.gender?.toLowerCase() || 'puppy'} with a ${wizardAnswers.color?.toLowerCase() || 'royal'} coat thrives wonderfully in a ${wizardAnswers.environment?.toLowerCase() || 'loving'} home setting. Explore our current available litters!`;
+
+    if (result) result.style.display = 'block';
+  }
+
+  function resetWizard() {
+    document.getElementById('wizardResult').style.display = 'none';
+    document.querySelectorAll('.wizard-step').forEach((el, idx) => {
+      el.style.display = idx === 0 ? 'block' : 'none';
+    });
+  }
+</script>

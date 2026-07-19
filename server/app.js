@@ -640,6 +640,9 @@ app.post("/testimonials/submit", asyncHandler(async (req, res) => {
     name: String(req.body.name || "").trim(),
     email: String(req.body.email || "").trim(),
     location: String(req.body.location || "").trim(),
+    puppyName: String(req.body.puppyName || "").trim(),
+    rating: Number(req.body.rating) || 5,
+    photoUrl: String(req.body.photoUrl || "").trim(),
     message: String(req.body.message || "").trim()
   };
 
