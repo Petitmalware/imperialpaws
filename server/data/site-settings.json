@@ -1,6 +1,6 @@
 {
   "contact": {
-    "email": "",
+    "email": "info@imperialpaws.pet",
     "phone": "",
     "location": ""
   },
@@ -11,6 +11,11 @@
     "tiktok": ""
   },
   "meta": {
-    "lastUpdated": ""
+    "siteName": "ImperialPaws Pekingese",
+    "siteUrl": "https://imperialpaws.net",
+    "lastUpdated": "2026-07-19T21:00:00.000Z"
+  },
+  "notifications": {
+    "enableEmail": true
   }
 }

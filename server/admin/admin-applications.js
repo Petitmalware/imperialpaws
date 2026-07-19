@@ -56,6 +56,13 @@ router.post("/applications/:id/status", requireAdmin, asyncHandler(async (req, r
   await saveCollection("applications", applications);
   await saveCollection("puppies", puppies);
 
+  // Trigger optional email notification to applicant
+  const { sendApplicationStatusUpdateEmail } = require("../utils/emailService");
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  sendApplicationStatusUpdateEmail(application, nextStatus, baseUrl).catch(err => {
+    console.error("Email notification dispatch error:", err);
+  });
+
   res.redirect("/admin/applications");
 }));
 

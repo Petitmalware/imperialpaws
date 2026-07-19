@@ -577,6 +577,16 @@ app.post("/apply", asyncHandler(async (req, res) => {
 
   await saveApplications(applications);
 
+  // Trigger optional email confirmation to applicant & alert to breeder
+  const {
+    sendApplicationConfirmationEmail,
+    sendBreederNewApplicationAlert
+  } = require("./utils/emailService");
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  const newApp = { ...values, trackingCode, id: trackingCode };
+  sendApplicationConfirmationEmail(newApp, baseUrl).catch(err => console.error("Applicant confirmation email error:", err));
+  sendBreederNewApplicationAlert(newApp).catch(err => console.error("Breeder alert email error:", err));
+
   res.cookie(
     "imperialpaws_application",
     JSON.stringify({ puppyId: puppy.id, trackingCode }),

@@ -14,7 +14,7 @@ services:
       - key: SESSION_SECRET
         generateValue: true
       - key: PUBLIC_SITE_URL
-        value: https://imperialpaws.onrender.com
+        value: https://imperialpaws.net
       - key: SITE_SETTINGS_CACHE_TTL_MS
         value: 60000
       - key: MONGODB_URI

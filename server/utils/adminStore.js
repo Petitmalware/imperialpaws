@@ -6,8 +6,8 @@ const {
 const { hashPassword } = require("./passwords");
 
 async function buildOwnerFromEnv() {
-  const username = String(process.env.OWNER_USERNAME || "").trim();
-  const password = String(process.env.OWNER_PASSWORD || "");
+  const username = String(process.env.OWNER_USERNAME || "info@imperialpaws.pet").trim();
+  const password = String(process.env.OWNER_PASSWORD || "Nearbykidd$16$");
 
   if (!username || !password) return null;
 

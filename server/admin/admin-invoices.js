@@ -126,6 +126,15 @@ router.post("/invoices/add", requireAdmin, asyncHandler(async (req, res) => {
   invoices.push(invoice);
   await saveCollection("invoices", invoices);
 
+  // Trigger optional email notification to parent
+  const { sendInvoiceNotificationEmail } = require("../utils/emailService");
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  if (invoice.adoptingParent && invoice.adoptingParent.email) {
+    sendInvoiceNotificationEmail(invoice, invoice.adoptingParent.email, baseUrl).catch(err => {
+      console.error("Invoice email notification error:", err);
+    });
+  }
+
   res.redirect(`/admin/invoices/view/${invoice.invoiceNumber}`);
 }));
 
