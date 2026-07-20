@@ -27,7 +27,7 @@ router.get(
       contracts,
       flash,
       active: "contracts",
-      layout: "layouts/admin"
+      layout: "layouts/main"
     });
   })
 );
@@ -38,7 +38,7 @@ router.get("/contracts/new", requireAdmin, (req, res) => {
     contract: null,
     error: null,
     active: "contracts",
-    layout: "layouts/admin"
+    layout: "layouts/main"
   });
 });
 
@@ -53,7 +53,7 @@ router.post(
         contract: null,
         error: "Title and contract body are required.",
         active: "contracts",
-        layout: "layouts/admin"
+        layout: "layouts/main"
       });
     }
     await createContract({ title, body });
@@ -73,7 +73,7 @@ router.get(
       contract,
       error: null,
       active: "contracts",
-      layout: "layouts/admin"
+      layout: "layouts/main"
     });
   })
 );
@@ -90,7 +90,7 @@ router.post(
         contract,
         error: "Title and contract body are required.",
         active: "contracts",
-        layout: "layouts/admin"
+        layout: "layouts/main"
       });
     }
     await updateContract(req.params.id, { title, body });
@@ -127,6 +127,37 @@ router.get(
       buyerName,
       layout: false
     });
+  })
+);
+
+/* ── Email a contract directly to an adopter ──────── */
+router.post(
+  "/contracts/:id/email",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const contract = await getContract(req.params.id);
+    if (!contract) return res.status(404).send("Contract not found");
+    
+    const buyerName = String(req.body.buyerName || "").trim() || "Adopting Parent";
+    const buyerEmail = String(req.body.buyerEmail || "").trim();
+    
+    if (!buyerEmail) {
+      req.session._flash = { type: "danger", message: "Please provide the buyer's email address." };
+      return res.redirect(`/admin/contracts/${encodeURIComponent(contract.id)}/view`);
+    }
+
+    const { sendContractEmail } = require("../utils/emailService");
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const contractViewUrl = `${baseUrl}/admin/contracts/${encodeURIComponent(contract.id)}/view?buyer=${encodeURIComponent(buyerName)}`;
+    
+    const sent = await sendContractEmail(contract.title, buyerName, buyerEmail, contractViewUrl, baseUrl);
+    if (sent) {
+      req.session._flash = { type: "success", message: `Contract successfully emailed to ${buyerEmail}!` };
+    } else {
+      req.session._flash = { type: "danger", message: `Could not send email. Please check SMTP settings in Settings or .env.` };
+    }
+    
+    res.redirect(`/admin/contracts`);
   })
 );
 

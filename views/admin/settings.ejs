@@ -7,8 +7,33 @@
         <p class="admin-eyebrow">Configuration</p>
         <h1>Site Settings</h1>
         <p class="admin-subtitle">Manage public contact information and social links displayed across the website.</p>
-      </div>
     </header>
+
+    <% if (typeof flash !== "undefined" && flash) { %>
+      <div class="admin-alert admin-alert-<%= flash.type %>" style="margin-bottom: 1.5rem; padding: 1rem; border-radius: 8px; background: <%= flash.type === 'success' ? '#E6F4EA' : '#FEE2E2' %>; color: <%= flash.type === 'success' ? '#166534' : '#991B1B' %>; border: 1px solid <%= flash.type === 'success' ? '#A7F3D0' : '#FECACA' %>;">
+        <strong><%= flash.type === 'success' ? '✅ Success:' : '⚠️ Notice:' %></strong> <%= flash.message %>
+      </div>
+    <% } %>
+
+    <section class="admin-card" style="margin-bottom: 2rem; border-left: 4px solid #C7A45A;">
+      <h2>📧 Email System & SMTP Verification</h2>
+      <p class="admin-muted" style="margin-bottom: 1.25rem;">
+        Verify that automated emails (Spacemail via <strong>mail.spaceship.com</strong>) are working properly. Click below to send an instant test verification email right to your inbox.
+      </p>
+      <form method="POST" action="/admin/settings/test-email" style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+        <input
+          type="email"
+          name="testEmail"
+          placeholder="info@imperialpaws.pet"
+          value="<%= settings.contact.email || 'info@imperialpaws.pet' %>"
+          style="padding: 0.6rem 1rem; border: 1px solid #ccc; border-radius: 8px; width: 280px; font-size:0.95rem;"
+          required
+        >
+        <button type="submit" class="btn-primary" style="background:#C7A45A; color:#111; font-weight:700; border:none; padding:0.6rem 1.4rem; border-radius:8px; cursor:pointer;">
+          Send Verification Email 🚀
+        </button>
+      </form>
+    </section>
 
     <section class="admin-card">
       <form method="POST" action="/admin/settings" class="admin-form">

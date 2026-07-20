@@ -185,14 +185,14 @@
   %>
 
   <!-- Actions bar (hidden when printing) -->
-  <div class="contract-actions no-print">
+  <div class="contract-actions no-print" style="flex-wrap: wrap; gap: 1rem;">
     <button onclick="window.print()" class="btn-print" type="button">
       🖨 Print / Save as PDF
     </button>
     <a href="/admin/contracts" class="btn-back">← Back</a>
 
     <!-- Live buyer-name fill -->
-    <form class="fill-form" onsubmit="fillBuyer(event)">
+    <form class="fill-form" onsubmit="fillBuyer(event)" style="margin: 0;">
       <label for="buyerInput">Buyer Name:</label>
       <input
         id="buyerInput"
@@ -200,7 +200,22 @@
         value="<%= buyerName %>"
         placeholder="Adopting Parent Name"
       >
-      <button type="submit">Apply</button>
+      <button type="submit">Apply Name</button>
+    </form>
+
+    <!-- Email to Adopter form -->
+    <form class="fill-form" method="POST" action="/admin/contracts/<%= encodeURIComponent(contract.id) %>/email" style="margin: 0; display:flex; gap:0.5rem; align-items:center;">
+      <input type="hidden" name="buyerName" id="hiddenBuyerName" value="<%= buyerName %>">
+      <input
+        type="email"
+        name="buyerEmail"
+        required
+        placeholder="Adopter Email Address"
+        style="width: 210px; padding: 0.4rem 0.75rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.875rem;"
+      >
+      <button type="submit" style="background:#c7a45a; color:#111; font-weight:600; padding:0.4rem 0.9rem; border:none; border-radius:6px; cursor:pointer;">
+        📧 Email Agreement
+      </button>
     </form>
   </div>
 
@@ -253,6 +268,8 @@
       const name = document.getElementById("buyerInput").value.trim() || "[Adopting Parent Name]";
       const body = document.getElementById("contractBody");
       const sig  = document.getElementById("buyerSig");
+      const hidden = document.getElementById("hiddenBuyerName");
+      if (hidden) hidden.value = name;
       // Replace placeholder text
       body.innerHTML = body.innerHTML.replace(/\[Adopting Parent Name\]|\[BUYER_NAME\]/gi, name);
       sig.textContent = name;

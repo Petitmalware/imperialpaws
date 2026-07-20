@@ -294,7 +294,21 @@ router.get("/dashboard", requireAdmin, asyncHandler(async (req, res) => {
 
 router.get("/settings", requireAdmin, asyncHandler(async (req, res) => {
   const settings = await loadSiteSettings();
-  res.render("admin/settings", { settings });
+  const flash = req.session._flash || null;
+  delete req.session._flash;
+  res.render("admin/settings", { settings, flash });
+}));
+
+router.post("/settings/test-email", requireAdmin, asyncHandler(async (req, res) => {
+  const { sendTestEmail } = require("../utils/emailService");
+  const targetEmail = String(req.body.testEmail || "").trim() || process.env.SMTP_USER || "info@imperialpaws.pet";
+  const success = await sendTestEmail(targetEmail);
+  if (success) {
+    req.session._flash = { type: "success", message: `Test verification email sent successfully to ${targetEmail} via mail.spaceship.com!` };
+  } else {
+    req.session._flash = { type: "danger", message: `Failed to send verification email to ${targetEmail}. Please check that SMTP_USER, SMTP_PASS, and ENABLE_EMAIL_NOTIFICATIONS are set in your .env file.` };
+  }
+  res.redirect("/admin/settings");
 }));
 
 router.post("/settings", requireAdmin, asyncHandler(async (req, res) => {
