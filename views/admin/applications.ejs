@@ -10,6 +10,18 @@
       </div>
     </header>
 
+    <% if (typeof success !== "undefined" && success) { %>
+      <div style="background:#F0FDF4; border:1px solid #22C55E; color:#166534; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-weight:600;">
+        ✅ <%= success %>
+      </div>
+    <% } %>
+
+    <% if (typeof error !== "undefined" && error) { %>
+      <div style="background:#FEF2F2; border:1px solid #EF4444; color:#991B1B; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-weight:600;">
+        ❌ <%= error %>
+      </div>
+    <% } %>
+
     <% if (applications.length === 0) { %>
       <section class="admin-empty-state">
         <strong>No applications submitted yet.</strong>
@@ -23,8 +35,8 @@
               <th>Tracking Code</th>
               <th>Puppy</th>
               <th>Applicant</th>
-              <th>Email</th>
               <th>Status</th>
+              <th>Breeder Lifecycle Email Guidance</th>
               <th>Submitted</th>
             </tr>
           </thead>
@@ -33,26 +45,63 @@
             <% applications.forEach(app => { %>
               <tr>
                 <td class="mono"><%= app.id %></td>
-                <td><%= app.puppyName %></td>
-                <td><%= app.name %></td>
-                <td><%= app.email %></td>
+                <td><strong><%= app.puppyName %></strong></td>
                 <td>
-                  <span class="status-pill <%= statusClass(app.status) %>">
+                  <div><strong><%= app.name %></strong></div>
+                  <div style="font-size:0.82rem; color:#666;"><%= app.email %></div>
+                  <div style="font-size:0.82rem; color:#666;"><%= app.phone || "" %></div>
+                </td>
+                <td>
+                  <span class="status-pill <%= statusClass(app.status) %>" style="display:inline-block; margin-bottom:0.5rem;">
                     <%= app.status %>
                   </span>
 
                   <form method="post" action="/admin/applications/<%= app.id %>/status" class="status-form">
-                    <select name="status" required>
+                    <select name="status" required style="padding:0.3rem; border-radius:6px; border:1px solid #ccc; font-size:0.8rem;">
                       <option value="">Change status</option>
                       <option value="Pending">Mark Pending</option>
                       <option value="Approved">Approve</option>
                       <option value="Rejected">Reject</option>
                       <option value="Sold">Mark Sold</option>
                     </select>
-                    <button type="submit">Update</button>
+                    <button type="submit" style="padding:0.3rem 0.6rem; border-radius:6px; background:#e0ddd6; border:none; cursor:pointer; font-size:0.8rem;">Update</button>
                   </form>
                 </td>
-                <td><%= app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "Unknown" %></td>
+                <td style="min-width:320px;">
+                  <form method="post" action="/admin/applications/<%= app.id %>/email-stage" style="background:#fcfaf5; border:1px solid #e2ddd4; padding:0.75rem; border-radius:8px;">
+                    <label style="display:block; font-size:0.75rem; font-weight:700; color:#5c4414; margin-bottom:0.35rem; text-transform:uppercase;">
+                      📧 Dispatch Lifecycle Email
+                    </label>
+                    
+                    <select name="stageType" required style="width:100%; padding:0.4rem; border-radius:6px; border:1px solid #ccc; font-size:0.82rem; margin-bottom:0.5rem; background:#fff;">
+                      <option value="">-- Pick Lifecycle Stage --</option>
+                      <option value="under_review">1. Under Review & Next Steps Check-in</option>
+                      <option value="approved_guidance">2. Application Approved & Reservation Guide</option>
+                      <option value="deposit_received">3. Deposit Confirmed & Preparation Checklist</option>
+                      <option value="pre_delivery">4. Final Balance & Pickup / Delivery Coordination</option>
+                      <option value="welcome_home">5. Care Guide & Welcome Home Check-in</option>
+                    </select>
+
+                    <input type="text" name="customNote" placeholder="Add custom personal note to adopter (optional)..." style="width:100%; padding:0.4rem; border-radius:6px; border:1px solid #ccc; font-size:0.8rem; margin-bottom:0.5rem; background:#fff;">
+
+                    <button type="submit" style="width:100%; padding:0.45rem; background:#c7a45a; color:#111; font-weight:700; border:none; border-radius:6px; cursor:pointer; font-size:0.82rem;">
+                      Send Stage Email to Adopter 🚀
+                    </button>
+                  </form>
+
+                  <% if (app.status === "Sold") { %>
+                    <form method="post" action="/admin/applications/<%= app.id %>/adoption-complete" style="margin-top:0.5rem; background:#f0fdf4; border:1px solid #22c55e; padding:0.75rem; border-radius:8px;">
+                      <label style="display:block; font-size:0.75rem; font-weight:700; color:#166534; margin-bottom:0.35rem; text-transform:uppercase;">
+                        🏠 Adoption Complete Email
+                      </label>
+                      <input type="text" name="customNote" placeholder="Optional personal note (e.g. 'We loved having him, enjoy!')..." style="width:100%; padding:0.4rem; border-radius:6px; border:1px solid #bbf7d0; font-size:0.8rem; margin-bottom:0.5rem; background:#fff;">
+                      <button type="submit" style="width:100%; padding:0.45rem; background:#22c55e; color:#fff; font-weight:700; border:none; border-radius:6px; cursor:pointer; font-size:0.82rem;">
+                        Send Care Guide & Welcome Home 🐾
+                      </button>
+                    </form>
+                  <% } %>
+                </td>
+                <td style="font-size:0.82rem;"><%= app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "Unknown" %></td>
               </tr>
             <% }) %>
           </tbody>

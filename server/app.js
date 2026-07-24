@@ -1,12 +1,14 @@
-require("dotenv").config();
+require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const expressLayouts = require("express-ejs-layouts");
+const multer = require("multer");
 
 const { loadSiteSettings } = require("./utils/siteSettings");
 const { createTestimonial } = require("./utils/testimonialStore");
+const { saveTestimonialImage } = require("./utils/imageStorage");
 const { getCurrencySymbol } = require("./utils/currency");
 const { createRateLimiter } = require("./utils/rateLimit");
 const {
@@ -635,14 +637,34 @@ app.get("/testimonials/submit", (req, res) => {
   });
 });
 
-app.post("/testimonials/submit", asyncHandler(async (req, res) => {
+const testimonialUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter(req, file, cb) {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Only image uploads are allowed."));
+    }
+    cb(null, true);
+  }
+});
+
+app.post("/testimonials/submit", testimonialUpload.single("photo"), asyncHandler(async (req, res) => {
+  let photoUrl = String(req.body.photoUrl || "").trim();
+  if (req.file) {
+    try {
+      photoUrl = await saveTestimonialImage(req.file, { testimonialId: "review-" + Date.now() });
+    } catch (err) {
+      console.error("Testimonial image upload failed:", err);
+    }
+  }
+
   const values = {
     name: String(req.body.name || "").trim(),
     email: String(req.body.email || "").trim(),
     location: String(req.body.location || "").trim(),
     puppyName: String(req.body.puppyName || "").trim(),
     rating: Number(req.body.rating) || 5,
-    photoUrl: String(req.body.photoUrl || "").trim(),
+    photoUrl,
     message: String(req.body.message || "").trim()
   };
 

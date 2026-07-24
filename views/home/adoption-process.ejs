@@ -1,92 +1,529 @@
+<%/* ============================================================
+   ADOPTION PROCESS — ImperialPaws Pekingese
+   Visual step-by-step guide. No layout tag — content partial.
+   ============================================================ */%>
+
 <section class="page-hero reveal">
   <div class="container">
     <h1>Our Adoption Process</h1>
     <p class="subtitle">
-      A clear, careful placement process designed to protect every puppy and
-      support prepared families.
+      Seven clear steps — from finding your puppy to welcoming them home.
+      No surprises, no pressure, no hidden fees.
     </p>
   </div>
 </section>
 
 <section class="page-content reveal">
-  <div class="container narrow reveal">
-    <p>
-      The ImperialPaws process is intentionally measured. Families can browse,
-      apply, track status, and receive an invoice only after approval. This keeps
-      communication organized and helps prevent rushed or confusing placements.
+  <div class="container narrow">
+
+    <%/* ─── INTRO ─── */%>
+    <p style="text-align:center; max-width:680px; margin:0 auto 3.2rem; font-size:1.05rem; line-height:1.85; color:#3c3830;">
+      The ImperialPaws adoption process is built around one principle: every placement
+      should be calm, clear, and completely honest. We walk alongside every family from
+      first browse to final handover — here is exactly what to expect.
     </p>
 
-    <div class="process-grid">
-      <div class="process-card">
-        <strong>1. Browse</strong>
-        <p>Review photos, status, care notes, and profile details before applying.</p>
+    <%/* ─── STEP GRID ─── */%>
+    <div style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    ">
+
+      <%/* Step 1 */%>
+      <div style="
+        background: linear-gradient(160deg, #fffdf8, #f8f5ec);
+        border: 1px solid rgba(199,164,90,0.22);
+        border-radius: 14px;
+        padding: 1.8rem 1.6rem;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="
+          position: absolute;
+          top: -0.6rem;
+          right: 1.1rem;
+          font-size: 4.5rem;
+          opacity: 0.07;
+          font-family: 'Playfair Display', serif;
+          font-weight: 700;
+          color: #c7a45a;
+          user-select: none;
+        ">1</div>
+        <div style="font-size: 2.2rem; margin-bottom: 0.75rem; line-height: 1;">🐾</div>
+        <div style="
+          display: inline-block;
+          font-size: 0.68rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #c7a45a;
+          font-weight: 600;
+          margin-bottom: 0.4rem;
+        ">Step 1</div>
+        <h3 style="
+          font-family: 'Playfair Display', serif;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #1f1f1f;
+          margin: 0 0 0.75rem;
+          line-height: 1.35;
+        ">Browse Available Puppies</h3>
+        <p style="margin:0; color:#56534c; font-size:0.97rem; line-height:1.75;">
+          Start by exploring our available puppy listings. Each profile includes
+          photos, breed details, gender, age, and the listed adoption fee. Take
+          your time — there is no rush and no account required to browse.
+        </p>
       </div>
-      <div class="process-card">
-        <strong>2. Apply</strong>
-        <p>Submit one accurate application for the puppy you are interested in.</p>
+
+      <%/* Step 2 */%>
+      <div style="
+        background: linear-gradient(160deg, #fffdf8, #f8f5ec);
+        border: 1px solid rgba(199,164,90,0.22);
+        border-radius: 14px;
+        padding: 1.8rem 1.6rem;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="
+          position: absolute;
+          top: -0.6rem;
+          right: 1.1rem;
+          font-size: 4.5rem;
+          opacity: 0.07;
+          font-family: 'Playfair Display', serif;
+          font-weight: 700;
+          color: #c7a45a;
+          user-select: none;
+        ">2</div>
+        <div style="font-size: 2.2rem; margin-bottom: 0.75rem; line-height: 1;">📋</div>
+        <div style="
+          display: inline-block;
+          font-size: 0.68rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #c7a45a;
+          font-weight: 600;
+          margin-bottom: 0.4rem;
+        ">Step 2</div>
+        <h3 style="
+          font-family: 'Playfair Display', serif;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #1f1f1f;
+          margin: 0 0 0.75rem;
+          line-height: 1.35;
+        ">Submit Your Application</h3>
+        <p style="margin:0; color:#56534c; font-size:0.97rem; line-height:1.75;">
+          Click "Apply to Adopt" on the puppy's detail page and fill in your
+          household information. This helps us understand your home environment
+          and readiness. <strong style="color:#3c3830;">No payment is requested at this stage — ever.</strong>
+        </p>
       </div>
-      <div class="process-card">
-        <strong>3. Track</strong>
-        <p>Use your private tracking code to follow review status and next steps.</p>
+
+      <%/* Step 3 */%>
+      <div style="
+        background: linear-gradient(160deg, #fffdf8, #f8f5ec);
+        border: 1px solid rgba(199,164,90,0.22);
+        border-radius: 14px;
+        padding: 1.8rem 1.6rem;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="
+          position: absolute;
+          top: -0.6rem;
+          right: 1.1rem;
+          font-size: 4.5rem;
+          opacity: 0.07;
+          font-family: 'Playfair Display', serif;
+          font-weight: 700;
+          color: #c7a45a;
+          user-select: none;
+        ">3</div>
+        <div style="font-size: 2.2rem; margin-bottom: 0.75rem; line-height: 1;">🔍</div>
+        <div style="
+          display: inline-block;
+          font-size: 0.68rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #c7a45a;
+          font-weight: 600;
+          margin-bottom: 0.4rem;
+        ">Step 3</div>
+        <h3 style="
+          font-family: 'Playfair Display', serif;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #1f1f1f;
+          margin: 0 0 0.75rem;
+          line-height: 1.35;
+        ">Review &amp; Approval <span style="color:#9a8060; font-size:0.95rem;">(24–48 hrs)</span></h3>
+        <p style="margin:0; color:#56534c; font-size:0.97rem; line-height:1.75;">
+          Every application is read personally by our breeder — no automated
+          screening. We consider your household setup, experience with the breed,
+          and overall suitability. We may follow up with a question or two if needed.
+        </p>
       </div>
+
+      <%/* Step 4 */%>
+      <div style="
+        background: linear-gradient(160deg, #fffdf8, #f8f5ec);
+        border: 1px solid rgba(199,164,90,0.22);
+        border-radius: 14px;
+        padding: 1.8rem 1.6rem;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="
+          position: absolute;
+          top: -0.6rem;
+          right: 1.1rem;
+          font-size: 4.5rem;
+          opacity: 0.07;
+          font-family: 'Playfair Display', serif;
+          font-weight: 700;
+          color: #c7a45a;
+          user-select: none;
+        ">4</div>
+        <div style="font-size: 2.2rem; margin-bottom: 0.75rem; line-height: 1;">📧</div>
+        <div style="
+          display: inline-block;
+          font-size: 0.68rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #c7a45a;
+          font-weight: 600;
+          margin-bottom: 0.4rem;
+        ">Step 4</div>
+        <h3 style="
+          font-family: 'Playfair Display', serif;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #1f1f1f;
+          margin: 0 0 0.75rem;
+          line-height: 1.35;
+        ">Receive Your Approval Email</h3>
+        <p style="margin:0; color:#56534c; font-size:0.97rem; line-height:1.75;">
+          If approved, you will receive an email from
+          <strong style="color:#3c3830;">info@imperialpaws.pet</strong> confirming
+          your approval and the puppy's adoption fee — which is the <em>exact price
+          shown on the listing</em>, with no hidden charges added.
+        </p>
+      </div>
+
+      <%/* Step 5 */%>
+      <div style="
+        background: linear-gradient(160deg, #fffdf8, #f8f5ec);
+        border: 1px solid rgba(199,164,90,0.22);
+        border-radius: 14px;
+        padding: 1.8rem 1.6rem;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="
+          position: absolute;
+          top: -0.6rem;
+          right: 1.1rem;
+          font-size: 4.5rem;
+          opacity: 0.07;
+          font-family: 'Playfair Display', serif;
+          font-weight: 700;
+          color: #c7a45a;
+          user-select: none;
+        ">5</div>
+        <div style="font-size: 2.2rem; margin-bottom: 0.75rem; line-height: 1;">🧾</div>
+        <div style="
+          display: inline-block;
+          font-size: 0.68rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #c7a45a;
+          font-weight: 600;
+          margin-bottom: 0.4rem;
+        ">Step 5</div>
+        <h3 style="
+          font-family: 'Playfair Display', serif;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #1f1f1f;
+          margin: 0 0 0.75rem;
+          line-height: 1.35;
+        ">Invoice Issued &amp; Payment Arranged</h3>
+        <p style="margin:0 0 0.8rem; color:#56534c; font-size:0.97rem; line-height:1.75;">
+          A formal adoption invoice is issued to you directly. You reply to let us
+          know what payment method you have available, and we will send our payment
+          details to you privately by email.
+        </p>
+        <p style="margin:0; color:#56534c; font-size:0.97rem; line-height:1.75;">
+          <strong style="color:#8a1a1a;">We will NEVER ask for payment via random
+          links, third-party strangers, or social media messages.</strong> If anyone
+          contacts you claiming to collect payment on our behalf — it is not us.
+        </p>
+      </div>
+
+      <%/* Step 6 */%>
+      <div style="
+        background: linear-gradient(160deg, #fffdf8, #f8f5ec);
+        border: 1px solid rgba(199,164,90,0.22);
+        border-radius: 14px;
+        padding: 1.8rem 1.6rem;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="
+          position: absolute;
+          top: -0.6rem;
+          right: 1.1rem;
+          font-size: 4.5rem;
+          opacity: 0.07;
+          font-family: 'Playfair Display', serif;
+          font-weight: 700;
+          color: #c7a45a;
+          user-select: none;
+        ">6</div>
+        <div style="font-size: 2.2rem; margin-bottom: 0.75rem; line-height: 1;">🔒</div>
+        <div style="
+          display: inline-block;
+          font-size: 0.68rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #c7a45a;
+          font-weight: 600;
+          margin-bottom: 0.4rem;
+        ">Step 6</div>
+        <h3 style="
+          font-family: 'Playfair Display', serif;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #1f1f1f;
+          margin: 0 0 0.75rem;
+          line-height: 1.35;
+        ">Payment Confirmed &rarr; Puppy Reserved</h3>
+        <p style="margin:0; color:#56534c; font-size:0.97rem; line-height:1.75;">
+          Once your payment is confirmed, your puppy's listing is immediately updated
+          to <strong style="color:#3c3830;">Sold</strong> and reserved exclusively
+          under your name. From this moment, no other applicant can be placed with
+          your puppy.
+        </p>
+      </div>
+
+      <%/* Step 7 — spans full width */%>
+      <div style="
+        background: linear-gradient(160deg, #fffdf8, #f8f5ec);
+        border: 1px solid rgba(199,164,90,0.22);
+        border-radius: 14px;
+        padding: 1.8rem 1.6rem;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+        grid-column: 1 / -1;
+      ">
+        <div style="
+          position: absolute;
+          top: -0.6rem;
+          right: 1.6rem;
+          font-size: 4.5rem;
+          opacity: 0.07;
+          font-family: 'Playfair Display', serif;
+          font-weight: 700;
+          color: #c7a45a;
+          user-select: none;
+        ">7</div>
+        <div style="font-size: 2.2rem; margin-bottom: 0.75rem; line-height: 1;">&#x2708;&#xFE0F;</div>
+        <div style="
+          display: inline-block;
+          font-size: 0.68rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #c7a45a;
+          font-weight: 600;
+          margin-bottom: 0.4rem;
+        ">Step 7</div>
+        <h3 style="
+          font-family: 'Playfair Display', serif;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #1f1f1f;
+          margin: 0 0 0.75rem;
+          line-height: 1.35;
+        ">Pickup or Delivery Arranged</h3>
+        <p style="margin:0; max-width:700px; color:#56534c; font-size:0.97rem; line-height:1.75;">
+          We coordinate timing directly with you. Depending on your location, your
+          puppy can travel via a professional <strong style="color:#3c3830;">flight nanny</strong>
+          (an experienced pet transport companion) or be collected via
+          <strong style="color:#3c3830;">local pickup</strong>. We will guide you
+          through every detail to ensure your puppy arrives safely and comfortably.
+        </p>
+      </div>
+
+    </div><%/* end step grid */%>
+
+    <%/* ─── TRUST SHIELD SECTION ─── */%>
+    <div style="
+      margin: 0 0 4rem;
+      padding: 2.2rem 2rem 2rem;
+      border-left: 5px solid #c7a45a;
+      border-radius: 0 12px 12px 0;
+      background: linear-gradient(160deg, #fffcf2, #fef9e8);
+      box-shadow: 0 12px 36px rgba(199,164,90,0.10);
+    ">
+      <div style="
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin-bottom: 1.2rem;
+      ">
+        <span style="font-size: 1.6rem; line-height:1;">&#x1F6E1;&#xFE0F;</span>
+        <h2 style="
+          font-family: 'Playfair Display', serif;
+          font-size: 1.35rem;
+          font-weight: 600;
+          color: #1f1f1f;
+          margin: 0;
+          letter-spacing: 0.02em;
+        ">Our Buyer Trust Guarantee</h2>
+      </div>
+      <p style="margin:0 0 1.4rem; color:#56534c; font-size:0.97rem; line-height:1.75;">
+        We hold ourselves to a strict standard of transparency. Every family who
+        works with ImperialPaws can count on the following:
+      </p>
+      <ul style="
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.85rem;
+      ">
+        <li style="
+          display: flex;
+          align-items: flex-start;
+          gap: 0.6rem;
+          color: #2e2a22;
+          font-size: 0.98rem;
+          line-height: 1.7;
+        ">
+          <span style="color:#4a8a4a; font-size:1.1rem; flex-shrink:0; margin-top:0.05rem;">&#x2705;</span>
+          <span><strong>Exact adoption fee</strong> — the price you see on the listing is the price you pay. No processing fees, no surprise charges added later.</span>
+        </li>
+        <li style="
+          display: flex;
+          align-items: flex-start;
+          gap: 0.6rem;
+          color: #2e2a22;
+          font-size: 0.98rem;
+          line-height: 1.7;
+        ">
+          <span style="color:#4a8a4a; font-size:1.1rem; flex-shrink:0; margin-top:0.05rem;">&#x2705;</span>
+          <span><strong>No payment until you are approved</strong> and have reviewed and accepted your formal invoice. We will never rush you.</span>
+        </li>
+        <li style="
+          display: flex;
+          align-items: flex-start;
+          gap: 0.6rem;
+          color: #2e2a22;
+          font-size: 0.98rem;
+          line-height: 1.7;
+        ">
+          <span style="color:#4a8a4a; font-size:1.1rem; flex-shrink:0; margin-top:0.05rem;">&#x2705;</span>
+          <span><strong>We NEVER ask for payment via random links, strangers, or social media DMs.</strong> Payment details are only shared by us, directly to you, via our official email.</span>
+        </li>
+        <li style="
+          display: flex;
+          align-items: flex-start;
+          gap: 0.6rem;
+          color: #2e2a22;
+          font-size: 0.98rem;
+          line-height: 1.7;
+        ">
+          <span style="color:#4a8a4a; font-size:1.1rem; flex-shrink:0; margin-top:0.05rem;">&#x2705;</span>
+          <span><strong>All communication is via <a href="mailto:info@imperialpaws.pet" style="color:#7a5b00; font-weight:700; text-decoration:underline;">info@imperialpaws.pet</a> only.</strong> We do not communicate through third-party messaging apps, Facebook, or WhatsApp groups for payment matters.</span>
+        </li>
+        <li style="
+          display: flex;
+          align-items: flex-start;
+          gap: 0.6rem;
+          color: #2e2a22;
+          font-size: 0.98rem;
+          line-height: 1.7;
+        ">
+          <span style="color:#4a8a4a; font-size:1.1rem; flex-shrink:0; margin-top:0.05rem;">&#x2705;</span>
+          <span><strong>Your puppy is not marked Sold until payment is confirmed.</strong> The listing status is updated only after funds are received and verified — your reservation is not assumed or tentative.</span>
+        </li>
+      </ul>
     </div>
 
-    <h2>1. Browse Available Puppies</h2>
-    <p>
-      Visitors are welcome to explore available, reserved, and sold puppies at
-      any time. Each listing is designed to show current availability, photos,
-      puppy details, and care information where available.
-    </p>
-
-    <h2>2. Submit an Adoption Application</h2>
-    <p>
-      When you find a puppy you are interested in, submit an application from
-      that puppy's detail page. The form helps us learn about your household,
-      location, and readiness for the breed.
-    </p>
-    <p>
-      The system prevents the same buyer from repeatedly applying for the same
-      puppy when the same email address or phone number is used.
-    </p>
-
-    <div class="notice-box">
+    <%/* ─── NOTICE BOX ─── */%>
+    <div class="notice-box" style="margin-bottom: 4rem;">
       <p>
-        Submitting an application does not guarantee approval, reserve a puppy,
-        or create a payment obligation.
+        <strong>Submitting an application does not guarantee approval, reserve a puppy,
+        or create any payment obligation.</strong> Approval is at the breeder's sole
+        discretion, based on household suitability and the puppy's best interest.
       </p>
     </div>
 
-    <h2>3. Application Review</h2>
-    <p>
-      Each application is reviewed individually. We may ask follow-up questions
-      when more context is needed. Placement decisions are based on the puppy's
-      welfare, timing, buyer preparedness, and overall fit.
+    <%/* ─── FINAL CTA SECTION ─── */%>
+    <div style="
+      background: #1f1f1f;
+      border-radius: 16px;
+      padding: 3.2rem 2.4rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    ">
+      <div style="font-size:2rem; margin-bottom:0.6rem; line-height:1;">&#x1F436;</div>
+      <h2 style="
+        font-family: 'Playfair Display', serif;
+        color: #fff;
+        font-size: clamp(1.7rem, 4vw, 2.1rem);
+        margin: 0 0 0.85rem;
+        letter-spacing: 0.02em;
+      ">Ready to Apply?</h2>
+      <p style="
+        color: rgba(255,255,255,0.8);
+        max-width: 520px;
+        margin: 0 auto 2rem;
+        font-size: 1rem;
+        line-height: 1.8;
+      ">
+        Browse our available Pekingese puppies and begin your application
+        directly from a puppy's profile. Already applied? Track your
+        application status any time.
+      </p>
+      <div style="
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        align-items: center;
+      ">
+        <a href="/puppies" class="btn-primary" style="
+          font-size: 0.88rem;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          text-decoration: none;
+        ">Browse Puppies</a>
+        <a href="/track" class="btn-secondary" style="
+          font-size: 0.82rem;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          text-decoration: none;
+          border-color: rgba(199,164,90,0.6);
+          color: rgba(199,164,90,0.9);
+        ">Track My Application</a>
+      </div>
+    </div>
+
+    <p class="closing-note" style="text-align:center;">
+      Thoughtful placements take time — and that is exactly how it should be.
+      A careful process protects your family just as much as it protects the puppy.
     </p>
 
-    <h2>4. Status Tracking</h2>
-    <p>
-      After submitting, you receive a tracking code. Keep it private and use it
-      on the tracking page to view current status. Tracking helps avoid missed
-      updates and keeps communication organized.
-    </p>
-
-    <h2>5. Approval and Invoice</h2>
-    <p>
-      If an application is approved, the admin can create a clear adoption
-      invoice linked to that application. The invoice shows the puppy, buyer
-      information, line item, amount, due date when used, and adoption note.
-    </p>
-
-    <h2>6. Final Placement Steps</h2>
-    <p>
-      After approval, we provide guidance for the next steps. Final placement
-      remains subject to agreed arrangements, care expectations, and any written
-      health or placement documentation provided by ImperialPaws.
-    </p>
-
-    <p class="closing-note">
-      Thoughtful placements take time. A professional adoption process should
-      feel organized, transparent, and centered on the puppy's long-term well-being.
-    </p>
   </div>
 </section>

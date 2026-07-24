@@ -160,6 +160,29 @@
       </div>
     <% } %>
 
+    <!-- Payment Instructions -->
+    <% if (!invoice.paid) { %>
+    <div style="margin:24px 0; padding:18px 20px; border:2px solid #C7A45A; border-radius:10px; background:#FFFDF9;">
+      <h3 style="font-family:Georgia,'Times New Roman',serif; color:#1A1916; font-size:15px; margin:0 0 10px; letter-spacing:0.5px;">
+        📋 How to Arrange Payment
+      </h3>
+      <p style="font-size:13px; color:#444; line-height:1.7; margin:0 0 10px;">
+        We do not list payment methods publicly. To complete your adoption, simply reply to your approval email or contact us directly at
+        <strong>info@imperialpaws.pet</strong> and let us know what payment method you have available.
+        We will then send you our secure payment details privately.
+      </p>
+      <p style="font-size:12px; color:#777; margin:0;">
+        ✅ We will <strong>never</strong> ask for payment via social media, random links, or third parties.
+        All official communication is from <strong>info@imperialpaws.pet</strong> only.
+      </p>
+    </div>
+    <% } %>
+
+    <!-- No Hidden Fees Badge -->
+    <div style="margin:16px 0; padding:12px 16px; background:#F0FDF4; border:1px solid #22C55E; border-radius:8px; font-size:12px; color:#166534;">
+      ✅ <strong>No Hidden Fees:</strong> This invoice reflects only the exact adoption fee listed on the puppy's profile. No processing fees, insurance fees, or surprise charges.
+    </div>
+
     <% if (invoice.seller && invoice.seller.name) { %>
       <div class="seller-card">
         <strong><%= invoice.seller.name %></strong>

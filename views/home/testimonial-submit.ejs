@@ -18,7 +18,7 @@
         <div class="error-box center"><%= error %></div>
       <% } %>
 
-      <form method="post" action="/testimonials/submit" class="testimonial-form">
+      <form method="post" action="/testimonials/submit" enctype="multipart/form-data" class="testimonial-form">
 
         <div class="form-group">
           <label>Your Name *</label>
@@ -52,10 +52,10 @@
         </div>
 
         <div class="form-group">
-          <label>Puppy Photo URL (optional)</label>
-          <input type="url" name="photoUrl" value="<%= formValues.photoUrl || '' %>" placeholder="https://example.com/photo.jpg">
-          <small style="color:#777; font-size:0.8rem; display:block; margin-top:-1rem; margin-bottom:1rem;">
-            Link a photo of your grown ImperialPaws Pekingese!
+          <label>Upload Puppy Photo (optional)</label>
+          <input type="file" name="photo" accept="image/*" style="width:100%; padding:0.6rem; border:1px dashed #c7a45a; border-radius:8px; background:#fffdf9; cursor:pointer;">
+          <small style="color:#777; font-size:0.8rem; display:block; margin-top:0.4rem;">
+            Upload a photo of your grown ImperialPaws Pekingese right from your phone or computer!
           </small>
         </div>
 

@@ -1,25 +1,770 @@
+<%# ============================================================
+    FAQ — ImperialPaws Pekingese
+    Accordion-style, fully hardcoded, no JS required.
+    Uses <details>/<summary> with scoped <style> for interaction.
+============================================================ %>
+
+<style>
+  /* ── FAQ Scoped Styles ── */
+  .faq-trust-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    margin: 2.2rem 0 2.8rem;
+    padding: 1.2rem 1.4rem;
+    background: #fffaf0;
+    border: 1px solid rgba(199, 164, 90, 0.45);
+    border-left: 5px solid #c7a45a;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(199, 164, 90, 0.1);
+  }
+
+  .faq-trust-callout__icon {
+    font-size: 1.45rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .faq-trust-callout__body {
+    flex: 1;
+  }
+
+  .faq-trust-callout__title {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1f1f1f;
+    letter-spacing: 0.02em;
+    margin: 0 0 0.35rem;
+  }
+
+  .faq-trust-callout__text {
+    margin: 0;
+    font-size: 0.93rem;
+    color: #3e382b;
+    line-height: 1.7;
+  }
+
+  .faq-trust-callout__text strong {
+    color: #6d520f;
+  }
+
+  /* ── Section heading ── */
+  .faq-section {
+    margin-top: 3rem;
+  }
+
+  .faq-section:first-of-type {
+    margin-top: 0;
+  }
+
+  .faq-section__heading {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(1.25rem, 3vw, 1.55rem);
+    color: #1e1e1e;
+    margin: 0 0 1.1rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 2px solid #c7a45a;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Accordion items ── */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .faq-item {
+    border: 1px solid rgba(31, 31, 31, 0.1);
+    border-radius: 10px;
+    background: #fffdf8;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .faq-item:hover {
+    box-shadow: 0 6px 22px rgba(199, 164, 90, 0.12);
+  }
+
+  .faq-item details {
+    width: 100%;
+  }
+
+  .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1.05rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #1f1f1f;
+    line-height: 1.5;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Remove default browser marker */
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::marker { display: none; }
+
+  .faq-item summary .faq-arrow {
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    color: #c7a45a;
+    display: inline-block;
+    transition: transform 0.22s ease;
+  }
+
+  .faq-item details[open] summary .faq-arrow {
+    transform: rotate(90deg);
+  }
+
+  .faq-item details[open] summary {
+    color: #6d520f;
+    border-bottom: 1px solid rgba(199, 164, 90, 0.2);
+  }
+
+  .faq-answer {
+    padding: 1.1rem 1.25rem 1.25rem;
+    background: #f9f7f2;
+  }
+
+  .faq-answer p {
+    margin: 0 0 0.85rem;
+    color: #3e382b;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .faq-answer p:last-child {
+    margin-bottom: 0;
+  }
+
+  .faq-answer strong {
+    color: #1f1f1f;
+  }
+
+  .faq-answer em {
+    color: #6d520f;
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .faq-answer ol,
+  .faq-answer ul {
+    margin: 0.5rem 0 0.85rem 1.1rem;
+    padding: 0;
+    color: #3e382b;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .faq-answer li {
+    margin-bottom: 0.35rem;
+  }
+
+  .faq-answer a {
+    color: #6d520f;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .faq-answer a:hover {
+    color: #c7a45a;
+  }
+
+  /* ── Bottom CTA ── */
+  .faq-cta {
+    margin: 3.5rem 0 2rem;
+    padding: 2.4rem 2rem;
+    background: linear-gradient(135deg, #1f1f1f 0%, #2c2a25 100%);
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.14);
+  }
+
+  .faq-cta__heading {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(1.4rem, 3vw, 1.75rem);
+    color: #fff;
+    margin: 0 0 0.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .faq-cta__text {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.95rem;
+    margin: 0 auto 1.6rem;
+    max-width: 480px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 600px) {
+    .faq-trust-callout {
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .faq-item summary {
+      padding: 0.95rem 1rem;
+    }
+
+    .faq-answer {
+      padding: 1rem 1rem 1.15rem;
+    }
+
+    .faq-cta {
+      padding: 2rem 1.25rem;
+    }
+  }
+</style>
+
+<%# ── PAGE HERO ── %>
 <section class="page-hero reveal">
   <div class="container">
     <h1>Frequently Asked Questions</h1>
     <p class="subtitle">
-      Helpful information about our puppies and adoption process.
+      Everything you need to know about ImperialPaws, our Pekingese puppies,
+      and how our adoption process works — clearly and honestly.
     </p>
   </div>
 </section>
 
+<%# ── FAQ BODY ── %>
 <section class="page-content reveal">
-  <div class="container narrow faq reveal">
-    <div class="notice-box">
-      <p>
-        The safest path is simple: review the puppy profile, submit one accurate
-        application, wait for approval, and only then review any invoice tied to
-        your private tracking code.
-      </p>
+  <div class="container narrow reveal">
+
+    <%# ── Trust Callout ── %>
+    <div class="faq-trust-callout">
+      <div class="faq-trust-callout__icon">🔒</div>
+      <div class="faq-trust-callout__body">
+        <p class="faq-trust-callout__title">Official Communication Notice</p>
+        <p class="faq-trust-callout__text">
+          All official communication from ImperialPaws is sent from
+          <strong>info@imperialpaws.pet</strong> only. We will
+          <strong>never</strong> ask for payment via social media, random links,
+          or third parties. If you receive a message from any other address
+          claiming to be us, do not respond — contact us directly.
+        </p>
+      </div>
     </div>
 
-    <% faqItems.forEach(item => { %>
-      <h2><%= item.question %></h2>
-      <p><%= item.answer %></p>
-    <% }) %>
+    <%# ══════════════════════════════════
+        SECTION 1 — ABOUT IMPERIALPAWS
+    ══════════════════════════════════ %>
+    <div class="faq-section">
+      <h2 class="faq-section__heading">About ImperialPaws</h2>
+      <ul class="faq-list">
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              Are you a licensed and reputable breeder?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Yes. ImperialPaws is a home-based, ethical Pekingese breeding
+                program based in the United States. Our parent dogs are
+                <strong>AKC registered</strong> and health-tested before being
+                included in our breeding program.
+              </p>
+              <p>
+                We are not a broker, pet mill, or high-volume listing site. Every
+                litter is planned with care and every puppy receives individual
+                attention from birth. Our commitment is to the long-term health
+                and temperament of the breed and the satisfaction of the families
+                who adopt from us.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              Where are the puppies raised?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Our puppies are raised <strong>inside our home</strong> — not in
+                kennels or outside facilities. From birth they are surrounded by
+                family members, including children and other household pets, which
+                gives them a natural, well-rounded early socialization.
+              </p>
+              <p>
+                This home-raised environment helps puppies develop confidence,
+                gentleness, and adaptability — qualities that make them wonderful
+                companions in a wide variety of households.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              Do you ship puppies?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Yes. We offer multiple delivery options to accommodate families
+                across the country:
+              </p>
+              <ul>
+                <li>
+                  <strong>Professional Flight Nanny</strong> — A trusted, experienced
+                  flight nanny accompanies your puppy in-cabin for the safest possible
+                  air transport experience.
+                </li>
+                <li>
+                  <strong>Ground Transport</strong> — For families within a reasonable
+                  driving distance, we coordinate safe and comfortable ground delivery.
+                </li>
+                <li>
+                  <strong>Local Pickup</strong> — If you are located near us, you are
+                  welcome to collect your puppy in person after all adoption steps are
+                  complete.
+                </li>
+              </ul>
+              <p>
+                Delivery logistics and any associated transport fees will be
+                communicated clearly in your adoption agreement before any payment is
+                made.
+              </p>
+            </div>
+          </details>
+        </li>
+
+      </ul>
+    </div>
+
+    <%# ══════════════════════════════════
+        SECTION 2 — THE ADOPTION PROCESS
+    ══════════════════════════════════ %>
+    <div class="faq-section">
+      <h2 class="faq-section__heading">The Adoption Process</h2>
+      <ul class="faq-list">
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              How do I adopt a puppy?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>Our adoption process is straightforward and fully transparent:</p>
+              <ol>
+                <li><strong>Browse</strong> — Explore our available puppies and find the right match for your family.</li>
+                <li><strong>Apply</strong> — Submit an adoption application from the puppy's detail page.</li>
+                <li><strong>Get Approved</strong> — We review your application and notify you by email within 24–48 hours.</li>
+                <li><strong>Receive Invoice</strong> — Upon approval, an official adoption invoice is issued and emailed to you.</li>
+                <li><strong>Pay</strong> — You pay the exact adoption fee shown on your invoice using your preferred method.</li>
+                <li><strong>Reserved</strong> — Once payment is confirmed, your puppy is immediately marked as Reserved for you.</li>
+                <li><strong>Delivered</strong> — We coordinate pickup or delivery and your puppy comes home to you.</li>
+              </ol>
+              <p>
+                At no point are you asked to pay before receiving an official, itemized invoice
+                tied to your private tracking code.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              How long does the application review take?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Most applications are reviewed within <strong>24 to 48 hours</strong>. During
+                busier periods it may take slightly longer. You can check your application
+                status at any time using your private tracking code at
+                <a href="/track">imperialpaws.pet/track</a>.
+              </p>
+              <p>
+                In some cases we may reach out with follow-up questions before making a
+                placement decision. Providing detailed, honest answers on your application
+                helps speed up the process.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              Can I apply for multiple puppies at the same time?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                We recommend applying for <strong>one puppy at a time</strong>. Submitting
+                multiple applications simultaneously can cause confusion in the review process
+                and may slow down your approval.
+              </p>
+              <p>
+                If the puppy you applied for is placed before your application is reviewed,
+                we will note this and you are welcome to apply for another available puppy
+                at that time.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              What happens after I am approved?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                After approval, you will receive an <strong>approval email</strong> to the
+                address you provided in your application. This email will confirm the puppy
+                you have been approved for and the adoption fee.
+              </p>
+              <p>
+                Following the approval email, an official <strong>adoption invoice</strong>
+                is issued and sent to you. The invoice is linked to your tracking code and
+                contains an itemized breakdown of the adoption fee. You simply reply to your
+                approval email to begin the payment step.
+              </p>
+            </div>
+          </details>
+        </li>
+
+      </ul>
+    </div>
+
+    <%# ══════════════════════════════════
+        SECTION 3 — PAYMENTS & SAFETY
+    ══════════════════════════════════ %>
+    <div class="faq-section">
+      <h2 class="faq-section__heading">Payments &amp; Safety</h2>
+      <ul class="faq-list">
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              What payment methods do you accept?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                We do <strong>not</strong> list payment methods publicly on our website. This
+                is a deliberate security measure to protect both you and us.
+              </p>
+              <p>
+                Once you have been approved and received your official invoice, simply
+                <em>reply to your approval email</em> and let us know what payment method
+                you have available. We will then send you our payment details
+                <strong>securely and privately</strong> via email.
+              </p>
+              <p>
+                This process ensures that payment information is only ever exchanged through
+                a verified, direct email thread — never through social media, a third-party
+                site, or an unsolicited link.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              How do I know the payment process is safe?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>Our safe payment process has several built-in protections:</p>
+              <ul>
+                <li>
+                  You will only pay <strong>after</strong> receiving your official invoice —
+                  a document linked directly to your private tracking code.
+                </li>
+                <li>
+                  All communication originates from <strong>info@imperialpaws.pet</strong>
+                  only. We never use personal email addresses, social media accounts, or
+                  messaging apps for official business.
+                </li>
+                <li>
+                  We never request payment via random links, wire instructions sent via
+                  social media, or through any third-party not disclosed in your invoice.
+                </li>
+                <li>
+                  After payment is confirmed you receive an automatic
+                  <strong>Payment Received</strong> confirmation email.
+                </li>
+              </ul>
+              <p>
+                If at any point something feels unclear or off, stop and contact us at
+                <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a> before
+                proceeding.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              Is there a deposit or holding fee?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                No. Your invoice reflects <strong>only the exact adoption fee</strong>
+                shown on the puppy's listing page. There are no hidden fees, processing
+                surcharges, or surprise charges added at any stage.
+              </p>
+              <p>
+                What you see on the puppy's profile is what you pay. Full stop. If an
+                invoice you receive shows a different amount than what is listed, do
+                not pay — contact us at
+                <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a>
+                immediately.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              What if I send payment and do not hear back?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Once your payment is confirmed, you will receive an automatic
+                <strong>"Payment Confirmed — Puppy Reserved"</strong> email. This
+                email serves as your official receipt and reservation confirmation.
+                The puppy will simultaneously be marked as Sold on our website.
+              </p>
+              <p>
+                If you have made a payment and do <strong>not</strong> receive this
+                confirmation email within <strong>24 hours</strong>, please contact
+                us immediately at
+                <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a>
+                with your tracking code and payment reference. We will resolve this
+                as quickly as possible.
+              </p>
+              <p>
+                Do not assume silence is normal. Prompt follow-up is always appropriate
+                when payment confirmation is delayed.
+              </p>
+            </div>
+          </details>
+        </li>
+
+      </ul>
+    </div>
+
+    <%# ══════════════════════════════════
+        SECTION 4 — PUPPIES & HEALTH
+    ══════════════════════════════════ %>
+    <div class="faq-section">
+      <h2 class="faq-section__heading">Puppies &amp; Health</h2>
+      <ul class="faq-list">
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              Do puppies come with health guarantees?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Yes. All of our puppies come with a <strong>health guarantee</strong>.
+                The full terms and conditions of the guarantee are included in your
+                adoption agreement, which you will receive before the adoption is
+                finalized.
+              </p>
+              <p>
+                We encourage all adopters to read the adoption agreement carefully and
+                to ask any questions before signing. Your peace of mind matters to us.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              What vaccinations and deworming will my puppy have received?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Every puppy is placed with <strong>age-appropriate vaccinations
+                and deworming completed</strong> prior to leaving us. Specific
+                records will depend on the puppy's age at the time of placement.
+              </p>
+              <p>
+                Your puppy's vaccination and deworming records will be provided
+                to you at the time of adoption so your veterinarian can continue
+                the proper schedule. We strongly recommend booking a wellness vet
+                visit within the first week of your puppy arriving home.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              What do I need to prepare before pickup or delivery?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Getting your home ready before your puppy arrives makes the
+                transition much smoother. Here is what we recommend having on hand:
+              </p>
+              <ul>
+                <li>
+                  <strong>Small breed puppy food</strong> — Ask us what food your
+                  puppy is currently eating so you can maintain consistency and avoid
+                  a sudden diet change.
+                </li>
+                <li>
+                  <strong>Cozy, appropriately-sized bed or crate</strong> — Pekingese
+                  appreciate a warm, quiet space of their own.
+                </li>
+                <li>
+                  <strong>Water bowl</strong> — Fresh water should be available at
+                  all times.
+                </li>
+                <li>
+                  <strong>Vet appointment booked</strong> — Schedule a wellness
+                  appointment for the week of your puppy's arrival. Early vet visits
+                  build a baseline health record and catch any concerns early.
+                </li>
+              </ul>
+              <p>
+                We are happy to answer any breed-specific care questions you have
+                before or after your puppy comes home.
+              </p>
+            </div>
+          </details>
+        </li>
+
+      </ul>
+    </div>
+
+    <%# ══════════════════════════════════
+        SECTION 5 — TRACKING & COMMUNICATION
+    ══════════════════════════════════ %>
+    <div class="faq-section">
+      <h2 class="faq-section__heading">Tracking &amp; Communication</h2>
+      <ul class="faq-list">
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              How do I track my application status?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                When you submit an application, you are issued a
+                <strong>private tracking code</strong>. You can enter this code
+                at any time on our tracking page to see your current application
+                status.
+              </p>
+              <p>
+                Visit: <a href="/track">imperialpaws.pet/track</a>
+              </p>
+              <p>
+                Keep your tracking code private — it is unique to your application
+                and displays your approval status and any associated invoice.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              Who do I contact if I have questions?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                For all questions, contact us at:
+                <a href="mailto:info@imperialpaws.pet"><strong>info@imperialpaws.pet</strong></a>
+              </p>
+              <p>
+                This is the <strong>only official email address</strong> used by
+                ImperialPaws. All responses, invoices, approval notifications, and
+                payment confirmations will come from this address. If you ever receive
+                a message claiming to be from ImperialPaws from any other email
+                address, treat it with caution and verify with us directly.
+              </p>
+            </div>
+          </details>
+        </li>
+
+        <li class="faq-item">
+          <details>
+            <summary>
+              How will I know my puppy is officially reserved for me?
+              <span class="faq-arrow">▸</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Your puppy is <strong>not reserved</strong> until payment has been
+                confirmed. Once that happens, two things occur simultaneously:
+              </p>
+              <ul>
+                <li>
+                  You receive a <strong>"Payment Confirmed — Puppy Reserved"</strong>
+                  email to the address on your application.
+                </li>
+                <li>
+                  The puppy's listing on our website is immediately updated to
+                  <strong>Sold</strong>, so no other applicant can be invoiced for
+                  that puppy.
+                </li>
+              </ul>
+              <p>
+                This dual confirmation ensures complete clarity. If you have paid but
+                have not received the confirmation email and the listing has not
+                changed, contact us at
+                <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a>
+                without delay.
+              </p>
+            </div>
+          </details>
+        </li>
+
+      </ul>
+    </div>
+
+    <%# ── Bottom CTA ── %>
+    <div class="faq-cta">
+      <h2 class="faq-cta__heading">Still have questions?</h2>
+      <p class="faq-cta__text">
+        We are happy to help. Reach out and a member of our team will get back
+        to you as soon as possible — always from
+        <strong style="color: #c7a45a;">info@imperialpaws.pet</strong>.
+      </p>
+      <a href="/contact" class="btn-primary">Contact Us</a>
+    </div>
+
   </div>
 </section>

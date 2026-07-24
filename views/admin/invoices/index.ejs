@@ -6,10 +6,22 @@
       <div>
         <p class="admin-eyebrow">Payments</p>
         <h1>Invoices</h1>
-        <p class="admin-subtitle">Create adoption invoices, track payment status, and email buyers their invoice links.</p>
+        <p class="admin-subtitle">Create adoption invoices, track payment status, and communicate with buyers.</p>
       </div>
       <a href="/admin/invoices/select-application" class="admin-link-button">Create Invoice</a>
     </header>
+
+    <% if (req.query.success) { %>
+      <div style="background:#F0FDF4; border:1px solid #22C55E; color:#166534; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-weight:600;">
+        ✅ <%= req.query.success %>
+      </div>
+    <% } %>
+
+    <% if (req.query.error) { %>
+      <div style="background:#FEF2F2; border:1px solid #EF4444; color:#991B1B; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-weight:600;">
+        ❌ <%= req.query.error %>
+      </div>
+    <% } %>
 
     <% if (!invoices.length) { %>
       <section class="admin-empty-state">
@@ -33,12 +45,6 @@
               <%
                 const buyerEmail = inv.adoptingParent && inv.adoptingParent.email;
                 const buyerName = (inv.adoptingParent && inv.adoptingParent.name) || "there";
-                const invoicePath = inv.applicationId
-                  ? `/invoice/${encodeURIComponent(inv.applicationId)}/${encodeURIComponent(inv.invoiceNumber)}`
-                  : `/invoice/${encodeURIComponent(inv.invoiceNumber)}`;
-                const invoiceUrl = absoluteUrl(invoicePath);
-                const emailSubject = `ImperialPaws invoice ${inv.invoiceNumber}`;
-                const emailBody = `Hello ${buyerName},\n\nYour ImperialPaws invoice is ready:\n${invoiceUrl}\n\nThank you,\nImperialPaws Pekingese`;
               %>
               <tr>
                 <td><strong><%= inv.invoiceNumber %></strong></td>
@@ -52,19 +58,35 @@
                   </span>
                 </td>
                 <td><%= inv.createdAt ? new Date(inv.createdAt).toLocaleDateString() : "Unknown" %></td>
-                <td class="admin-actions">
+                <td class="admin-actions" style="display:flex; flex-wrap:wrap; gap:0.4rem; align-items:flex-start;">
+
                   <a class="btn-small" href="/admin/invoices/view/<%= inv.invoiceNumber %>">View</a>
                   <a class="btn-small" href="/admin/invoices/edit/<%= inv.invoiceNumber %>">Edit</a>
-                  <% if (buyerEmail) { %>
-                    <a class="btn-small" href="mailto:<%= encodeURIComponent(buyerEmail) %>?subject=<%= encodeURIComponent(emailSubject) %>&body=<%= encodeURIComponent(emailBody) %>">
-                      Email Buyer
-                    </a>
-                  <% } %>
+
                   <form method="POST" action="/admin/invoices/<%= inv.invoiceNumber %>/toggle-paid">
                     <button type="submit" class="btn-small">
-                      <%= inv.paid ? "Mark Unpaid" : "Mark Paid" %>
+                      <%= inv.paid ? "Mark Unpaid" : "✅ Mark Paid" %>
                     </button>
                   </form>
+
+                  <% if (buyerEmail && !inv.paid) { %>
+                    <form method="POST" action="/admin/invoices/<%= inv.invoiceNumber %>/send-reminder">
+                      <button type="submit" class="btn-small" style="background:#FEF3C7; color:#92400E; border:1px solid #F59E0B;">
+                        🔔 Send Reminder
+                      </button>
+                    </form>
+                  <% } %>
+
+                  <% if (buyerEmail) { %>
+                    <button
+                      class="btn-small"
+                      style="background:#EFF6FF; color:#1E40AF; border:1px solid #93C5FD;"
+                      onclick="openReply('<%= inv.invoiceNumber %>', '<%= buyerEmail %>', '<%= buyerName %>')"
+                    >
+                      ✉️ Manual Reply
+                    </button>
+                  <% } %>
+
                 </td>
               </tr>
             <% }) %>
@@ -74,3 +96,52 @@
     <% } %>
   </main>
 </div>
+
+<!-- Manual Reply Modal -->
+<div id="replyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:12px; padding:2rem; max-width:520px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <h3 style="margin:0 0 1rem; font-family:Georgia,serif; color:#1a1a1a;">✉️ Send Message to Buyer</h3>
+    <form method="POST" id="replyForm">
+      <input type="hidden" name="toEmail" id="replyToEmail">
+      <input type="hidden" name="toName" id="replyToName">
+
+      <div style="margin-bottom:0.75rem;">
+        <label style="font-size:0.82rem; font-weight:700; color:#555; display:block; margin-bottom:0.3rem;">TO</label>
+        <div id="replyToDisplay" style="padding:0.5rem 0.75rem; background:#f5f5f5; border-radius:6px; font-size:0.9rem; color:#333;"></div>
+      </div>
+
+      <div style="margin-bottom:0.75rem;">
+        <label style="font-size:0.82rem; font-weight:700; color:#555; display:block; margin-bottom:0.3rem;">SUBJECT</label>
+        <input type="text" name="subject" placeholder="e.g. Regarding Your Puppy Adoption" style="width:100%; padding:0.55rem 0.75rem; border:1px solid #ddd; border-radius:6px; font-size:0.9rem; box-sizing:border-box;">
+      </div>
+
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:0.82rem; font-weight:700; color:#555; display:block; margin-bottom:0.3rem;">MESSAGE</label>
+        <textarea name="messageBody" rows="7" placeholder="Type your message to the buyer here..." required style="width:100%; padding:0.6rem 0.75rem; border:1px solid #ddd; border-radius:6px; font-size:0.9rem; resize:vertical; box-sizing:border-box;"></textarea>
+      </div>
+
+      <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+        <button type="button" onclick="closeReply()" style="padding:0.55rem 1.2rem; border:1px solid #ddd; border-radius:8px; background:#fff; cursor:pointer; font-size:0.875rem;">Cancel</button>
+        <button type="submit" style="padding:0.55rem 1.4rem; border:none; border-radius:8px; background:#c7a45a; color:#111; font-weight:700; cursor:pointer; font-size:0.875rem;">Send Email 🚀</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openReply(invoiceNumber, email, name) {
+  document.getElementById("replyToEmail").value = email;
+  document.getElementById("replyToName").value = name;
+  document.getElementById("replyToDisplay").textContent = name + " <" + email + ">";
+  document.getElementById("replyForm").action = "/admin/invoices/" + invoiceNumber + "/manual-reply";
+  const modal = document.getElementById("replyModal");
+  modal.style.display = "flex";
+}
+function closeReply() {
+  document.getElementById("replyModal").style.display = "none";
+}
+document.getElementById("replyModal").addEventListener("click", function(e) {
+  if (e.target === this) closeReply();
+});
+</script>
+

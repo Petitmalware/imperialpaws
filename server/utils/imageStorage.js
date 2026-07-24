@@ -133,9 +133,62 @@ async function deletePuppyImage(image) {
   if (fs.existsSync(resolvedPath)) fs.unlinkSync(resolvedPath);
 }
 
+function uploadTestimonialToCloudinary(buffer, { testimonialId }) {
+  return new Promise((resolve, reject) => {
+    const upload = cloudinary.uploader.upload_stream(
+      {
+        folder: "imperialpaws/testimonials",
+        public_id: safeSegment(testimonialId),
+        resource_type: "image",
+        overwrite: true
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve({
+          path: result.secure_url,
+          publicId: result.public_id,
+          storage: "cloudinary"
+        });
+      }
+    );
+    upload.end(buffer);
+  });
+}
+
+function uploadTestimonialToLocal(file, { testimonialId }) {
+  const dir = path.join(__dirname, "../../public/uploads/testimonials");
+  const ext = path.extname(file.originalname || "").toLowerCase() || ".jpg";
+  const filename = `${safeSegment(testimonialId)}${ext}`;
+
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, filename), file.buffer);
+
+  return {
+    path: `/uploads/testimonials/${filename}`,
+    publicId: "",
+    storage: "local"
+  };
+}
+
+async function saveTestimonialImage(file, { testimonialId }) {
+  if (!file || !file.buffer) {
+    throw new Error("No image file received.");
+  }
+  if (usingCloudinary()) {
+    const result = await uploadTestimonialToCloudinary(file.buffer, { testimonialId });
+    return result.path;
+  }
+  if (!LOCAL_IMAGE_FALLBACK_ENABLED) {
+    throw createPersistentImageStorageError();
+  }
+  const result = uploadTestimonialToLocal(file, { testimonialId });
+  return result.path;
+}
+
 module.exports = {
   deletePuppyImage,
   getImageStorageStatus,
   savePuppyImage,
+  saveTestimonialImage,
   usingCloudinary
 };

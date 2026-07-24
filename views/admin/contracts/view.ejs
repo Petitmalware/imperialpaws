@@ -133,38 +133,83 @@
     .contract-body {
       white-space: pre-wrap;
       word-break: break-word;
-      font-size: 11pt;
-      line-height: 1.9;
+      font-size: 10.5pt;
+      line-height: 1.55;
       color: #222;
     }
 
     /* Signature block */
     .signature-block {
-      margin-top: 3.5rem;
+      margin-top: 2rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      gap: 2.5rem;
     }
 
     .sig-line {
       border-top: 1px solid #333;
-      padding-top: 0.5rem;
-      font-size: 0.9rem;
+      padding-top: 0.4rem;
+      font-size: 0.88rem;
       color: #555;
     }
 
     .sig-line strong {
       display: block;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.2rem;
       color: #1a1a1a;
     }
 
-    /* Print media */
+    /* Print media - Guaranteed 1 Page Fit */
+    @page {
+      size: letter portrait;
+      margin: 0.4in;
+    }
+
     @media print {
-      .contract-actions { display: none !important; }
-      body { padding: 0; }
-      .contract-page { padding: 1.5cm 2cm; max-width: none; }
-      .signature-block { break-inside: avoid; }
+      .contract-actions, .no-print { display: none !important; }
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 9pt !important;
+        line-height: 1.35 !important;
+        background: #fff !important;
+      }
+      .contract-page {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+      }
+      .contract-header {
+        margin-bottom: 0.8rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+      .contract-logo svg {
+        width: 24px !important;
+        height: 24px !important;
+      }
+      .contract-logo strong {
+        font-size: 1.1rem !important;
+      }
+      .contract-title {
+        font-size: 1.25rem !important;
+        margin: 0.2rem 0 0 !important;
+      }
+      .contract-body {
+        font-size: 9pt !important;
+        line-height: 1.35 !important;
+      }
+      .signature-block {
+        margin-top: 1.2rem !important;
+        gap: 2rem !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .sig-line {
+        padding-top: 0.3rem !important;
+        font-size: 8.5pt !important;
+      }
     }
 
     @media (max-width: 600px) {

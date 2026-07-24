@@ -155,9 +155,56 @@ router.post("/invoices/:number/toggle-paid", requireAdmin, asyncHandler(async (r
     invoice.paid = !invoice.paid;
     invoice.status = invoice.paid ? "Paid" : "Pending";
     await saveCollection("invoices", invoices);
+
+    // Fire Payment Received email when toggled to Paid
+    if (invoice.paid) {
+      const recipientEmail = invoice.adoptingParent?.email;
+      if (recipientEmail) {
+        const { sendPaymentReceivedEmail } = require("../utils/emailService");
+        const baseUrl = `${req.protocol}://${req.get("host")}`;
+        sendPaymentReceivedEmail(invoice, recipientEmail, baseUrl).catch(err => {
+          console.error("Payment received email error:", err);
+        });
+      }
+    }
   }
 
   res.redirect("/admin/invoices");
+}));
+
+router.post("/invoices/:number/send-reminder", requireAdmin, asyncHandler(async (req, res) => {
+  const invoices = await loadCollection("invoices");
+  const invoice = invoices.find(i => i.invoiceNumber === req.params.number);
+
+  if (!invoice || invoice.paid) return res.redirect("/admin/invoices");
+
+  const recipientEmail = invoice.adoptingParent?.email;
+  if (!recipientEmail) return res.redirect("/admin/invoices?error=No+email+on+invoice");
+
+  const { sendPaymentReminderEmail } = require("../utils/emailService");
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  await sendPaymentReminderEmail(invoice, recipientEmail, baseUrl);
+
+  res.redirect("/admin/invoices?success=Reminder+sent+to+" + encodeURIComponent(recipientEmail));
+}));
+
+router.post("/invoices/:number/manual-reply", requireAdmin, asyncHandler(async (req, res) => {
+  const invoices = await loadCollection("invoices");
+  const invoice = invoices.find(i => i.invoiceNumber === req.params.number);
+
+  if (!invoice) return res.redirect("/admin/invoices");
+
+  const toEmail = String(req.body.toEmail || invoice.adoptingParent?.email || "").trim();
+  const toName = String(req.body.toName || invoice.adoptingParent?.name || "").trim();
+  const subject = String(req.body.subject || "").trim();
+  const messageBody = String(req.body.messageBody || "").trim();
+
+  if (!toEmail || !messageBody) return res.redirect("/admin/invoices?error=Email+and+message+required");
+
+  const { sendManualReplyEmail } = require("../utils/emailService");
+  await sendManualReplyEmail({ toEmail, toName, subject, messageBody });
+
+  res.redirect("/admin/invoices?success=Message+sent+to+" + encodeURIComponent(toEmail));
 }));
 
 router.get("/invoices/edit/:number", requireAdmin, asyncHandler(async (req, res) => {

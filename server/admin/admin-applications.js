@@ -17,7 +17,9 @@ router.get("/applications", requireAdmin, asyncHandler(async (req, res) => {
   });
 
   res.render("admin/applications", {
-    applications: enriched
+    applications: enriched,
+    success: req.query.success || null,
+    error: req.query.error || null
   });
 }));
 
@@ -56,14 +58,56 @@ router.post("/applications/:id/status", requireAdmin, asyncHandler(async (req, r
   await saveCollection("applications", applications);
   await saveCollection("puppies", puppies);
 
-  // Trigger optional email notification to applicant
+  // Trigger optional email notification to applicant (pass puppy for transparent approved email)
   const { sendApplicationStatusUpdateEmail } = require("../utils/emailService");
   const baseUrl = `${req.protocol}://${req.get("host")}`;
-  sendApplicationStatusUpdateEmail(application, nextStatus, baseUrl).catch(err => {
+  sendApplicationStatusUpdateEmail(application, nextStatus, baseUrl, puppy || null).catch(err => {
     console.error("Email notification dispatch error:", err);
   });
 
   res.redirect("/admin/applications");
+}));
+
+router.post("/applications/:id/email-stage", requireAdmin, asyncHandler(async (req, res) => {
+  const applications = await loadCollection("applications");
+  const application = applications.find(a => a.id === req.params.id);
+
+  if (!application) return res.redirect("/admin/applications");
+
+  const stageType = String(req.body.stageType || "").trim();
+  const customNote = String(req.body.customNote || "").trim();
+  const { sendAdopterLifecycleEmail } = require("../utils/emailService");
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+
+  try {
+    await sendAdopterLifecycleEmail({ application, stageType, customNote, baseUrl });
+    res.redirect("/admin/applications?success=" + encodeURIComponent(`Lifecycle Stage Email dispatched to ${application.name} (${application.email}).`));
+  } catch (err) {
+    console.error("Failed to send stage email:", err);
+    res.redirect("/admin/applications?error=" + encodeURIComponent("Failed to send email: " + err.message));
+  }
+}));
+
+router.post("/applications/:id/adoption-complete", requireAdmin, asyncHandler(async (req, res) => {
+  const applications = await loadCollection("applications");
+  const puppies = await loadCollection("puppies");
+  const application = applications.find(a => a.id === req.params.id);
+
+  if (!application) return res.redirect("/admin/applications");
+
+  const puppy = puppies.find(p => p.id === application.puppyId) || null;
+  const customNote = String(req.body.customNote || "").trim();
+
+  const { sendAdoptionCompleteEmail } = require("../utils/emailService");
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+
+  try {
+    await sendAdoptionCompleteEmail({ application, puppy, customNote, baseUrl });
+    res.redirect("/admin/applications?success=" + encodeURIComponent(`Adoption Complete email with care guide sent to ${application.name} (${application.email})! 🐾`));
+  } catch (err) {
+    console.error("Failed to send adoption complete email:", err);
+    res.redirect("/admin/applications?error=" + encodeURIComponent("Failed to send email: " + err.message));
+  }
 }));
 
 module.exports = router;
