@@ -5,7 +5,7 @@
     <header class="admin-page-header">
       <div>
         <p class="admin-eyebrow">Invoices</p>
-        <h1>Create Invoice</h1>
+        <h1>Create Adoption Invoice</h1>
         <p class="admin-subtitle">Invoice for <strong><%= application.name %></strong><% if (puppy) { %> adopting <strong><%= puppy.name %></strong><% } %>.</p>
       </div>
       <a href="/admin/invoices/select-application" class="btn-secondary">Change Application</a>
@@ -17,7 +17,7 @@
 
       <section class="admin-grid two">
         <div class="admin-card">
-          <h2>Seller</h2>
+          <h2>Breeder / Seller</h2>
           <div class="form-group">
             <label>Business Name</label>
             <input name="sellerName" value="ImperialPaws Pekingese">
@@ -80,7 +80,13 @@
       </section>
 
       <section class="admin-card">
-        <h2>Invoice Details</h2>
+        <h2>Puppy Details</h2>
+        <div class="form-grid">
+          <% for (const [key, label, field] of [['name','Puppy name','puppyName'],['breed','Breed','puppyBreed'],['gender','Sex','puppyGender'],['color','Color / markings','puppyColor']]) { %>
+          <div class="form-group"><label for="<%= field %>"><%= label %></label><input id="<%= field %>" name="<%= field %>" maxlength="160" value="<%= puppy?.[key] || '' %>"></div>
+          <% } %>
+        </div>
+        <h2>Adoption Payment Details</h2>
         <div class="form-grid">
           <div class="form-group">
             <label>Issue Date</label>
@@ -102,15 +108,15 @@
 
         <div class="form-grid">
           <div class="form-group">
-            <label>Line Item</label>
+            <label>Adoption fee description</label>
             <input name="itemDescription" value="<%= puppy ? puppy.name + ' - Puppy Adoption Fee' : 'Puppy Adoption Fee' %>">
           </div>
           <div class="form-group">
-            <label>Quantity</label>
+            <label>Number of placements</label>
             <input name="itemQty" type="number" value="1" min="1">
           </div>
           <div class="form-group">
-            <label>Price</label>
+            <label>Adoption fee per placement</label>
             <input name="itemPrice" type="number" step="0.01" min="0" value="<%= puppy?.price || '' %>">
           </div>
           <div class="form-group">
@@ -120,7 +126,7 @@
         </div>
 
         <div class="form-group">
-          <label>Adoption Note</label>
+          <label>Placement notes / agreed payment terms</label>
           <textarea name="notes"><%= defaultInvoiceNote %></textarea>
         </div>
       </section>

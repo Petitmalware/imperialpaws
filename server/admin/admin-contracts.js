@@ -6,6 +6,7 @@
 const express = require("express");
 const router = express.Router();
 const { requireAdmin } = require("./admin-auth");
+const { contractFields, fillContract } = require("../utils/contractPresentation");
 const asyncHandler = require("../utils/asyncHandler");
 const {
   loadContracts,
@@ -47,7 +48,8 @@ router.post(
   "/contracts/new",
   requireAdmin,
   asyncHandler(async (req, res) => {
-    const { title, body } = req.body;
+    const fields = contractFields(req.body);
+    const { title, body } = fields;
     if (!title || !body) {
       return res.status(400).render("admin/contracts/edit", {
         contract: null,
@@ -56,7 +58,7 @@ router.post(
         layout: "layouts/main"
       });
     }
-    await createContract({ title, body });
+    await createContract(fields);
     req.session._flash = { type: "success", message: "Contract template created." };
     res.redirect("/admin/contracts");
   })
@@ -83,7 +85,8 @@ router.post(
   "/contracts/:id/edit",
   requireAdmin,
   asyncHandler(async (req, res) => {
-    const { title, body } = req.body;
+    const fields = contractFields(req.body);
+    const { title, body } = fields;
     if (!title || !body) {
       const contract = await getContract(req.params.id);
       return res.status(400).render("admin/contracts/edit", {
@@ -93,7 +96,7 @@ router.post(
         layout: "layouts/main"
       });
     }
-    await updateContract(req.params.id, { title, body });
+    await updateContract(req.params.id, fields);
     req.session._flash = { type: "success", message: "Contract template updated." };
     res.redirect("/admin/contracts");
   })
@@ -118,10 +121,8 @@ router.get(
     const contract = await getContract(req.params.id);
     if (!contract) return res.status(404).send("Contract not found");
     // Optionally prefill with a buyer name from query param
-    const buyerName = req.query.buyer || "[Adopting Parent Name]";
-    const filledBody = contract.body
-      .replace(/\[BUYER_NAME\]/gi, buyerName)
-      .replace(/\[DATE\]/gi, new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }));
+    const buyerName = typeof req.query.buyer === "string" ? req.query.buyer : "[Adopting Parent Name]";
+    const filledBody = fillContract(contract, buyerName);
     res.render("admin/contracts/view", {
       contract: { ...contract, filledBody },
       buyerName,

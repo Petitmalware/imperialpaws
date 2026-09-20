@@ -167,7 +167,6 @@ async function main() {
       breed: "Pekingese",
       gender: "Male",
       color: "Fawn",
-      dob: "2026-02-01",
       description: "Temporary system test listing",
       vaccinationStatus: "Current",
       registrationType: "Breeder records",

@@ -45,11 +45,6 @@
             </div>
 
             <div class="form-group">
-              <label>Date of Birth</label>
-              <input type="date" name="dob" value="<%= puppy.dob || '' %>">
-            </div>
-
-            <div class="form-group">
               <label>Status</label>
               <select name="status">
                 <option value="Available" <%= puppy.status === "Available" ? "selected" : "" %>>Available</option>

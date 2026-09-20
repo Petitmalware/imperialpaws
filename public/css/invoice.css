@@ -329,3 +329,24 @@ body {
     page-break-inside: avoid;
   }
 }
+
+/* Adoption documents */
+.invoice-meta h1 {font-family:Georgia,serif;letter-spacing:0;font-weight:normal;font-size:1.65rem;}
+.payment-status {display:inline-block;margin-top:8px;border:1px solid #c7a45a;border-radius:20px;padding:4px 12px;font-size:12px;color:#6f5524;background:#fbf8f1;}
+.payment-status.is-paid {color:#234638;border-color:#91b59e;background:#eff7f0;}
+.puppy-record {border:1px solid #d9dfd8;border-left:4px solid #234638;background:#f5f7f2;padding:16px;margin:20px 0;}
+.puppy-record h2,.fee-section h2 {font:normal 19px Georgia,serif;margin:0 0 12px;color:#234638;}
+.puppy-fields {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.puppy-fields span {display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#627064;}
+.puppy-fields strong {font-size:14px;font-weight:600;}
+.adoption-fees th:first-child,.adoption-fees td:first-child {width:72%;}
+.adoption-fees th:last-child,.adoption-fees td:last-child {width:28%;text-align:right;}
+.adoption-fees small {display:block;color:#6b7069;margin-top:4px;}
+.totals p {grid-template-columns:minmax(160px,auto) 110px;}
+.invoice-note p {white-space:pre-wrap;}
+.payment-guidance {margin-top:18px;font-size:13px;color:#4d584f;}
+.payment-guidance h3 {font-size:13px;margin-bottom:6px;}
+.record-note {font-size:11px;text-align:center;border-top:1px solid #ded8ca;padding-top:14px;color:#6b7069;}
+.invoice-page {overflow-wrap:anywhere;}
+@media print {.invoice-header,.info-row,.puppy-record,.totals {break-inside:avoid;} .invoice-page{font-size:11px;} }
+@media(max-width:480px){.totals p {grid-template-columns:1fr auto;}.invoice-meta h1{font-size:1.45rem;}}

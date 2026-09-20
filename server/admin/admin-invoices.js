@@ -7,7 +7,7 @@ const { loadCollection, saveCollection } = require("../utils/dataStore");
 const asyncHandler = require("../utils/asyncHandler");
 
 const DEFAULT_ADOPTION_NOTE =
-  "Thank you for choosing ImperialPaws Pekingese. This invoice is issued after adoption application approval for the puppy adoption fee and related agreed charges. Please keep this invoice for your records. Final placement remains subject to completion of all agreed adoption steps, transfer arrangements, and any written health or placement documentation provided by ImperialPaws.";
+  "Thank you for welcoming a puppy into your family. This invoice records the adoption fee and any agreed placement charges listed above. Please keep it with your puppy records and refer to your adoption agreement for the agreed health, payment, and placement terms. Confirm pickup or travel arrangements directly with the breeder.";
 
 function generateInvoiceNumber(invoices) {
   const d = new Date();
@@ -27,7 +27,11 @@ function generateInvoiceNumber(invoices) {
 
 router.get("/invoices", requireAdmin, asyncHandler(async (req, res) => {
   const invoices = await loadCollection("invoices");
-  res.render("admin/invoices/index", { invoices });
+  res.render("admin/invoices/index", {
+    invoices,
+    success: typeof req.query.success === "string" ? req.query.success : "",
+    error: typeof req.query.error === "string" ? req.query.error : ""
+  });
 }));
 
 router.get("/invoices/select-application", requireAdmin, asyncHandler(async (req, res) => {
@@ -93,6 +97,12 @@ router.post("/invoices/add", requireAdmin, asyncHandler(async (req, res) => {
     createdAt: new Date().toISOString(),
     applicationId: req.body.applicationId || null,
     puppyId: req.body.puppyId || null,
+    puppy: {
+      name: String(req.body.puppyName || "").trim(),
+      breed: String(req.body.puppyBreed || "").trim(),
+      gender: String(req.body.puppyGender || "").trim(),
+      color: String(req.body.puppyColor || "").trim()
+    },
     currency: req.body.currency || "$",
     issueDate: req.body.issueDate || "",
     dueDate: req.body.dueDate || "",
@@ -224,6 +234,12 @@ router.post("/invoices/edit/:number", requireAdmin, asyncHandler(async (req, res
 
   invoice.issueDate = req.body.issueDate || "";
   invoice.dueDate = req.body.dueDate || "";
+  invoice.puppy = {
+    name: String(req.body.puppyName ?? invoice.puppy?.name ?? "").trim(),
+    breed: String(req.body.puppyBreed ?? invoice.puppy?.breed ?? "").trim(),
+    gender: String(req.body.puppyGender ?? invoice.puppy?.gender ?? "").trim(),
+    color: String(req.body.puppyColor ?? invoice.puppy?.color ?? "").trim()
+  };
   invoice.currency = req.body.currency || invoice.currency;
   invoice.seller = {
     name: req.body.sellerName || "",

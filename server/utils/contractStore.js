@@ -43,6 +43,9 @@ async function createContract(fields) {
     id: `contract-${Date.now()}`,
     title: String(fields.title || "").trim(),
     body: String(fields.body || "").trim(),
+    headerName: String(fields.headerName ?? "ImperialPaws Pekingese").trim(),
+    sellerName: String(fields.sellerName ?? "ImperialPaws Pekingese").trim(),
+    breed: String(fields.breed ?? "Pekingese").trim(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
@@ -64,6 +67,9 @@ async function updateContract(id, fields) {
     ...contracts[idx],
     title: String(fields.title || "").trim(),
     body: String(fields.body || "").trim(),
+    headerName: String(fields.headerName ?? contracts[idx].headerName ?? "ImperialPaws Pekingese").trim(),
+    sellerName: String(fields.sellerName ?? contracts[idx].sellerName ?? "ImperialPaws Pekingese").trim(),
+    breed: String(fields.breed ?? contracts[idx].breed ?? "Pekingese").trim(),
     updatedAt: new Date().toISOString()
   };
   await saveContracts(contracts);

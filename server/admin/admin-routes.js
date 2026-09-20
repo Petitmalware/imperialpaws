@@ -219,7 +219,6 @@ function toPuppyPayload(body, existing = {}) {
     name: clean(body.name),
     breed: clean(body.breed) || existing.breed || "Pekingese",
     gender: clean(body.gender),
-    dob: clean(body.dob),
     color: clean(body.color),
     description: clean(body.description),
     price: body.price !== undefined ? clean(body.price) : existing.price || "",

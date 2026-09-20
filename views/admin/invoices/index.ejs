@@ -5,21 +5,21 @@
     <header class="admin-page-header">
       <div>
         <p class="admin-eyebrow">Payments</p>
-        <h1>Invoices</h1>
+        <h1>Adoption Invoices</h1>
         <p class="admin-subtitle">Create adoption invoices, track payment status, and communicate with buyers.</p>
       </div>
       <a href="/admin/invoices/select-application" class="admin-link-button">Create Invoice</a>
     </header>
 
-    <% if (req.query.success) { %>
+    <% if (success) { %>
       <div style="background:#F0FDF4; border:1px solid #22C55E; color:#166534; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-weight:600;">
-        ✅ <%= req.query.success %>
+        ✅ <%= success %>
       </div>
     <% } %>
 
-    <% if (req.query.error) { %>
+    <% if (error) { %>
       <div style="background:#FEF2F2; border:1px solid #EF4444; color:#991B1B; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-weight:600;">
-        ❌ <%= req.query.error %>
+        ❌ <%= error %>
       </div>
     <% } %>
 
@@ -78,10 +78,12 @@
                   <% } %>
 
                   <% if (buyerEmail) { %>
+                    <% const publicPath = inv.applicationId ? '/invoice/' + encodeURIComponent(inv.applicationId) + '/' + encodeURIComponent(inv.invoiceNumber) : '/invoice/' + encodeURIComponent(inv.invoiceNumber); %>
+                    <a class="btn-small" href="mailto:<%= encodeURIComponent(buyerEmail) %>?subject=<%= encodeURIComponent('Adoption invoice ' + inv.invoiceNumber) %>&body=<%= encodeURIComponent('Your puppy adoption invoice is ready: ' + absoluteUrl(publicPath)) %>">Email invoice</a>
                     <button
                       class="btn-small"
                       style="background:#EFF6FF; color:#1E40AF; border:1px solid #93C5FD;"
-                      onclick="openReply('<%= inv.invoiceNumber %>', '<%= buyerEmail %>', '<%= buyerName %>')"
+                      data-number="<%= inv.invoiceNumber %>" data-email="<%= buyerEmail %>" data-name="<%= buyerName %>" onclick="openReply(this.dataset.number, this.dataset.email, this.dataset.name)"
                     >
                       ✉️ Manual Reply
                     </button>
@@ -144,4 +146,3 @@ document.getElementById("replyModal").addEventListener("click", function(e) {
   if (e.target === this) closeReply();
 });
 </script>
-

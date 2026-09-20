@@ -26,6 +26,10 @@ let transporter = null;
 
 function getTransporter() {
   if (!transporter) {
+    if (process.env.NODE_ENV === "test") {
+      transporter = nodemailer.createTransport({ jsonTransport: true });
+      return transporter;
+    }
     transporter = nodemailer.createTransport({
       host: SMTP_HOST,
       port: SMTP_PORT,

@@ -1,0 +1,57 @@
+<%
+  const seller = invoice.seller || {};
+  const parent = invoice.adoptingParent || {};
+  const puppy = invoice.puppy || {};
+  const items = invoice.items || [];
+  const subtotal = items.reduce((sum, item) => sum + Number(item.qty || 0) * Number(item.unitPrice || 0), 0);
+  const tax = subtotal * Number(invoice.taxRate || 0);
+  const total = subtotal + tax;
+  const money = value => (invoice.currency || '$') + value.toFixed(2);
+%>
+<header class="invoice-header">
+  <div class="logo">
+    <%- include('paw-logo') %>
+    <div class="brand-text"><strong><%= seller.name || 'Breeder / Seller' %></strong><span>Puppy placement &amp; adoption</span></div>
+  </div>
+  <div class="invoice-meta">
+    <h1>Adoption Invoice</h1>
+    <p><strong>Invoice No:</strong> <%= invoice.invoiceNumber %></p>
+    <p><strong>Issued:</strong> <%= invoice.issueDate || (invoice.createdAt ? new Date(invoice.createdAt).toLocaleDateString('en-US') : 'Not specified') %></p>
+    <% if (invoice.dueDate) { %><p><strong>Payment due:</strong> <%= invoice.dueDate %></p><% } %>
+    <span class="payment-status <%= invoice.paid ? 'is-paid' : '' %>"><%= invoice.paid ? 'Paid in full' : 'Payment pending' %></span>
+  </div>
+</header>
+<section class="info-row">
+  <div class="card"><h3>Breeder / Seller</h3><p><strong><%= seller.name || 'Not specified' %></strong></p>
+    <% for (const field of ['address','phone','email','website']) { if (seller[field]) { %><p><%= seller[field] %></p><% } } %>
+  </div>
+  <div class="card"><h3>Adopting Parent</h3><p><strong><%= parent.name || 'Not specified' %></strong></p>
+    <% for (const field of ['address','phone','email']) { if(parent[field]) { %><p><%= parent[field] %></p><% } } %>
+    <p><%= [parent.city,parent.state,parent.zip].filter(Boolean).join(', ') %></p>
+  </div>
+</section>
+<% if (Object.values(puppy).some(Boolean)) { %>
+<section class="puppy-record"><h2>Puppy being welcomed home</h2><div class="puppy-fields">
+  <% for (const [field,label] of [['name','Puppy name'],['breed','Breed'],['gender','Sex'],['color','Color / markings']]) { if(puppy[field]) { %>
+  <div><span><%= label %></span><strong><%= puppy[field] %></strong></div><% } } %>
+</div></section>
+<% } %>
+<section class="fee-section"><h2>Adoption fee summary</h2>
+<table class="items adoption-fees"><thead><tr><th>Placement / agreed charge</th><th>Amount</th></tr></thead><tbody>
+  <% for (const item of items) { %><tr><td><%= item.description %>
+    <% if (Number(item.qty) !== 1) { %><small><%= item.qty %> placements at <%= money(Number(item.unitPrice || 0)) %> each</small><% } %>
+    </td><td><%= money(Number(item.qty || 0) * Number(item.unitPrice || 0)) %></td></tr><% } %>
+  <% if (!items.length) { %><tr><td colspan="2">No adoption fees recorded.</td></tr><% } %>
+</tbody></table></section>
+<section class="totals" aria-label="Payment summary">
+  <p>Subtotal <span><%= money(subtotal) %></span></p>
+  <% if (invoice.taxRate) { %><p>Tax (<%= Number(invoice.taxRate) * 100 %>%) <span><%= money(tax) %></span></p><% } %>
+  <p>Total adoption charges <span><%= money(total) %></span></p>
+  <% if (invoice.paid) { %><p>Payment recorded <span><%= money(total) %></span></p><% } %>
+  <p class="grand">Balance due <span><%= money(invoice.paid ? 0 : total) %></span></p>
+</section>
+<footer class="footer">
+  <% if (invoice.notes) { %><div class="invoice-note"><h3>Adoption Notes &amp; Payment Terms</h3><p><%= invoice.notes %></p></div><% } %>
+  <% if (!invoice.paid) { %><div class="payment-guidance"><h3>Arrange your adoption payment</h3><p>Contact the breeder using the details above to confirm payment instructions and your puppy's pickup or travel arrangements.</p></div><% } %>
+  <p class="record-note">Please retain this invoice with your adoption agreement and puppy records.</p>
+</footer>

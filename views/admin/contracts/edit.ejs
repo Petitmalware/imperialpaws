@@ -41,11 +41,14 @@
           >
         </div>
 
+        <% for (const [field, label, fallback] of [['headerName','Agreement header / business name','ImperialPaws Pekingese'], ['sellerName','Breeder / seller name','ImperialPaws Pekingese'], ['breed','Breed','Pekingese']]) { %>
+        <div class="form-group"><label for="<%= field %>"><%= label %></label><input id="<%= field %>" name="<%= field %>" maxlength="160" required value="<%= contract && contract[field] !== undefined ? contract[field] : fallback %>"></div>
+        <% } %>
         <div class="form-group">
           <label for="contract-body">Contract Body</label>
           <p style="font-size:0.8rem;color:#888;margin-bottom:0.5rem;">
             Write your full adoption agreement here. Supported placeholders:
-            <code>[BUYER_NAME]</code>, <code>[DATE]</code>.
+            <code>[BUYER_NAME]</code>, <code>[DATE]</code>, <code>[HEADER_NAME]</code>, <code>[SELLER_NAME]</code>, <code>[BREED]</code>.
             Line breaks are preserved.
           </p>
           <textarea
@@ -54,10 +57,10 @@
             rows="28"
             placeholder="ADOPTION AGREEMENT
 
-This Adoption Agreement ("Agreement") is entered into on [DATE], between ImperialPaws Pekingese ("Breeder") and [BUYER_NAME] ("Adopting Parent").
+This Adoption Agreement (&quot;Agreement&quot;) is entered into on [DATE], between [SELLER_NAME] (&quot;Breeder&quot;) and [BUYER_NAME] (&quot;Adopting Parent&quot;).
 
 1. PUPPY DESCRIPTION
-The Breeder agrees to transfer ownership of one (1) Pekingese puppy as described in the accompanying invoice.
+The Breeder agrees to transfer ownership of one (1) [BREED] puppy as described in the accompanying invoice.
 
 2. ADOPTION FEE
 The Adopting Parent agrees to pay the adoption fee as stated in the invoice. All fees are non-refundable once paid.

@@ -205,7 +205,6 @@ async function main() {
       breed: "Pekingese",
       gender: "Female",
       color: "Cream",
-      dob: "2026-01-15",
       description: "Temporary test listing",
       vetChecked: "on",
       vaccinationStatus: "Current",
@@ -234,7 +233,6 @@ async function main() {
       breed: "Pekingese",
       gender: "Female",
       color: "Cream",
-      dob: "2026-01-15",
       description: "Updated temporary test listing",
       vaccinationStatus: "Current",
       registrationType: "Breeder records",
@@ -340,7 +338,7 @@ async function main() {
   assert(invoiceAddHtml.includes('value="buyer@example.com"'), "Invoice form should prefill buyer email.");
   assert(invoiceAddHtml.includes('value="555-1000"'), "Invoice form should prefill buyer phone.");
   assert(invoiceAddHtml.includes('value="1250"'), "Invoice form should prefill puppy price.");
-  assert(invoiceAddHtml.includes("Thank you for choosing ImperialPaws"), "Invoice form should include adoption note.");
+  assert(invoiceAddHtml.includes("Thank you for welcoming a puppy"), "Invoice form should include adoption note.");
 
   const createInvoice = await postForm(
     "/admin/invoices/add",
@@ -358,6 +356,10 @@ async function main() {
       itemDescription: "Smoke Test Puppy Updated - Puppy Adoption Fee",
       itemQty: "1",
       itemPrice: "1250",
+      puppyName: "Smoke Test Puppy Updated",
+      puppyBreed: "Golden Retriever",
+      puppyGender: "Female",
+      puppyColor: "Golden",
       taxRate: "0",
       notes: ""
     },
@@ -368,7 +370,7 @@ async function main() {
   const invoicesFile = path.join(appRoot, "server", "data", "invoices.json");
   const invoice = readJSON(invoicesFile).find(item => item.applicationId === application.id);
   assert(invoice, "Invoice should be stored.");
-  assert(invoice.notes.includes("Thank you for choosing ImperialPaws"), "Default adoption note should be stored.");
+  assert(invoice.notes.includes("Thank you for welcoming a puppy"), "Default adoption note should be stored.");
 
   const publicInvoice = await assertRoute(
     `/invoice/${application.id}/${invoice.invoiceNumber}`,
@@ -377,6 +379,10 @@ async function main() {
   const publicInvoiceHtml = await publicInvoice.text();
   assert(publicInvoiceHtml.includes("Adoption Note"), "Public invoice should show adoption note.");
   assert(publicInvoiceHtml.includes("1250.00"), "Public invoice should show invoice total.");
+  assert(publicInvoiceHtml.includes("Golden Retriever"), "Public invoice should show saved puppy breed.");
+  assert(publicInvoiceHtml.includes("hello@imperialpaws.test"), "Public invoice should show breeder contact details.");
+  assert(publicInvoiceHtml.includes("Payment pending"), "Unpaid invoice should show pending status.");
+  assert(!publicInvoiceHtml.includes("<th>Qty</th>"), "Adoption invoice should use a placement fee summary.");
 
   const adminInvoiceIndex = await assertRoute("/admin/invoices", 200, cookie);
   const adminInvoiceIndexHtml = await adminInvoiceIndex.text();
@@ -400,6 +406,10 @@ async function main() {
   assert(togglePaid.status === 302, "Mark paid should redirect.");
   const paidInvoice = readJSON(invoicesFile).find(item => item.invoiceNumber === invoice.invoiceNumber);
   assert(paidInvoice.paid === true, "Mark paid should set paid true.");
+  const paidPage = await assertRoute(`/invoice/${application.id}/${invoice.invoiceNumber}`, 200);
+  const paidHtml = await paidPage.text();
+  assert(paidHtml.includes("Paid in full"), "Paid invoice should identify recorded payment.");
+  assert(/Balance due\s*<span>\$0\.00<\/span>/.test(paidHtml), "Paid invoice should have zero balance due.");
 
   const sold = await postForm(
     `/admin/applications/${application.id}/status`,

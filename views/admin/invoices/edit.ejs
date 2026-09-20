@@ -5,7 +5,7 @@
     <header class="admin-page-header">
       <div>
         <p class="admin-eyebrow">Invoices</p>
-        <h1>Edit Invoice</h1>
+        <h1>Edit Adoption Invoice</h1>
         <p class="admin-subtitle">Update invoice <strong><%= invoice.invoiceNumber %></strong>.</p>
       </div>
       <a href="/admin/invoices" class="btn-secondary">Back to Invoices</a>
@@ -14,7 +14,7 @@
     <form method="POST" action="/admin/invoices/edit/<%= invoice.invoiceNumber %>" class="admin-form-wide">
       <section class="admin-grid two">
         <div class="admin-card">
-          <h2>Seller</h2>
+          <h2>Breeder / Seller</h2>
           <div class="form-group"><label>Name</label><input name="sellerName" value="<%= invoice.seller?.name || '' %>"></div>
           <div class="form-group"><label>Address</label><input name="sellerAddress" value="<%= invoice.seller?.address || '' %>"></div>
           <div class="form-grid">
@@ -41,7 +41,13 @@
       </section>
 
       <section class="admin-card">
-        <h2>Invoice Details</h2>
+        <h2>Puppy Details</h2>
+        <div class="form-grid">
+          <% for (const [key, label, field] of [['name','Puppy name','puppyName'],['breed','Breed','puppyBreed'],['gender','Sex','puppyGender'],['color','Color / markings','puppyColor']]) { %>
+          <div class="form-group"><label for="<%= field %>"><%= label %></label><input id="<%= field %>" name="<%= field %>" maxlength="160" value="<%= invoice.puppy?.[key] || '' %>"></div>
+          <% } %>
+        </div>
+        <h2>Adoption Payment Details</h2>
         <div class="form-grid">
           <div class="form-group"><label>Issue Date</label><input type="date" name="issueDate" value="<%= invoice.issueDate || '' %>"></div>
           <div class="form-group"><label>Due Date</label><input type="date" name="dueDate" value="<%= invoice.dueDate || '' %>"></div>
@@ -56,14 +62,14 @@
         </div>
 
         <div class="form-grid">
-          <div class="form-group"><label>Line Item</label><input name="itemDescription" value="<%= invoice.items?.[0]?.description || '' %>"></div>
-          <div class="form-group"><label>Quantity</label><input type="number" name="itemQty" value="<%= invoice.items?.[0]?.qty || 1 %>"></div>
-          <div class="form-group"><label>Price</label><input type="number" step="0.01" name="itemPrice" value="<%= invoice.items?.[0]?.unitPrice || 0 %>"></div>
+          <div class="form-group"><label>Adoption fee description</label><input name="itemDescription" value="<%= invoice.items?.[0]?.description || '' %>"></div>
+          <div class="form-group"><label>Number of placements</label><input type="number" name="itemQty" value="<%= invoice.items?.[0]?.qty || 1 %>"></div>
+          <div class="form-group"><label>Adoption fee per placement</label><input type="number" step="0.01" name="itemPrice" value="<%= invoice.items?.[0]?.unitPrice || 0 %>"></div>
           <div class="form-group"><label>Tax Rate</label><input type="number" step="0.01" name="taxRate" value="<%= invoice.taxRate || 0 %>"></div>
         </div>
 
         <div class="form-group">
-          <label>Adoption Note</label>
+          <label>Placement notes / agreed payment terms</label>
           <textarea name="notes"><%= invoice.notes || '' %></textarea>
         </div>
       </section>
