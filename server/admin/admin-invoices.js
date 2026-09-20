@@ -157,6 +157,24 @@ router.get("/invoices/view/:number", requireAdmin, asyncHandler(async (req, res)
   res.render("admin/invoices/view", { invoice, layout: false });
 }));
 
+router.get("/invoices/:number/pdf", requireAdmin, asyncHandler(async (req, res) => {
+  const invoices = await loadCollection("invoices");
+  const invoice = invoices.find(i => i.invoiceNumber === req.params.number);
+  if (!invoice) return res.status(404).send("Invoice not found");
+  const { invoicePdf } = require("../utils/documentPdf");
+  res.set("Cache-Control", "private, no-store");
+  res.attachment("Adoption-Invoice.pdf").send(await invoicePdf(invoice));
+}));
+
+router.post("/invoices/:number/send-pdf", requireAdmin, asyncHandler(async (req, res) => {
+  const invoices = await loadCollection("invoices");
+  const invoice = invoices.find(i => i.invoiceNumber === req.params.number);
+  if (!invoice) return res.status(404).send("Invoice not found");
+  const { sendInvoiceNotificationEmail } = require("../utils/emailService");
+  const sent = await sendInvoiceNotificationEmail(invoice, invoice.adoptingParent?.email);
+  res.redirect(sent ? "/admin/invoices?success=Invoice+PDF+emailed" : "/admin/invoices?error=Email+not+sent.+Check+the+recipient+and+email+settings.");
+}));
+
 router.post("/invoices/:number/toggle-paid", requireAdmin, asyncHandler(async (req, res) => {
   const invoices = await loadCollection("invoices");
   const invoice = invoices.find(i => i.invoiceNumber === req.params.number);
@@ -193,9 +211,10 @@ router.post("/invoices/:number/send-reminder", requireAdmin, asyncHandler(async 
 
   const { sendPaymentReminderEmail } = require("../utils/emailService");
   const baseUrl = `${req.protocol}://${req.get("host")}`;
-  await sendPaymentReminderEmail(invoice, recipientEmail, baseUrl);
-
-  res.redirect("/admin/invoices?success=Reminder+sent+to+" + encodeURIComponent(recipientEmail));
+  const sent = await sendPaymentReminderEmail(invoice, recipientEmail, baseUrl);
+  res.redirect(sent
+    ? "/admin/invoices?success=Reminder+sent+to+" + encodeURIComponent(recipientEmail)
+    : "/admin/invoices?error=Reminder+not+sent.+Check+email+settings.");
 }));
 
 router.post("/invoices/:number/manual-reply", requireAdmin, asyncHandler(async (req, res) => {

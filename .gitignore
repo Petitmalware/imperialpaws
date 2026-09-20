@@ -7,3 +7,4 @@ imperialpaws-preview.*.log
 imperialpaws-*.log
 imperialpaws-*.pid
 public/uploads/
+server/data/document-deliveries.json

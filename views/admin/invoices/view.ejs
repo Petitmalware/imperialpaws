@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Adoption Invoice <%= invoice.invoiceNumber %></title><link rel="stylesheet" href="/css/invoice.css"></head><body>
 <div class="invoice-page">
-<div class="invoice-actions no-print"><button type="button" class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+<div class="invoice-actions no-print"><a class="btn-print" href="/admin/invoices/<%= encodeURIComponent(invoice.invoiceNumber) %>/pdf">Download PDF</a>
 <a class="btn-print" href="/admin/invoices/edit/<%= encodeURIComponent(invoice.invoiceNumber) %>">Edit invoice</a><a class="btn-print" href="/admin/invoices">Back</a>
-<% const buyerEmail=invoice.adoptingParent?.email; const invoicePath=invoice.applicationId ? '/invoice/'+encodeURIComponent(invoice.applicationId)+'/'+encodeURIComponent(invoice.invoiceNumber) : '/invoice/'+encodeURIComponent(invoice.invoiceNumber); if(buyerEmail) { %>
-<a class="btn-print" href="mailto:<%= encodeURIComponent(buyerEmail) %>?subject=<%= encodeURIComponent('Adoption invoice '+invoice.invoiceNumber) %>&body=<%= encodeURIComponent('Your puppy adoption invoice is ready: '+absoluteUrl(invoicePath)) %>">Email Buyer</a><% } %>
+<% if (invoice.adoptingParent?.email) { %>
+<form method="POST" action="/admin/invoices/<%= encodeURIComponent(invoice.invoiceNumber) %>/send-pdf"><button class="btn-print" type="submit">Email Buyer PDF</button></form><% } %>
 </div>
 <%- include('../../partials/adoption-invoice', {invoice}) %>
 </div></body></html>

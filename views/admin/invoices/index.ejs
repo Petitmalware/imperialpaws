@@ -77,9 +77,7 @@
                     </form>
                   <% } %>
 
-                  <% if (buyerEmail) { %>
-                    <% const publicPath = inv.applicationId ? '/invoice/' + encodeURIComponent(inv.applicationId) + '/' + encodeURIComponent(inv.invoiceNumber) : '/invoice/' + encodeURIComponent(inv.invoiceNumber); %>
-                    <a class="btn-small" href="mailto:<%= encodeURIComponent(buyerEmail) %>?subject=<%= encodeURIComponent('Adoption invoice ' + inv.invoiceNumber) %>&body=<%= encodeURIComponent('Your puppy adoption invoice is ready: ' + absoluteUrl(publicPath)) %>">Email invoice</a>
+                  <% if (buyerEmail) { %><form method="POST" action="/admin/invoices/<%= encodeURIComponent(inv.invoiceNumber) %>/send-pdf"><button type="submit" class="btn-small">Email invoice PDF</button></form>
                     <button
                       class="btn-small"
                       style="background:#EFF6FF; color:#1E40AF; border:1px solid #93C5FD;"

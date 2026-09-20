@@ -11,6 +11,8 @@ const files = {
   admins: "admins.json",
   applications: "applications.json",
   invoices: "invoices.json",
+  contracts: "contracts.json",
+  deliveries: "document-deliveries.json",
   puppies: "puppies.json",
   testimonials: "testimonials.json"
 };

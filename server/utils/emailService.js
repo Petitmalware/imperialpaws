@@ -224,7 +224,7 @@ function wrapHtmlContent(title, contentHtml) {
 /**
  * Send email safely without blocking execution or throwing unhandled rejections.
  */
-async function sendMailSafe({ to, subject, text, html }) {
+async function sendMailSafe({ to, subject, text, html, attachments = [] }) {
   try {
     const enabled = await isEmailEnabled();
     if (!enabled) {
@@ -238,6 +238,7 @@ async function sendMailSafe({ to, subject, text, html }) {
       subject,
       text,
       html,
+      attachments,
       headers: {
         "X-Mailer": "ImperialPaws Luxury Placement System",
         "X-Priority": "3"
@@ -245,7 +246,7 @@ async function sendMailSafe({ to, subject, text, html }) {
     };
 
     const info = await getTransporter().sendMail(mailOptions);
-    console.log(`[Email Sent] "${subject}" to ${to} (MessageId: ${info.messageId})`);
+    console.log(`[Email ${process.env.NODE_ENV === "test" ? "Preview" : "Sent"}] "${subject}" to ${to} (MessageId: ${info.messageId})`);
     return true;
   } catch (err) {
     console.error(`[Email Error] Failed to send "${subject}" to ${to}:`, err.message);
@@ -389,126 +390,34 @@ async function sendApplicationStatusUpdateEmail(application, newStatus, baseUrl 
  * Trigger: Invoice Issued Notification (To Adopter)
  * Reflects exact adoption fee — no hidden charges language.
  */
-async function sendInvoiceNotificationEmail(invoice, applicationEmail, baseUrl = "https://imperialpaws.pet") {
-  if (!applicationEmail) return;
-
-  const invoiceUrl = invoice.applicationId
-    ? `${baseUrl}/invoice/${encodeURIComponent(invoice.applicationId)}/${encodeURIComponent(invoice.invoiceNumber)}`
-    : `${baseUrl}/invoice/${encodeURIComponent(invoice.invoiceNumber)}`;
-
-  const subject = `Adoption Invoice for ${invoice.puppyName || "Your Puppy"} – ImperialPaws`;
-  const totalAmount = invoice.items?.reduce((sum, item) => sum + (item.qty * item.unitPrice), 0) || 0;
-  const currency = invoice.currency || "$";
-  const puppyName = invoice.puppyName || invoice.items?.[0]?.description || "Your Puppy";
-  const parentName = invoice.adoptingParent?.name || "there";
-
-  const text = `Dear ${parentName},\n\nThank you for choosing to adopt ${puppyName}.\n\nYour adoption invoice is now ready.\n\nAdoption Summary\nPuppy: ${puppyName}\nAdoption Fee: ${currency}${totalAmount}\nTotal Due: ${currency}${totalAmount}\n\nThis invoice reflects the exact adoption fee listed on our website. There are no additional adoption charges or hidden fees beyond the amount shown above.\n\nOnce payment is received and verified, your puppy will be marked as Sold and reserved under your name.\n\nView Invoice: ${invoiceUrl}\n\nThank you for choosing Imperial Paws.`;
-
-  const html = wrapHtmlContent(
-    `Adoption Invoice for ${puppyName}`,
-    `<h2>Adoption Invoice for ${puppyName}</h2>
-    <p>Dear ${parentName},</p>
-    <p>Thank you for choosing to adopt <strong>${puppyName}</strong>. Your adoption invoice is now ready.</p>
-    <div class="callout-box">
-      <p style="margin-bottom:8px;"><strong>Puppy:</strong> ${puppyName}</p>
-      ${invoice.breed ? `<p style="margin-bottom:8px;"><strong>Breed:</strong> ${invoice.breed}</p>` : ''}
-      ${invoice.gender ? `<p style="margin-bottom:8px;"><strong>Gender:</strong> ${invoice.gender}</p>` : ''}
-      <p style="margin-bottom:8px;"><strong>Invoice #:</strong> ${invoice.invoiceNumber}</p>
-      ${invoice.dueDate ? `<p style="margin-bottom:8px;"><strong>Due Date:</strong> ${invoice.dueDate}</p>` : ''}
-      <p style="margin-bottom:0; font-size:18px;"><strong>Total Due:</strong> <strong style="color:#5C4414;">${currency}${totalAmount}</strong></p>
-    </div>
-    <p style="font-size:13px; color:#666;">This invoice reflects the exact adoption fee listed on our website. There are no additional adoption charges or hidden fees beyond the amount shown above.</p>
-    <div class="btn-wrapper">
-      <a href="${invoiceUrl}" class="btn">View &amp; Pay Adoption Invoice</a>
-    </div>
-    <p>Once payment is received and verified, your puppy will be marked as <strong>Sold</strong> and reserved under your name.</p>
-    <p>If you have any questions, simply reply to this email or reach us at <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a>.</p>
-    <p>Thank you for choosing Imperial Paws.<br><br>Best regards,<br><strong>ImperialPaws</strong><br>ImperialPaws.pet</p>`
-  );
-
-  return sendMailSafe({ to: applicationEmail, subject, text, html });
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-/**
- * Trigger: Payment Received — Puppy Is Reserved (To Adopter)
- */
-async function sendPaymentReceivedEmail(invoice, applicationEmail, baseUrl = "https://imperialpaws.pet") {
-  if (!applicationEmail) return;
-
-  const totalAmount = invoice.items?.reduce((sum, item) => sum + (item.qty * item.unitPrice), 0) || 0;
-  const currency = invoice.currency || "$";
-  const puppyName = invoice.puppyName || invoice.items?.[0]?.description || "Your Puppy";
-  const parentName = invoice.adoptingParent?.name || "there";
-  const subject = `Payment Received — ${puppyName} Is Reserved for You – ImperialPaws`;
-
-  const text = `Dear ${parentName},\n\nWe have successfully received your payment. Thank you for completing the adoption of ${puppyName}.\n\nAdoption Fee: ${currency}${totalAmount}\nPayment Status: Paid\n\n${puppyName} has now been officially marked as Sold and is reserved exclusively for you.\n\nOur team will contact you shortly to arrange either pickup or delivery.\n\nCongratulations on your new family member.\n\nThank you,\nImperialPaws`;
-
-  const html = wrapHtmlContent(
-    `Payment Received — ${puppyName} Is Reserved`,
-    `<h2>Payment Received — Your Puppy Is Reserved! 🐾</h2>
-    <p>Dear ${parentName},</p>
-    <p>We have successfully received your payment. Thank you for completing the adoption of <strong>${puppyName}</strong>.</p>
-    <div class="callout-box" style="background:#F0FDF4; border-color:#22C55E; color:#166534;">
-      <p style="margin-bottom:8px;"><strong>Puppy:</strong> ${puppyName}</p>
-      <p style="margin-bottom:8px;"><strong>Adoption Fee:</strong> ${currency}${totalAmount}</p>
-      <p style="margin-bottom:0;"><strong>Payment Status:</strong> ✅ Paid</p>
-    </div>
-    <p><strong>${puppyName}</strong> has now been officially marked as <strong>Sold</strong> and is reserved exclusively for you.</p>
-    <p>Our team will contact you shortly to arrange either pickup or delivery.</p>
-    <p>Congratulations on your new family member! 🎉</p>
-    <p>Thank you,<br><strong>ImperialPaws</strong><br>ImperialPaws.pet</p>`
-  );
-
-  return sendMailSafe({ to: applicationEmail, subject, text, html });
+async function sendInvoiceDocumentEmail(invoice, recipient, heading) {
+  if (!recipient || !(await isEmailEnabled())) return false;
+  const { invoicePdf } = require('./documentPdf');
+  const { saveDelivery } = require('./documentDelivery');
+  const pdf = await invoicePdf(invoice);
+  const filename = 'Adoption-Invoice-' + String(invoice.invoiceNumber).replace(/[^a-zA-Z0-9_-]/g, '-') + '.pdf';
+  const delivery = await saveDelivery(pdf, filename);
+  const name = invoice.adoptingParent?.name || 'Adopting Parent';
+  const subject = heading + ': ' + invoice.invoiceNumber;
+  const text = 'Hello ' + name + ',\n\nYour adoption invoice is attached as a PDF. You can also download the same copy from our website without logging in:\n' + delivery.url + '\n\nPlease keep this private link with your puppy records.';
+  const html = wrapHtmlContent(escapeHtml(heading), '<h2>' + escapeHtml(heading) + '</h2><p>Hello ' + escapeHtml(name) + ',</p><p>Your adoption invoice is attached as a PDF. Save the attachment to your device, or download the same copy using the link below. No account or login is needed.</p><div class="btn-wrapper"><a class="btn" href="' + escapeHtml(delivery.url) + '">Download invoice PDF</a></div><p>Please keep this private link with your puppy records.</p>');
+  return sendMailSafe({to:recipient,subject,text,html,attachments:[delivery.attachment]});
 }
 
-/**
- * Trigger: Friendly Payment Reminder (To Adopter — Unpaid Invoice)
- */
-async function sendPaymentReminderEmail(invoice, applicationEmail, baseUrl = "https://imperialpaws.pet") {
-  if (!applicationEmail) return;
-
-  const invoiceUrl = invoice.applicationId
-    ? `${baseUrl}/invoice/${encodeURIComponent(invoice.applicationId)}/${encodeURIComponent(invoice.invoiceNumber)}`
-    : `${baseUrl}/invoice/${encodeURIComponent(invoice.invoiceNumber)}`;
-
-  const totalAmount = invoice.items?.reduce((sum, item) => sum + (item.qty * item.unitPrice), 0) || 0;
-  const currency = invoice.currency || "$";
-  const puppyName = invoice.puppyName || invoice.items?.[0]?.description || "your selected puppy";
-  const parentName = invoice.adoptingParent?.name || "there";
-  const subject = `Reminder: Complete Your Adoption of ${puppyName} – ImperialPaws`;
-
-  const text = `Dear ${parentName},\n\nThis is a friendly reminder that your adoption application has been approved, but payment has not yet been received.\n\nAdoption Fee: ${currency}${totalAmount}\nAmount Due: ${currency}${totalAmount}\n\nYour puppy will remain available until payment is received. Once payment has been confirmed:\n• ${puppyName} will be marked as Sold\n• The adoption will be finalized\n• Pickup or delivery arrangements can begin\n\nIf you have already submitted payment, please disregard this message.\n\nView Invoice: ${invoiceUrl}\n\nThank you for choosing Imperial Paws.`;
-
-  const html = wrapHtmlContent(
-    `Reminder: Complete Your Adoption of ${puppyName}`,
-    `<h2>Friendly Reminder — Complete Your Adoption</h2>
-    <p>Dear ${parentName},</p>
-    <p>This is a friendly reminder that your adoption application has been approved, but payment has not yet been received.</p>
-    <div class="callout-box">
-      <p style="margin-bottom:8px;"><strong>Puppy:</strong> ${puppyName}</p>
-      <p style="margin-bottom:8px;"><strong>Adoption Fee:</strong> ${currency}${totalAmount}</p>
-      <p style="margin-bottom:0; font-size:17px;"><strong>Amount Due:</strong> <strong style="color:#5C4414;">${currency}${totalAmount}</strong></p>
-    </div>
-    <p>Your puppy will remain available until payment is received. Once payment has been confirmed:</p>
-    <ul style="margin:0 0 16px; padding-left:20px; color:#333;">
-      <li><strong>${puppyName}</strong> will be marked as Sold</li>
-      <li>The adoption will be finalized</li>
-      <li>Pickup or delivery arrangements can begin</li>
-    </ul>
-    <div class="btn-wrapper">
-      <a href="${invoiceUrl}" class="btn">Complete Your Adoption Payment</a>
-    </div>
-    <p style="font-size:13px; color:#777;">If you have already submitted payment, please disregard this message.</p>
-    <p>Thank you for choosing Imperial Paws.<br><br>Best regards,<br><strong>ImperialPaws</strong><br>ImperialPaws.pet</p>`
-  );
-
-  return sendMailSafe({ to: applicationEmail, subject, text, html });
+async function sendInvoiceNotificationEmail(invoice, recipient) {
+  return sendInvoiceDocumentEmail(invoice, recipient, 'Your adoption invoice');
+}
+async function sendPaymentReceivedEmail(invoice, recipient) {
+  return sendInvoiceDocumentEmail(invoice, recipient, 'Adoption payment recorded');
+}
+async function sendPaymentReminderEmail(invoice, recipient) {
+  return sendInvoiceDocumentEmail(invoice, recipient, 'Adoption payment reminder');
 }
 
-/**
- * Trigger: Manual Reply Email from Breeder to Any Client
- */
 async function sendManualReplyEmail({ toEmail, toName, subject, messageBody }) {
   if (!toEmail || !messageBody) return false;
   const emailSubject = subject || `A Message from ImperialPaws`;
@@ -526,32 +435,18 @@ async function sendManualReplyEmail({ toEmail, toName, subject, messageBody }) {
 /**
  * Trigger: Send Adoption Agreement / Contract to Adopter
  */
-async function sendContractEmail(contractTitle, buyerName, buyerEmail, contractViewUrl, baseUrl = "https://imperialpaws.pet") {
-  if (!buyerEmail) return;
-
-  const subject = `Adoption Agreement Ready for Review: ${contractTitle} – ImperialPaws Pekingese`;
-
-  const text = `Hello ${buyerName || 'Adopting Parent'},\n\nYour official Pekingese Adoption Agreement (${contractTitle}) is ready for your review and signature.\n\nView Agreement:\n${contractViewUrl}\n\nWarm regards,\nImperialPaws Pekingese`;
-
-  const html = wrapHtmlContent(
-    "Adoption Agreement Ready",
-    `<h2>Adoption Agreement Ready for Review</h2>
-    <p>Dear ${buyerName || 'Adopting Parent'},</p>
-    <p>Your official adoption agreement, <strong>${contractTitle}</strong>, is now ready for your review and records.</p>
-    <p>Please review the health guarantee, care guidelines, and ownership transfer terms outlined in the document:</p>
-    <div class="btn-wrapper">
-      <a href="${contractViewUrl}" class="btn">View & Print Adoption Agreement</a>
-    </div>
-    <p>If you have any questions about any clause before signing, please reply directly to this email so we can discuss and finalize your puppy's placement.</p>
-    <p>Warmest regards,<br><strong>ImperialPaws Pekingese</strong></p>`
-  );
-
-  return sendMailSafe({ to: buyerEmail, subject, text, html });
+async function sendContractEmail(contract, buyerName, buyerEmail) {
+  if (!buyerEmail || !(await isEmailEnabled())) return false;
+  const { contractPdf } = require('./documentPdf');
+  const { saveDelivery } = require('./documentDelivery');
+  const pdf = await contractPdf(contract, buyerName);
+  const delivery = await saveDelivery(pdf, 'Adoption-Agreement.pdf');
+  const subject = 'Your adoption agreement: ' + contract.title;
+  const text = 'Hello ' + buyerName + ',\n\nYour one-page adoption agreement is attached as a PDF for review and signature. You can also download the same copy without logging in:\n' + delivery.url + '\n\nPlease keep this private link with your puppy records.';
+  const html = wrapHtmlContent('Adoption agreement', '<h2>Your adoption agreement</h2><p>Hello ' + escapeHtml(buyerName) + ',</p><p>Your one-page agreement, <strong>' + escapeHtml(contract.title) + '</strong>, is attached as a PDF for review and signature.</p><p>You can also download the same copy from our website. No account or admin login is needed.</p><div class="btn-wrapper"><a class="btn" href="' + escapeHtml(delivery.url) + '">Download agreement PDF</a></div><p>Please keep this private link with your puppy records.</p>');
+  return sendMailSafe({to:buyerEmail,subject,text,html,attachments:[delivery.attachment]});
 }
 
-/**
- * Trigger: Send Admin Test Email
- */
 async function sendTestEmail(toEmail) {
   if (!toEmail) return false;
   const subject = `✅ ImperialPaws Spacemail SMTP Verification`;

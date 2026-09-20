@@ -26,8 +26,16 @@ function getBaseUrl(req, settings = {}) {
     stripTrailingSlash(settings.meta && settings.meta.siteUrl) ||
     stripTrailingSlash(process.env.PUBLIC_SITE_URL);
 
-  if (configured) return configured;
-  return `${req.protocol}://${req.get("host")}`;
+  if (configured) {
+    try {
+      const url = new URL(configured);
+      if (["imperialpaws.net", "www.imperialpaws.net"].includes(url.hostname)) return "https://imperialpaws.pet";
+      if (["http:", "https:"].includes(url.protocol)) return url.origin;
+    } catch (_) {
+      // An invalid optional URL setting must not make every public page fail.
+    }
+  }
+  return req ? `${req.protocol}://${req.get("host")}` : "https://imperialpaws.pet";
 }
 
 function toAbsoluteUrl(value, baseUrl) {

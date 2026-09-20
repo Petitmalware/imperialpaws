@@ -32,7 +32,7 @@
 </head>
 <body>
 <div class="toolbar no-print">
-<button class="primary" id="printButton" type="button">Print / Save PDF</button>
+<a class="primary" href="/admin/contracts/<%= encodeURIComponent(contract.id) %>/pdf?buyer=<%= encodeURIComponent(buyerName) %>">Download PDF</a>
 <a href="/admin/contracts/<%= encodeURIComponent(contract.id) %>/edit">Edit agreement details</a>
 <a href="/admin/contracts">Back</a>
 <form method="GET">
@@ -45,7 +45,7 @@
 <input type="hidden" name="buyerName" value="<%= buyerName %>">
 <label for="buyerEmail">Adopter email</label>
 <input id="buyerEmail" type="email" name="buyerEmail" required>
-<button>Email agreement</button>
+<button>Email agreement PDF</button>
 </form>
 <p class="notice no-print" id="fitStatus" role="status">One-page Letter agreement. Turn off browser headers and footers when printing.</p>
 <div class="paper-scroll">
@@ -121,7 +121,7 @@ function fitPage() {
     ? 'Fits one page. Text is reduced; shorten the agreement for easier reading. Print on Letter paper with browser headers and footers off.'
     : 'One-page Letter agreement. Turn off browser headers and footers when printing.';
 }
-document.getElementById('printButton').addEventListener('click',()=>{fitPage();window.print()});window.addEventListener('beforeprint',fitPage);window.addEventListener('load',fitPage);document.fonts.ready.then(fitPage);
+window.addEventListener('beforeprint',fitPage);window.addEventListener('load',fitPage);document.fonts.ready.then(fitPage);
 </script>
 </body>
 </html>

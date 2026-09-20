@@ -132,6 +132,14 @@ router.get(
 );
 
 /* ── Email a contract directly to an adopter ──────── */
+router.get("/contracts/:id/pdf", requireAdmin, asyncHandler(async (req, res) => {
+  const contract = await getContract(req.params.id);
+  if (!contract) return res.status(404).send("Contract not found");
+  const buyerName = typeof req.query.buyer === "string" ? req.query.buyer : "[Adopting Parent Name]";
+  const { contractPdf } = require("../utils/documentPdf");
+  res.set("Cache-Control", "private, no-store");
+  res.attachment("Adoption-Agreement.pdf").send(await contractPdf(contract, buyerName));
+}));
 router.post(
   "/contracts/:id/email",
   requireAdmin,
@@ -148,10 +156,8 @@ router.post(
     }
 
     const { sendContractEmail } = require("../utils/emailService");
-    const baseUrl = `${req.protocol}://${req.get("host")}`;
-    const contractViewUrl = `${baseUrl}/admin/contracts/${encodeURIComponent(contract.id)}/view?buyer=${encodeURIComponent(buyerName)}`;
     
-    const sent = await sendContractEmail(contract.title, buyerName, buyerEmail, contractViewUrl, baseUrl);
+    const sent = await sendContractEmail(contract, buyerName, buyerEmail);
     if (sent) {
       req.session._flash = { type: "success", message: `Contract successfully emailed to ${buyerEmail}!` };
     } else {

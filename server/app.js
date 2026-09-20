@@ -196,6 +196,7 @@ app.get("/sitemap.xml", asyncHandler(async (req, res) => {
 }));
 
 app.use(applicantInvoiceRoutes);
+app.use(require("./routes/document-download"));
 app.use("/admin", adminRoutes);
 app.use("/admin", adminApplicationsRoutes);
 app.use("/admin", adminTestimonialsRoutes);

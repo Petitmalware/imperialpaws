@@ -10,6 +10,7 @@ const dataFiles = [
   "puppies.json",
   "applications.json",
   "invoices.json",
+  "document-deliveries.json",
   "testimonials.json",
   "admins.json",
   "site-settings.json"
@@ -386,8 +387,9 @@ async function main() {
 
   const adminInvoiceIndex = await assertRoute("/admin/invoices", 200, cookie);
   const adminInvoiceIndexHtml = await adminInvoiceIndex.text();
-  assert(adminInvoiceIndexHtml.includes("mailto:buyer%40example.com"), "Invoice list should include buyer email action.");
-  assert(adminInvoiceIndexHtml.includes(encodeURIComponent(`/invoice/${application.id}/${invoice.invoiceNumber}`)), "Email body should include public invoice URL.");
+  assert(adminInvoiceIndexHtml.includes(`/admin/invoices/${invoice.invoiceNumber}/send-pdf`), "Invoice list should email a PDF through the server.");
+  const download = await assertRoute(`/invoice/${application.id}/${invoice.invoiceNumber}/download`, 200);
+  assert(download.headers.get('content-type').includes('application/pdf'), "Buyer download must return a PDF.");
 
   const adminInvoiceView = await assertRoute(
     `/admin/invoices/view/${invoice.invoiceNumber}`,

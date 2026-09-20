@@ -64,6 +64,29 @@ Environment variables:
 
 ## Production Storage
 
+### Buyer PDF delivery
+
+Invoices, payment reminders, and agreements are emailed with a PDF attachment
+and a private download link. The link does not require an admin login. Each send
+saves the exact PDF, so later edits do not change the recipient's copy. Treat
+download links as private: anyone holding one can download that document.
+
+The `deliveries` collection stores these copies in MongoDB, or in
+`server/data/document-deliveries.json` when the existing local storage mode is
+enabled. Include it in server backups; it is deliberately excluded from Git.
+The migration script includes contracts and deliveries.
+
+Set the public site URL to `https://imperialpaws.pet`. Legacy configured
+`imperialpaws.net` addresses are corrected to that working domain when links are
+built. Old emails cannot be changed; resend their documents using **Email invoice
+PDF** or **Email agreement PDF**. The invoice email buttons send through the
+server's configured SMTP account rather than opening a mail app.
+
+Run `npm ci --omit=dev --ignore-scripts` before restarting the updated production
+app to install the PDF libraries. PDFs are generated in Node without a browser or
+external document service. `npm run test:documents` tests attachments and download
+access with a fake email transport; it never delivers real email.
+
 Render is pinned to Node `20.19.0` in `render.yaml`, `.node-version`, and
 `package.json` so MongoDB Atlas connections use a stable Node LTS runtime.
 

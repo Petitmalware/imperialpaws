@@ -24,6 +24,7 @@ const collections = {
   admins: "admins.json",
   applications: "applications.json",
   contracts: "contracts.json",
+  deliveries: "document-deliveries.json",
   invoices: "invoices.json",
   puppies: "puppies.json",
   settings: "site-settings.json",

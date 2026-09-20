@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node server/app.js",
     "smoke": "node scripts/smoke-test.js",
-    "test": "npm run test:contracts && npm run test:unit && npm run test:production-storage && npm run smoke && npm run test:system",
+    "test": "npm run test:documents && npm run test:contracts && npm run test:unit && npm run test:production-storage && npm run smoke && npm run test:system",
+    "test:documents": "node scripts/document-test.js",
     "test:contracts": "node scripts/contract-test.js",
     "test:unit": "node scripts/data-store-test.js",
     "test:production-storage": "node scripts/production-storage-test.js",
@@ -17,6 +18,7 @@
     "migrate:mongo": "node scripts/migrate-json-to-mongo.js"
   },
   "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.6",
@@ -27,6 +29,7 @@
     "express-session": "^1.17.3",
     "mongodb": "^7.4.0",
     "multer": "^2.0.0",
-    "nodemailer": "^9.0.3"
+    "nodemailer": "^9.0.3",
+    "pdf-lib": "^1.17.1"
   }
 }
