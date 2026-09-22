@@ -1,77 +1,32 @@
-<div class="page-puppies reveal">
-  <section class="page-hero reveal">
-    <div class="container">
-      <h1>Available Pekingese Puppies</h1>
-      <p class="subtitle">
-        Browse current ImperialPaws puppies with clear status labels,
-        thoughtful details, and an application-first adoption process.
-      </p>
-    </div>
-  </section>
-
-  <section class="page-content reveal">
-    <div class="container reveal">
-      <div class="trust-panel">
-        <h2>Before You Apply</h2>
-        <ul class="trust-list">
-          <li>Review the puppy profile, photos, and availability status carefully.</li>
-          <li>Submit one accurate application for the puppy you are interested in.</li>
-          <li>No invoice or payment request is created until after application approval.</li>
-        </ul>
+<div class="page-puppies">
+  <section class="page-hero"><div class="container"><p class="eyebrow">Your next chapter starts here</p><h1>Meet our puppies.</h1><p class="subtitle">A little personality. A lot of love. Explore each puppy’s photos, details, and current availability.</p></div></section>
+  <section class="page-content"><div class="container">
+    <% if (!puppies.length) { %>
+      <div class="empty-state"><%- include('../partials/paw-logo') %><h2>No puppies listed just yet.</h2><p>Please check back for updates, or get in touch about availability.</p><a href="/contact" class="btn-primary">Contact us</a></div>
+    <% } else { const breeds = [...new Set(puppies.map(p => p.breed || 'Pekingese'))].sort(); %>
+      <form class="puppy-filters" data-puppy-filters role="search" aria-label="Find a puppy" hidden>
+        <div class="filter-search"><label for="puppy-search">Find a puppy</label><input id="puppy-search" type="search" name="q" placeholder="Name, breed, or coat color" autocomplete="off"></div>
+        <div><label for="puppy-breed">Breed</label><select id="puppy-breed" name="breed"><option value="">All breeds</option><% breeds.forEach(breed => { %><option><%= breed %></option><% }); %></select></div>
+        <div><label for="puppy-gender">Gender</label><select id="puppy-gender" name="gender"><option value="">Any gender</option><option>Male</option><option>Female</option></select></div>
+        <div><label for="puppy-status">Availability</label><select id="puppy-status" name="status"><option value="">All listings</option><option>Available</option><option>Reserved</option></select></div>
+        <button type="reset" class="filter-reset">Reset</button>
+      </form>
+      <div class="listing-summary"><p data-puppy-count aria-live="polite"><%= puppies.length %> <%= puppies.length === 1 ? 'puppy' : 'puppies' %> to get to know</p><a href="/adoption-process">How adoption works ↗</a></div>
+      <div class="premium-puppy-grid" data-puppy-grid>
+        <% puppies.forEach(puppy => { %>
+          <article class="premium-puppy-card" data-puppy-card data-search="<%= [puppy.name, puppy.breed || 'Pekingese', puppy.color].filter(Boolean).join(' ').toLowerCase() %>" data-breed="<%= (puppy.breed || 'Pekingese').toLowerCase() %>" data-gender="<%= String(puppy.gender || '').toLowerCase() %>" data-status="<%= String(puppy.status || 'Available').toLowerCase() %>">
+            <a href="/puppies/<%= puppy.id %>" class="puppy-image-wrap" aria-label="Meet <%= puppy.name %>">
+              <% if (puppy.images && puppy.images.length) { %><img src="<%= puppy.images.find(i => i.isCover)?.path || puppy.images[0].path %>" alt="<%= puppy.name %>" loading="lazy" decoding="async"><% } else { %><div class="image-placeholder"><span aria-hidden="true">🐾</span> Photos coming soon</div><% } %>
+              <span class="status-badge <%= statusClass(puppy.status) %>"><%= puppy.status || 'Available' %></span>
+            </a>
+            <div class="puppy-card-body"><p class="eyebrow"><%= puppy.breed || 'Pekingese' %></p><h2><%= puppy.name %></h2><p class="meta"><%= [puppy.gender, puppy.color].filter(Boolean).join(' · ') %></p>
+              <div class="puppy-card-footer"><% if (puppy.price) { %><span class="price"><small>Adoption fee</small><%= currencySymbol(puppy.currency) %><%= Number(puppy.price).toFixed(2) %></span><% } %><a href="/puppies/<%= puppy.id %>" class="text-link">Meet <%= puppy.name %> ↗</a></div>
+            </div>
+          </article>
+        <% }); %>
       </div>
-
-      <% if (!puppies.length) { %>
-        <p class="center">No puppies are available at the moment. Please check back for updates.</p>
-      <% } else { %>
-        <div class="premium-puppy-grid">
-          <% puppies.forEach(puppy => { %>
-            <article class="premium-puppy-card">
-              <div class="puppy-image-wrap">
-                <% if (puppy.images && puppy.images.length) { %>
-                  <img
-                    src="<%= puppy.images.find(i => i.isCover)?.path || puppy.images[0].path %>"
-                    alt="<%= puppy.name %>"
-                    loading="lazy"
-                    decoding="async">
-                <% } else { %>
-                  <div class="image-placeholder">No Image</div>
-                <% } %>
-
-                <span class="status-badge <%= statusClass(puppy.status) %>">
-                  <%= puppy.status || "Available" %>
-                </span>
-              </div>
-
-              <div class="puppy-card-body">
-                <h3><%= puppy.name %></h3>
-
-                <p class="meta">
-                  <%= puppy.gender || "-" %>
-                  <% if (puppy.color) { %> &bull; <%= puppy.color %><% } %>
-                </p>
-
-                <% if (puppy.price) { %>
-                  <div class="price">
-                    <%= currencySymbol(puppy.currency) %><%= Number(puppy.price).toFixed(2) %>
-                  </div>
-                <% } %>
-
-                <p class="card-note">
-                  View full details before applying. Placement is based on review, not speed.
-                </p>
-
-                <a href="/puppies/<%= puppy.id %>" class="btn-secondary">
-                  View Details
-                </a>
-              </div>
-            </article>
-          <% }) %>
-        </div>
-      <% } %>
-
-      <p class="closing-note center">
-        Availability updates as applications are reviewed and placement decisions are made.
-      </p>
-    </div>
-  </section>
+      <div class="empty-state" data-puppy-empty hidden><%- include('../partials/paw-logo') %><h2>No puppies match those filters.</h2><p>Try a different name, breed, or availability.</p><button type="button" class="btn-secondary" data-reset-puppies>Show all puppies</button></div>
+    <% } %>
+    <div class="visitor-note"><%- include('../partials/paw-logo') %><p><strong>Find the right fit, at your own pace.</strong> Applying starts a conversation. It does not reserve a puppy, and no payment is requested before review and approval.</p><a href="/faq" class="text-link">Questions? ↗</a></div>
+  </div></section>
 </div>

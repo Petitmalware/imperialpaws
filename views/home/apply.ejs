@@ -1,101 +1,26 @@
+<% const formValues = typeof values !== 'undefined' ? values : {}; const cover = puppy.images?.find(i => i.isCover) || puppy.images?.[0]; %>
 <div class="page-application">
-
-  <section class="page-hero reveal">
-    <div class="container">
-      <h1>Adoption Application</h1>
-      <p class="subtitle">
-        Apply for <strong><%= puppy.name %></strong> through a careful review
-        process built around responsible placement.
-      </p>
-    </div>
-  </section>
-
-  <section class="page-content reveal">
-    <div class="container narrow">
-
-      <% const formValues = typeof values !== "undefined" ? values : {}; %>
-
-      <% if (typeof error !== "undefined" && error) { %>
-        <div class="error-box"><%= error %></div>
-      <% } %>
-
-      <div class="notice-box">
-        <p>
-          No payment is requested by this form. If your application is approved,
-          you will receive clear next steps and any invoice will be tied to your
-          private tracking code.
-        </p>
-      </div>
-
-      <form method="POST" action="/apply" class="application-form">
-
+  <section class="page-hero"><div class="container"><p class="eyebrow">A thoughtful first step</p><h1>Let’s get to know you.</h1><p class="subtitle">You’re applying for <strong><%= puppy.name %></strong>. Tell us a little about yourself and the home you can offer.</p></div></section>
+  <section class="page-content"><div class="container application-layout">
+    <div>
+      <% if (typeof error !== 'undefined' && error) { %><div class="error-box" role="alert" tabindex="-1" data-form-error><strong>Please check your application.</strong><br><%= error %></div><% } %>
+      <form method="POST" action="/apply" class="application-form" data-application-form>
         <input type="hidden" name="puppyId" value="<%= puppy.id %>">
-
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" name="name" value="<%= formValues.name || '' %>" required>
+        <div class="form-heading"><span class="step-tag">01</span><div><h2>Your contact details</h2><p>All contact fields are required, so we can follow up with you.</p></div></div>
+        <div class="form-grid">
+          <div class="form-group"><label for="app-name">Full name</label><input id="app-name" type="text" name="name" autocomplete="name" maxlength="120" value="<%= formValues.name || '' %>" required></div>
+          <div class="form-group"><label for="app-email">Email address</label><input id="app-email" type="email" name="email" autocomplete="email" maxlength="254" value="<%= formValues.email || '' %>" aria-describedby="email-help" required><small id="email-help">Use an address you check regularly.</small></div>
+          <div class="form-group"><label for="app-phone">Phone number</label><input id="app-phone" type="tel" name="phone" autocomplete="tel" maxlength="40" value="<%= formValues.phone || '' %>" aria-describedby="phone-help" required><small id="phone-help">Include your country or area code.</small></div>
+          <div class="form-group"><label for="app-location">City, state / region &amp; country</label><input id="app-location" type="text" name="location" autocomplete="address-level2" maxlength="180" value="<%= formValues.location || '' %>" required></div>
         </div>
-
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" name="email" value="<%= formValues.email || '' %>" required>
-        </div>
-
-        <div class="form-group">
-          <label>Phone</label>
-          <input type="text" name="phone" value="<%= formValues.phone || '' %>" required>
-        </div>
-
-        <div class="form-group">
-          <label>Location</label>
-          <input type="text" name="location" value="<%= formValues.location || '' %>" required>
-        </div>
-
-        <div class="form-group">
-          <label>Message</label>
-          <textarea
-            name="message"
-            rows="5"
-            placeholder="Tell us about your household and experience with dogs or the breed">
-<%= formValues.message || '' %></textarea>
-        </div>
-
-        <button class="btn-primary" type="submit">
-          Submit Application
-        </button>
-
+        <div class="form-heading"><span class="step-tag">02</span><div><h2>A little about your home</h2><p>Optional, but helpful when reviewing your application.</p></div></div>
+        <div class="form-group"><label for="app-message">Your message <span class="optional-label">(optional)</span></label><textarea id="app-message" name="message" rows="6" maxlength="5000" aria-describedby="message-help" placeholder="Who will care for your puppy? Tell us about other pets, your routine, and any questions you have."><%= formValues.message || '' %></textarea><small id="message-help">Please leave out sensitive information such as identification or payment details.</small></div>
+        <div class="submit-area"><p>No payment is requested here. Submitting does not guarantee approval or reserve this puppy.</p><button class="btn-primary" type="submit">Send my application <span aria-hidden="true">↗</span></button><p class="form-submit-status" aria-live="polite"></p><a href="/privacy-policy" class="quiet-link">How your information is used</a></div>
       </form>
-
-      <div class="application-notes">
-
-        <p class="note-strong">
-          No payments are requested or accepted until an application has been
-          reviewed and approved.
-        </p>
-
-        <p>
-          Submitting an adoption application allows us to learn more about you
-          and determine whether this puppy is the right fit for your home.
-        </p>
-
-        <p>
-          Submitting an application does not guarantee approval.
-          Our goal is thoughtful, responsible placement rather than rushed decisions.
-        </p>
-
-      </div>
-
-      <div class="trust-panel">
-        <h2>What Happens After Submission</h2>
-        <ul class="trust-list">
-          <li>You receive a tracking code for this application.</li>
-          <li>We review your information and may follow up if more context is needed.</li>
-          <li>If you already applied for this puppy with the same email or phone, the site will reuse your original tracking code.</li>
-          <li>Approved buyers can receive a clear invoice through the tracking flow.</li>
-        </ul>
-      </div>
-
     </div>
-  </section>
-
+    <aside class="application-aside">
+      <div class="application-puppy"><% if (cover) { %><img src="<%= cover.path %>" alt="<%= puppy.name %>"><% } else { %><div class="image-placeholder"><%- include('../partials/paw-logo') %></div><% } %><div><p class="eyebrow">You’re applying for</p><h2><%= puppy.name %></h2><p><%= [puppy.breed || 'Pekingese', puppy.gender].filter(Boolean).join(' · ') %></p><a href="/puppies/<%= puppy.id %>" class="text-link">Back to puppy profile ↗</a></div></div>
+      <div class="next-steps-card"><h3>What happens next?</h3><ol><li>Save the tracking code shown after you submit.</li><li>We review your application and may follow up for more information.</li><li>Check your status using your private tracking code.</li></ol><p>Already applied for this puppy? Use your original tracking code to follow its progress.</p><a href="/track" class="text-link">Track an existing application ↗</a></div>
+    </aside>
+  </div></section>
 </div>

@@ -10,8 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!nextImage) return;
 
       mainImage.src = nextImage;
-      thumbs.forEach(item => item.classList.remove("active"));
+      thumbs.forEach(item => {
+        item.classList.remove("active");
+        item.setAttribute("aria-pressed", "false");
+      });
       thumb.classList.add("active");
+      thumb.setAttribute("aria-pressed", "true");
     });
   });
 });

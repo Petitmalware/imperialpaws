@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node server/app.js",
     "smoke": "node scripts/smoke-test.js",
-    "test": "npm run test:documents && npm run test:contracts && npm run test:unit && npm run test:production-storage && npm run smoke && npm run test:system",
+    "test": "npm run test:workflows && npm run test:documents && npm run test:contracts && npm run test:unit && npm run test:production-storage && npm run smoke && npm run test:system",
+    "test:workflows": "node scripts/workflow-test.js",
     "test:documents": "node scripts/document-test.js",
     "test:contracts": "node scripts/contract-test.js",
     "test:unit": "node scripts/data-store-test.js",

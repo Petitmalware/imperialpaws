@@ -267,19 +267,19 @@ async function sendApplicationConfirmationEmail(application, baseUrl = "https://
 
   const html = wrapHtmlContent(
     "Application Received",
-    `<h2>Thank you for your application, ${application.name}!</h2>
+    `<h2>Thank you for your application, ${escapeHtml(application.name)}!</h2>
     <p>We have successfully received your adoption application for one of our home-raised Pekingese puppies. Our breeding team reviews every applicant personally to ensure thoughtful, loving lifelong placements.</p>
     <div class="code-box">
       <span>Your Private Tracking Code</span>
-      <strong>${application.trackingCode || application.id}</strong>
+      <strong>${escapeHtml(application.trackingCode || application.id)}</strong>
     </div>
     <p>You can verify your application status, review updates, or access placement documentation anytime on our tracking portal:</p>
     <div class="btn-wrapper">
-      <a href="${trackUrl}" class="btn">Track Your Application</a>
+      <a href="${escapeHtml(trackUrl)}" class="btn">Track Your Application</a>
     </div>
     <div class="callout-box">
       <strong>What Happens Next?</strong><br>
-      Our team typically completes review within 24 to 48 hours. Once approved, you will receive an email notification with guidance on reserving your puppy and reviewing adoption documentation.
+      We will review your application and contact you with next steps. You can also check your status using your private tracking code.
     </div>
     <p>If you have any immediate questions, feel free to reply directly to this email or reach our team at <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a>.</p>
     <p>Warmest regards,<br><strong>ImperialPaws Pekingese</strong></p>`
@@ -294,19 +294,19 @@ async function sendApplicationConfirmationEmail(application, baseUrl = "https://
 async function sendBreederNewApplicationAlert(application) {
   const subject = `🐾 New Adoption Application: ${application.name}`;
   const text = `New application received!\nName: ${application.name}\nEmail: ${application.email}\nPhone: ${application.phone || 'N/A'}\nLocation: ${application.location || 'N/A'}\nTracking Code: ${application.trackingCode || application.id}\nMessage: ${application.message || 'None'}`;
-  
+
   const html = wrapHtmlContent(
     "New Application Alert",
     `<h2>🐾 New Application Received</h2>
     <p>A prospective adopter has just submitted an adoption application on <strong>imperialpaws.pet</strong>.</p>
     <div class="callout-box">
-      <p style="margin-bottom: 8px;"><strong>Applicant:</strong> ${application.name}</p>
-      <p style="margin-bottom: 8px;"><strong>Email:</strong> <a href="mailto:${application.email}">${application.email}</a></p>
-      <p style="margin-bottom: 8px;"><strong>Phone:</strong> ${application.phone || 'N/A'}</p>
-      <p style="margin-bottom: 8px;"><strong>Location:</strong> ${application.location || 'N/A'}</p>
-      <p style="margin-bottom: 0;"><strong>Tracking Code:</strong> <code>${application.trackingCode || application.id}</code></p>
+      <p style="margin-bottom: 8px;"><strong>Applicant:</strong> ${escapeHtml(application.name)}</p>
+      <p style="margin-bottom: 8px;"><strong>Email:</strong> <a href="mailto:${escapeHtml(application.email)}">${escapeHtml(application.email)}</a></p>
+      <p style="margin-bottom: 8px;"><strong>Phone:</strong> ${escapeHtml(application.phone || 'N/A')}</p>
+      <p style="margin-bottom: 8px;"><strong>Location:</strong> ${escapeHtml(application.location || 'N/A')}</p>
+      <p style="margin-bottom: 0;"><strong>Tracking Code:</strong> <code>${escapeHtml(application.trackingCode || application.id)}</code></p>
     </div>
-    ${application.message ? `<p><strong>Applicant Note:</strong><br><em>"${application.message}"</em></p>` : ''}
+    ${application.message ? `<p><strong>Applicant Note:</strong><br><em>"${escapeHtml(application.message)}"</em></p>` : ''}
     <div class="btn-wrapper">
       <a href="https://imperialpaws.pet/admin/applications" class="btn">Review in Admin Panel</a>
     </div>`
@@ -320,69 +320,20 @@ async function sendBreederNewApplicationAlert(application) {
  * When Approved: shows clean transparent approval with puppy name + adoption fee only.
  */
 async function sendApplicationStatusUpdateEmail(application, newStatus, baseUrl = "https://imperialpaws.pet", puppy = null) {
-  if (!application || !application.email) return;
-
-  const trackUrl = `${baseUrl}/track?code=${encodeURIComponent(application.trackingCode || application.id)}`;
-  const statusFormatted = String(newStatus).toUpperCase();
-
-  // --- APPROVED: clean, transparent approval email ---
-  if (newStatus.toLowerCase() === "approved") {
-    const puppyName = puppy?.name || application.puppyName || "your selected puppy";
-    const adoptionFee = puppy?.price ? `${getCurrencySymbol(puppy.currency)}${puppy.price}` : "the listed adoption fee";
-    const subject = `Your Adoption Application Has Been Approved – ImperialPaws`;
-    const text = `Dear ${application.name},\n\nCongratulations! Your adoption application for ${puppyName} has been approved.\n\nThe next step is completing the adoption by paying the listed adoption fee shown on our website.\n\nAdoption Fee: ${adoptionFee}\n\nAn adoption invoice will be generated for you shortly. Once payment is confirmed, ${puppyName} will be marked as Sold and reserved exclusively for you.\n\nIf you have any questions before completing payment, we are happy to help.\n\nThank you for choosing Imperial Paws.\n\nBest regards,\nImperialPaws\nImperialPaws.pet`;
-    const html = wrapHtmlContent(
-      "Your Adoption Application Has Been Approved",
-      `<h2>Congratulations, ${application.name}!</h2>
-      <p>We are pleased to let you know that your adoption application for <strong>${puppyName}</strong> has been approved.</p>
-      <p>The next step is completing the adoption by paying the listed adoption fee shown on our website.</p>
-      <div class="callout-box" style="background:#F0FDF4; border-color:#22C55E; color:#166534;">
-        <p style="margin-bottom:8px;"><strong>Puppy:</strong> ${puppyName}</p>
-        <p style="margin-bottom:0; font-size:18px;"><strong>Adoption Fee:</strong> <strong>${adoptionFee}</strong></p>
-      </div>
-      <p>An adoption invoice has been generated for you. Please review it and submit payment using the available payment method.</p>
-      <p>Once payment has been confirmed, <strong>${puppyName}</strong> will immediately be marked as <strong>Sold</strong> and reserved exclusively for you.</p>
-      <div class="callout-box">
-        <strong>What Happens Next?</strong><br>
-        1. Review your invoice — it reflects the exact adoption fee listed on our website with no additional charges.<br>
-        2. Submit payment via the invoice link.<br>
-        3. We will confirm your reservation and arrange pickup or delivery.
-      </div>
-      <div class="btn-wrapper">
-        <a href="${trackUrl}" class="btn">View Your Application Portal</a>
-      </div>
-      <p>If you have any questions before completing payment, we are happy to help. Simply reply to this email or reach us at <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a>.</p>
-      <p>Thank you for choosing Imperial Paws.<br><br>Best regards,<br><strong>ImperialPaws</strong><br>ImperialPaws.pet</p>`
-    );
-    return sendMailSafe({ to: application.email, subject, text, html });
-  }
-
-  // --- REJECTED ---
-  if (["declined", "rejected"].includes(newStatus.toLowerCase())) {
-    const subject = `Regarding Your Adoption Application – ImperialPaws`;
-    const text = `Dear ${application.name},\n\nThank you for your interest in ImperialPaws Pekingese. After careful consideration, we are unable to move forward with your application at this time. We appreciate the time you took to apply and wish you the very best.\n\nImperialPaws Pekingese`;
-    const html = wrapHtmlContent(
-      "Regarding Your Adoption Application",
-      `<h2>Regarding Your Application</h2>
-      <p>Dear ${application.name},</p>
-      <p>Thank you for your interest in ImperialPaws Pekingese. After careful consideration, we are unable to move forward with your application for our current litters.</p>
-      <p>We appreciate the time you took to apply and wish you the very best in finding the perfect companion.</p>
-      <p>Warm regards,<br><strong>ImperialPaws Pekingese</strong></p>`
-    );
-    return sendMailSafe({ to: application.email, subject, text, html });
-  }
-
-  // --- OTHER STATUS UPDATES ---
-  const subject = `Application Update: ${statusFormatted} – ImperialPaws`;
-  const text = `Dear ${application.name},\n\nYour adoption application status has been updated to: ${statusFormatted}.\n\nTrack your application at: ${trackUrl}\n\nImperialPaws Pekingese`;
-  const html = wrapHtmlContent(
-    `Application Update: ${statusFormatted}`,
-    `<h2>Application Status Update</h2>
-    <p>Dear ${application.name},</p>
-    <p>Your adoption application (Reference: <strong>${application.trackingCode || application.id}</strong>) has been updated to: <span class="status-badge status-pending">${newStatus}</span>.</p>
-    <div class="btn-wrapper"><a href="${trackUrl}" class="btn">View Application Portal</a></div>
-    <p>Warm regards,<br><strong>ImperialPaws Pekingese</strong></p>`
-  );
+  if (!application || !application.email) return false;
+  const trackUrl = baseUrl + '/track?code=' + encodeURIComponent(application.trackingCode || application.id);
+  const statusLabel = newStatus === 'Sold' ? 'Adoption completed' : newStatus === 'Rejected' ? 'Declined' : newStatus;
+  const puppyName = puppy?.name || application.puppyName || 'your selected puppy';
+  const guidance = newStatus === 'Approved'
+    ? 'Your application has been approved. We will contact you to confirm the adoption terms, invoice, and arrangements for bringing your puppy home. Please review your documents and confirm the details with us before making a payment.'
+    : newStatus === 'Rejected'
+    ? 'Thank you for taking the time to apply. After reviewing this placement, we are unable to move forward with your application. Please reply if you have any questions.'
+    : newStatus === 'Sold'
+    ? 'We have marked this adoption as completed. Thank you for welcoming your puppy into your family. Please reply if there is anything you would like to discuss.'
+    : 'Your application is pending review. We will contact you with the next steps. You can reply to this email with any questions.';
+  const subject = 'Application update: ' + statusLabel + ' – ImperialPaws';
+  const text = 'Hello ' + application.name + ',\n\n' + puppyName + ': ' + statusLabel + '\n\n' + guidance + '\n\nView your application: ' + trackUrl;
+  const html = wrapHtmlContent(escapeHtml(subject), '<h2>An update about ' + escapeHtml(puppyName) + '</h2><p>Hello ' + escapeHtml(application.name) + ',</p><p><strong>' + escapeHtml(statusLabel) + '</strong></p><p>' + escapeHtml(guidance) + '</p><div class="btn-wrapper"><a class="btn" href="' + escapeHtml(trackUrl) + '">View your application</a></div>');
   return sendMailSafe({ to: application.email, subject, text, html });
 }
 
@@ -423,10 +374,10 @@ async function sendManualReplyEmail({ toEmail, toName, subject, messageBody }) {
   const emailSubject = subject || `A Message from ImperialPaws`;
   const text = `Dear ${toName || "there"},\n\n${messageBody}\n\nBest regards,\nImperialPaws\nImperialPaws.pet`;
   const html = wrapHtmlContent(
-    emailSubject,
+    escapeHtml(emailSubject),
     `<h2>A Message from ImperialPaws</h2>
-    <p>Dear ${toName || "there"},</p>
-    <div style="margin: 16px 0; padding: 20px; border-left: 4px solid #C7A45A; background: #FFFDF9; line-height: 1.8; color: #222; white-space: pre-wrap;">${String(messageBody).trim().replace(/\n/g, "<br>")}</div>
+    <p>Dear ${escapeHtml(toName || "there")},</p>
+    <div style="margin: 16px 0; padding: 20px; border-left: 4px solid #C7A45A; background: #FFFDF9; line-height: 1.8; color: #222; white-space: pre-wrap;">${escapeHtml(String(messageBody).trim()).replace(/\n/g, "<br>")}</div>
     <p>Best regards,<br><strong>ImperialPaws</strong><br><a href="https://imperialpaws.pet">ImperialPaws.pet</a></p>`
   );
   return sendMailSafe({ to: toEmail, subject: emailSubject, text, html });
@@ -545,7 +496,7 @@ async function sendAdopterLifecycleEmail({ application, stageType, customNote, b
   const customSection = customNote && String(customNote).trim()
     ? `<div style="margin: 20px 0; padding: 16px; border-left: 4px solid #c7a45a; background: #fffdf9; font-size: 15px; color: #333;">
         <strong style="color: #1a1a1a; display: block; margin-bottom: 6px;">Personal Note from Breeder:</strong>
-        ${String(customNote).trim().replace(/\n/g, '<br>')}
+        ${escapeHtml(String(customNote).trim()).replace(/\n/g, '<br>')}
       </div>`
     : "";
 
@@ -555,11 +506,11 @@ async function sendAdopterLifecycleEmail({ application, stageType, customNote, b
   const html = wrapHtmlContent(
     stageTitle,
     `<h2>${stageHeadline}</h2>
-    <p>Dear ${application.name},</p>
+    <p>Dear ${escapeHtml(application.name)},</p>
     ${stageBody}
     ${customSection}
     <div class="btn-wrapper">
-      <a href="${trackUrl}" class="btn">View Your Application Portal</a>
+      <a href="${escapeHtml(trackUrl)}" class="btn">View Your Application Portal</a>
     </div>
     <p>If you have any questions along the way, simply reply directly to this email or reach us at <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a>.</p>
     <p>Warmest regards,<br><strong>ImperialPaws Pekingese</strong></p>`
@@ -581,21 +532,21 @@ async function sendAdoptionCompleteEmail({ application, puppy, customNote, baseU
   const customSection = customNote && String(customNote).trim()
     ? `<div style="margin:20px 0; padding:16px; border-left:4px solid #C7A45A; background:#FFFDF9; font-size:15px; color:#333;">
         <strong style="display:block; margin-bottom:6px; color:#1a1a1a;">A Personal Note from Your Breeder:</strong>
-        ${String(customNote).trim().replace(/\n/g, "<br>")}
+        ${escapeHtml(String(customNote).trim()).replace(/\n/g, "<br>")}
       </div>`
     : "";
 
   const text = `Dear ${application.name},\n\nCongratulations! The adoption of ${puppyName} is now complete.\n\nWelcome to the ImperialPaws family! 👑\n\n---\nPekingese Care Essentials:\n\n• REST: Puppies need 16-18 hrs of sleep. Keep first days calm and quiet.\n• FOOD: Small, frequent meals 3-4x daily. Premium small-breed puppy kibble.\n• WATER: Fresh water available at all times. Pekingese can be prone to hypoglycemia.\n• GROOMING: Brush daily around the face and eyes. Their coat needs regular gentle brushing.\n• HEAT: Pekingese are VERY heat sensitive. Never leave in a hot car or direct sun.\n• VET: Schedule a wellness check within the first week of arrival.\n• LOVE: They are loyal, gentle companions — give them time to settle in.\n---\n\n${customNote ? `Personal note: ${customNote}\n\n` : ""}We are always here if you have questions. Email us anytime at info@imperialpaws.pet.\n\nThank you for choosing ImperialPaws.\n\nWith warmest regards,\nImperialPaws Pekingese`;
 
   const html = wrapHtmlContent(
-    `Welcome Home, ${puppyName}! — Adoption Complete`,
+    `Welcome Home, ${escapeHtml(puppyName)}! — Adoption Complete`,
     `<h2>Welcome to the ImperialPaws Family! 👑</h2>
-    <p>Dear ${application.name},</p>
-    <p>Congratulations! The adoption of <strong>${puppyName}</strong> is now officially complete. We are so happy for you and your new family member.</p>
+    <p>Dear ${escapeHtml(application.name)},</p>
+    <p>Congratulations! The adoption of <strong>${escapeHtml(puppyName)}</strong> is now officially complete. We are so happy for you and your new family member.</p>
     ${customSection}
     <div class="callout-box" style="background:#F0FDF4; border-color:#22C55E; color:#166534;">
-      <strong style="font-size:16px;">🐾 Adoption Complete — ${puppyName} Is Home!</strong><br>
-      Thank you for trusting ImperialPaws Pekingese. It has been our absolute pleasure placing ${puppyName} with your family.
+      <strong style="font-size:16px;">🐾 Adoption Complete — ${escapeHtml(puppyName)} Is Home!</strong><br>
+      Thank you for trusting ImperialPaws Pekingese. It has been our absolute pleasure placing ${escapeHtml(puppyName)} with your family.
     </div>
     <h2 style="font-family:Georgia,serif; font-size:18px; margin-top:28px; margin-bottom:12px; color:#1A1916;">Pekingese Care Essentials</h2>
     <div class="callout-box">
@@ -607,7 +558,7 @@ async function sendAdoptionCompleteEmail({ application, puppy, customNote, baseU
       <p style="margin-bottom:0;">🏥 <strong>Vet Visit:</strong> Schedule a wellness check within the first week of arrival to establish their health record.</p>
     </div>
     <p>We are always here for you. If you ever have questions about your Pekingese, simply reply to this email or reach us at <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a>.</p>
-    <p>Thank you for choosing ImperialPaws. We hope ${puppyName} brings your family endless joy. 🐾</p>
+    <p>Thank you for choosing ImperialPaws. We hope ${escapeHtml(puppyName)} brings your family endless joy. 🐾</p>
     <p>With warmest regards,<br><strong>ImperialPaws Pekingese</strong><br>ImperialPaws.pet</p>`
   );
 

@@ -133,7 +133,8 @@ async function main() {
   await assertRoute("/track/result", 400);
   await assertRoute("/track/result?code=bad-code", 404);
   await assertRoute("/admin/login", 200);
-  await assertRoute("/invoice/not-real", 404);
+  const legacyInvoice = await assertRoute("/invoice/not-real", 302);
+  assert(legacyInvoice.headers.get("location") === "/track", "Number-only invoice links should require a tracking code.");
 
   const login = await postForm("/admin/login", {
     username: "owner",
@@ -300,6 +301,7 @@ async function main() {
   const applicationsFile = path.join(appRoot, "server", "data", "applications.json");
   let application = readJSON(applicationsFile).find(item => item.email === "buyer@example.com");
   assert(application, "Application should be stored.");
+  assert(/^IP-PUPPY-[a-f0-9]{24}$/i.test(application.id), "New applications must have unpredictable private tracking codes.");
   await assertRoute(`/track/result?code=${encodeURIComponent(application.id)}`, 200);
 
   const duplicateApply = await postForm("/apply", {
@@ -310,9 +312,20 @@ async function main() {
     location: "Test City",
     message: "Duplicate temporary application"
   });
-  assert(duplicateApply.status === 302, "Duplicate application should redirect.");
+  assert(duplicateApply.status === 409, "Matching buyer details alone must not reveal an existing application.");
+  assert(!(await duplicateApply.text()).includes(application.id), "Duplicate form response must keep the private tracking code secret.");
+  const existingApplicationCookie = (apply.headers.get("set-cookie") || "").split(";")[0];
+  const sameBrowserDuplicate = await postForm("/apply", {
+    puppyId: puppy.id,
+    name: "Test Buyer",
+    email: "buyer@example.com",
+    phone: "555-1000",
+    location: "Test City",
+    message: "Duplicate from the original browser"
+  }, existingApplicationCookie);
+  assert(sameBrowserDuplicate.status === 302, "The original applicant browser can reopen its existing application.");
   assert(
-    duplicateApply.headers.get("location").includes(application.id),
+    sameBrowserDuplicate.headers.get("location").includes(application.id),
     "Duplicate application should reuse the existing tracking code."
   );
   const duplicateApplications = readJSON(applicationsFile).filter(

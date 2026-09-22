@@ -9,7 +9,13 @@ function canViewInvoice(application) {
   );
 }
 
-async function renderInvoice(req, res, invoiceNumber, trackingCode = null, download = false) {
+async function renderInvoice(req, res, invoiceNumber, trackingCode, download = false) {
+  res.set({
+    "Cache-Control": "private, no-store",
+    "Referrer-Policy": "no-referrer",
+    "X-Robots-Tag": "noindex, nofollow"
+  });
+  if (!trackingCode) return res.redirect("/track");
   const invoices = await loadCollection("invoices", { fallbackToLocal: true });
   const applications = await loadCollection("applications", { fallbackToLocal: true });
   const invoice = invoices.find(i => i.invoiceNumber === invoiceNumber);
@@ -19,7 +25,7 @@ async function renderInvoice(req, res, invoiceNumber, trackingCode = null, downl
   const application = applications.find(
     a =>
       a.id === invoice.applicationId &&
-      (!trackingCode || a.id === trackingCode) &&
+      a.id === trackingCode &&
       canViewInvoice(a)
   );
 
@@ -46,9 +52,12 @@ async function renderInvoice(req, res, invoiceNumber, trackingCode = null, downl
 router.get("/invoice/:trackingCode/:invoiceNumber/download", asyncHandler(async (req, res) => {
   await renderInvoice(req, res, req.params.invoiceNumber, req.params.trackingCode, true);
 }));
-router.get("/invoice/:invoiceNumber/download", asyncHandler(async (req, res) => {
-  await renderInvoice(req, res, req.params.invoiceNumber, null, true);
-}));
+// Invoice numbers are human-readable references, not private access credentials.
+// Older number-only links lead families back to the tracking-code entry page.
+router.get("/invoice/:invoiceNumber/download", (req, res) => {
+  res.set({ "Cache-Control": "private, no-store", "Referrer-Policy": "no-referrer" });
+  res.redirect("/track");
+});
 
 router.get("/invoice/:trackingCode/:invoiceNumber", asyncHandler(async (req, res) => {
   await renderInvoice(
@@ -59,8 +68,9 @@ router.get("/invoice/:trackingCode/:invoiceNumber", asyncHandler(async (req, res
   );
 }));
 
-router.get("/invoice/:invoiceNumber", asyncHandler(async (req, res) => {
-  await renderInvoice(req, res, req.params.invoiceNumber);
-}));
+router.get("/invoice/:invoiceNumber", (req, res) => {
+  res.set({ "Cache-Control": "private, no-store", "Referrer-Policy": "no-referrer" });
+  res.redirect("/track");
+});
 
 module.exports = router;

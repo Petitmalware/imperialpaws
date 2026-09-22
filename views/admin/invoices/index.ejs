@@ -29,8 +29,9 @@
         <p class="admin-muted">Approve an application, then create the buyer invoice from this section.</p>
       </section>
     <% } else { %>
+      <div class="admin-toolbar"><div class="admin-search"><label for="invoice-table-search">Find an invoice</label><input type="search" id="invoice-table-search" placeholder="Invoice number, buyer, or status" data-table-search="invoice-table" data-search-count="invoice-table-count" data-search-empty="invoice-table-empty"></div><span class="admin-muted" id="invoice-table-count" aria-live="polite"></span></div><p id="invoice-table-empty" class="admin-empty-state" hidden>No matching records. Try another search.</p>
       <div class="admin-table-wrap">
-        <table class="admin-table">
+        <table class="admin-table" id="invoice-table">
           <thead>
             <tr>
               <th>Invoice</th>
@@ -63,21 +64,21 @@
                   <a class="btn-small" href="/admin/invoices/view/<%= inv.invoiceNumber %>">View</a>
                   <a class="btn-small" href="/admin/invoices/edit/<%= inv.invoiceNumber %>">Edit</a>
 
-                  <form method="POST" action="/admin/invoices/<%= inv.invoiceNumber %>/toggle-paid">
+                  <form data-submit-lock method="POST" action="/admin/invoices/<%= inv.invoiceNumber %>/toggle-paid">
                     <button type="submit" class="btn-small">
-                      <%= inv.paid ? "Mark Unpaid" : "✅ Mark Paid" %>
+                      <%= inv.paid ? "Mark Unpaid" : "Mark paid & email receipt" %>
                     </button>
                   </form>
 
                   <% if (buyerEmail && !inv.paid) { %>
-                    <form method="POST" action="/admin/invoices/<%= inv.invoiceNumber %>/send-reminder">
+                    <form data-submit-lock method="POST" action="/admin/invoices/<%= inv.invoiceNumber %>/send-reminder">
                       <button type="submit" class="btn-small" style="background:#FEF3C7; color:#92400E; border:1px solid #F59E0B;">
                         🔔 Send Reminder
                       </button>
                     </form>
                   <% } %>
 
-                  <% if (buyerEmail) { %><form method="POST" action="/admin/invoices/<%= encodeURIComponent(inv.invoiceNumber) %>/send-pdf"><button type="submit" class="btn-small">Email invoice PDF</button></form>
+                  <% if (buyerEmail) { %><form data-submit-lock method="POST" action="/admin/invoices/<%= encodeURIComponent(inv.invoiceNumber) %>/send-pdf"><button type="submit" class="btn-small">Email invoice PDF</button></form>
                     <button
                       class="btn-small"
                       style="background:#EFF6FF; color:#1E40AF; border:1px solid #93C5FD;"
@@ -97,50 +98,24 @@
   </main>
 </div>
 
-<!-- Manual Reply Modal -->
-<div id="replyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center;">
-  <div style="background:#fff; border-radius:12px; padding:2rem; max-width:520px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-    <h3 style="margin:0 0 1rem; font-family:Georgia,serif; color:#1a1a1a;">✉️ Send Message to Buyer</h3>
-    <form method="POST" id="replyForm">
-      <input type="hidden" name="toEmail" id="replyToEmail">
-      <input type="hidden" name="toName" id="replyToName">
-
-      <div style="margin-bottom:0.75rem;">
-        <label style="font-size:0.82rem; font-weight:700; color:#555; display:block; margin-bottom:0.3rem;">TO</label>
-        <div id="replyToDisplay" style="padding:0.5rem 0.75rem; background:#f5f5f5; border-radius:6px; font-size:0.9rem; color:#333;"></div>
-      </div>
-
-      <div style="margin-bottom:0.75rem;">
-        <label style="font-size:0.82rem; font-weight:700; color:#555; display:block; margin-bottom:0.3rem;">SUBJECT</label>
-        <input type="text" name="subject" placeholder="e.g. Regarding Your Puppy Adoption" style="width:100%; padding:0.55rem 0.75rem; border:1px solid #ddd; border-radius:6px; font-size:0.9rem; box-sizing:border-box;">
-      </div>
-
-      <div style="margin-bottom:1rem;">
-        <label style="font-size:0.82rem; font-weight:700; color:#555; display:block; margin-bottom:0.3rem;">MESSAGE</label>
-        <textarea name="messageBody" rows="7" placeholder="Type your message to the buyer here..." required style="width:100%; padding:0.6rem 0.75rem; border:1px solid #ddd; border-radius:6px; font-size:0.9rem; resize:vertical; box-sizing:border-box;"></textarea>
-      </div>
-
-      <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
-        <button type="button" onclick="closeReply()" style="padding:0.55rem 1.2rem; border:1px solid #ddd; border-radius:8px; background:#fff; cursor:pointer; font-size:0.875rem;">Cancel</button>
-        <button type="submit" style="padding:0.55rem 1.4rem; border:none; border-radius:8px; background:#c7a45a; color:#111; font-weight:700; cursor:pointer; font-size:0.875rem;">Send Email 🚀</button>
-      </div>
-    </form>
-  </div>
-</div>
-
+<dialog id="replyModal" class="admin-dialog" aria-labelledby="reply-title">
+  <div class="admin-section-title"><h2 id="reply-title">A message to your adopter</h2><button type="button" class="btn-small" onclick="closeReply()" aria-label="Close message">Close</button></div>
+  <p class="admin-muted" id="replyToDisplay"></p>
+  <form method="POST" id="replyForm" class="admin-form" data-submit-lock>
+    <input type="hidden" name="toEmail" id="replyToEmail"><input type="hidden" name="toName" id="replyToName">
+    <div class="form-group"><label for="invoice-reply-subject">Subject</label><input id="invoice-reply-subject" name="subject" required maxlength="160" placeholder="Your puppy adoption invoice"></div>
+    <div class="form-group"><label for="invoice-reply-body">Your message</label><textarea id="invoice-reply-body" name="messageBody" rows="7" maxlength="5000" required placeholder="Write a personal message…"></textarea></div>
+    <p class="admin-muted">This message will be emailed to the buyer shown above.</p>
+    <div class="admin-actions"><button type="submit" class="btn-primary">Send email</button><button type="button" class="btn-secondary" onclick="closeReply()">Cancel</button></div>
+  </form>
+</dialog>
 <script>
 function openReply(invoiceNumber, email, name) {
-  document.getElementById("replyToEmail").value = email;
-  document.getElementById("replyToName").value = name;
-  document.getElementById("replyToDisplay").textContent = name + " <" + email + ">";
-  document.getElementById("replyForm").action = "/admin/invoices/" + invoiceNumber + "/manual-reply";
-  const modal = document.getElementById("replyModal");
-  modal.style.display = "flex";
+  document.getElementById('replyToEmail').value = email;
+  document.getElementById('replyToName').value = name;
+  document.getElementById('replyToDisplay').textContent = 'To: ' + name + ' <' + email + '>';
+  document.getElementById('replyForm').action = '/admin/invoices/' + encodeURIComponent(invoiceNumber) + '/manual-reply';
+  document.getElementById('replyModal').showModal();
 }
-function closeReply() {
-  document.getElementById("replyModal").style.display = "none";
-}
-document.getElementById("replyModal").addEventListener("click", function(e) {
-  if (e.target === this) closeReply();
-});
+function closeReply() { document.getElementById('replyModal').close(); }
 </script>

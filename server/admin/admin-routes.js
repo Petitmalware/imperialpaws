@@ -91,12 +91,13 @@ function buildDashboard({
 
   if (storageStatus.mode !== "mongo") {
     notifications.push({
-      tone: "urgent",
-      title: "Database is not persisting to MongoDB",
+      tone: storageStatus.mode === 'local-json' ? 'info' : 'urgent',
+      title: storageStatus.mode === 'local-json' ? 'Local data storage' : 'Database connection needs attention',
       detail:
         storageStatus.mode === "local-fallback"
-          ? "The app is using emergency local fallback because MongoDB is unreachable. Data can reset after a Render restart."
-          : "The app is using local JSON files. Connect MongoDB before using the site for real buyers.",
+          ? "MongoDB is unreachable. The site is using local fallback files; restore the database connection before making further changes."
+          : storageStatus.mode === 'local-json' ? "Records are saved on this server. Include server/data in your regular VPS backups."
+          : "Database writes are unavailable. Review the server database configuration.",
       href: "/admin/settings",
       action: "Check settings"
     });
@@ -104,11 +105,11 @@ function buildDashboard({
 
   if (imageStorageStatus.mode !== "cloudinary") {
     notifications.push({
-      tone: imageStorageStatus.isProduction ? "urgent" : "warning",
-      title: "Cloudinary image storage is not active",
-      detail: imageStorageStatus.isProduction
-        ? "Production puppy photo uploads are blocked until Cloudinary is configured, so photos cannot disappear after a Render restart."
-        : "Local image uploads are fine for testing, but production needs Cloudinary so puppy photos survive restarts.",
+      tone: imageStorageStatus.fallbackEnabled ? "info" : "urgent",
+      title: imageStorageStatus.fallbackEnabled ? 'Photos saved on this server' : 'Photo uploads need configuration',
+      detail: imageStorageStatus.fallbackEnabled
+        ? 'Include public/uploads in your VPS backups so puppy photos can be restored with your records.'
+        : 'Configure Cloudinary or explicitly enable persistent local image storage on your VPS to upload photos.',
       href: "/admin/puppies",
       action: "Review photos"
     });
@@ -122,6 +123,12 @@ function buildDashboard({
       href: "/admin/applications",
       action: "Review applications"
     });
+  }
+
+  const dueFollowUps = applications.filter(application => application.followUpDate && application.followUpDate <= new Date().toISOString().slice(0, 10));
+  if (dueFollowUps.length) {
+    notifications.unshift({ tone: 'warning', title: `${dueFollowUps.length} family follow-up${dueFollowUps.length === 1 ? '' : 's'} due`,
+      detail: 'Pick up the conversation and clear or reschedule each reminder when you are done.', href: '/admin/applications?followUp=due', action: 'Open follow-ups' });
   }
 
   if (approvedWithoutInvoice.length) {
@@ -187,7 +194,7 @@ function buildDashboard({
 
   return {
     invoiceFollowUps: unpaidInvoices.slice().sort(byCreatedDesc).slice(0, 5),
-    notifications,
+    notifications: notifications.sort((a,b) => (a.tone === 'info') - (b.tone === 'info')),
     puppyCareList: puppiesMissingImages.slice(0, 5),
     recentApplications,
     storageStatus,

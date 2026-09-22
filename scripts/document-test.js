@@ -72,5 +72,26 @@ let server;
   assert(response.headers.get('cache-control').includes('no-store'));
   assert.deepEqual(Buffer.from(await response.arrayBuffer()),messages[1].attachments[0].content);
   assert.equal((await fetch(origin+'/documents/'+'0'.repeat(64))).status,404);
+  const markup = '<img src=x onerror=alert(1)>';
+  const escapedMarkup = '&lt;img src=x onerror=alert(1)&gt;';
+  const applicant = { id: 'IP-PUPPY-test', name: markup, email: 'alex@example.invalid', phone: markup, location: markup, message: markup };
+  const emailCases = [
+    () => email.sendManualReplyEmail({ toEmail: applicant.email, toName: markup, subject: markup, messageBody: markup + '\nA plain-text second line.' }),
+    () => email.sendApplicationConfirmationEmail(applicant),
+    () => email.sendBreederNewApplicationAlert(applicant),
+    () => email.sendApplicationStatusUpdateEmail(applicant, 'Approved', 'https://breeder.example', { name: markup }),
+    () => email.sendAdopterLifecycleEmail({ application: applicant, stageType: 'under_review', customNote: markup }),
+    () => email.sendAdoptionCompleteEmail({ application: applicant, puppy: { name: markup }, customNote: markup })
+  ];
+  for (const sendEmail of emailCases) {
+    const count = messages.length;
+    assert(await sendEmail());
+    assert.equal(messages.length, count + 1);
+    const message = messages.at(-1);
+    assert(!message.html.includes(markup), 'User-entered markup must be escaped in email HTML: ' + message.subject);
+    assert(message.html.includes(escapedMarkup), 'Entered text must remain visible after escaping');
+    assert(message.text.includes(markup), 'The plain-text message must retain the original content');
+  }
   console.log('PDF attachments, one-page agreements, private no-login downloads, immutable copies, and domain correction passed.');
+  console.log('Application, status, breeder alert, manual reply, and care email HTML escaping passed.');
 })().catch(error=>{console.error(error);process.exitCode=1;}).finally(()=>server?.close());

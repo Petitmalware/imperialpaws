@@ -1,84 +1,11 @@
-<section class="page-hero reveal">
-  <div class="container">
-    <h1>Contact ImperialPaws Pekingese</h1>
-    <p class="subtitle">
-      Thoughtful communication for puppy availability, applications, and
-      responsible placement questions.
-    </p>
-  </div>
-</section>
-
-<section class="page-content reveal">
-  <div class="container narrow reveal">
-    <p>
-      Thank you for your interest in ImperialPaws Pekingese. We welcome
-      thoughtful inquiries from individuals and families who are genuinely
-      interested in our puppies, adoption process, and care expectations.
-    </p>
-
-    <div class="contact-panel">
-      <h2>Best First Step</h2>
-      <p>
-        For questions about a specific puppy, please review that puppy's detail
-        page, the adoption process, and the FAQ before contacting us. Most
-        availability, application, tracking, and invoice questions are explained
-        on the site.
-      </p>
-    </div>
-
-    <h2>Adoption Applications</h2>
-    <p>
-      If you are interested in a particular puppy, submit an application from
-      that puppy's detail page. If you already applied, use your tracking code
-      to check the current status before sending a new message.
-    </p>
-
-    <h2>General Inquiries</h2>
-    <p>
-      For general questions that are not addressed elsewhere, use the contact
-      information below when available. We prioritize active applications,
-      approved placements, and questions related to current puppy listings.
-    </p>
-
-    <% if (
-      siteSettings.contact.email ||
-      siteSettings.contact.phone ||
-      siteSettings.contact.location
-    ) { %>
-      <div class="contact-details">
-        <% if (siteSettings.contact.email) { %>
-          <p><strong>Email:</strong> <a href="mailto:<%= siteSettings.contact.email %>"><%= siteSettings.contact.email %></a></p>
-        <% } %>
-
-        <% if (siteSettings.contact.phone) { %>
-          <p><strong>Phone:</strong> <a href="tel:<%= siteSettings.contact.phone.replace(/[^0-9+]/g, '') %>"><%= siteSettings.contact.phone %></a></p>
-        <% } %>
-
-        <% if (siteSettings.contact.location) { %>
-          <p><strong>Location:</strong> <%= siteSettings.contact.location %></p>
-        <% } %>
-      </div>
-    <% } else { %>
-      <div class="notice-box">
-        <p>
-          Public contact information has not been posted yet. Contact details
-          may be provided to approved applicants during the adoption process.
-        </p>
-      </div>
-    <% } %>
-
-    <div class="safety-panel">
-      <h2>Buyer Safety Reminder</h2>
-      <ul class="trust-list">
-        <li>Do not send payment for a public listing before application review and approval.</li>
-        <li>Keep your tracking code private.</li>
-        <li>Confirm any invoice matches the puppy, buyer details, and agreed amount.</li>
-      </ul>
-    </div>
-
-    <p class="closing-note">
-      We appreciate patient, respectful communication. Responsible placement is
-      careful work, and every inquiry is handled with the puppy's well-being in mind.
-    </p>
-  </div>
-</section>
+<% const contact = siteSettings.contact || {}; %>
+<section class="page-hero"><div class="container"><p class="eyebrow">A conversation starts here</p><h1>How can we help?</h1><p class="subtitle">Questions about a puppy, an application, or the next step? Let’s point you in the right direction.</p></div></section>
+<section class="page-content"><div class="container">
+  <div class="contact-route-grid"><a href="/puppies" class="contact-route"><span class="step-tag">01</span><h2>Meet a puppy</h2><p>See current availability, explore a profile, and apply from the puppy’s page.</p><strong>Browse puppies ↗</strong></a><a href="/track" class="contact-route"><span class="step-tag">02</span><h2>Check an application</h2><p>Your private code takes you to your status and approved invoice.</p><strong>Track my application ↗</strong></a><a href="/faq" class="contact-route"><span class="step-tag">03</span><h2>Have a quick question?</h2><p>Read about applications, puppy care, and the adoption process.</p><strong>Explore FAQs ↗</strong></a></div>
+  <div class="contact-main"><div><p class="eyebrow">Reach out</p><h2>We’re here for the next step.</h2><p>If you’ve already applied, mention your name and the puppy you applied for. Please keep payment and identification details out of your message.</p></div><div class="contact-methods">
+    <% if (contact.email) { %><a href="mailto:<%= contact.email %>"><span>Email us</span><strong><%= contact.email %></strong><small>Open your email app ↗</small></a><% } %>
+    <% if (contact.phone) { %><a href="tel:<%= contact.phone.replace(/[^0-9+]/g, '') %>"><span>Call us</span><strong><%= contact.phone %></strong><small>Open your phone app ↗</small></a><% } %>
+    <% if (contact.location) { %><div><span>Our location</span><strong><%= contact.location %></strong></div><% } %>
+    <% if (!contact.email && !contact.phone && !contact.location) { %><p>Public contact details haven’t been posted yet. Existing applicants can reply to the email they received from the breeder.</p><% } %>
+  </div></div>
+</div></section>

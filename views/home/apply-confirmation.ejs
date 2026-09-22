@@ -1,47 +1,9 @@
-<div class="page-application-confirmation">
-
-  <section class="page-hero reveal">
-    <div class="container">
-      <h1>Application Submitted</h1>
-      <p class="subtitle">
-        Thank you for your interest in one of our puppies.
-      </p>
-    </div>
-  </section>
-
-  <section class="page-content reveal">
-    <div class="container center">
-
-      <div class="tracking-box">
-        <h2>Your Tracking Code</h2>
-
-        <% if (existingApplication) { %>
-          <p class="confirmation-message">
-            We found an existing application for this puppy and buyer contact.
-            Use the tracking code below to follow that original application.
-          </p>
-        <% } else { %>
-          <p class="confirmation-message">
-            We review each application individually and may reach out if additional
-            information is needed.
-          </p>
-        <% } %>
-
-        <p class="tracking-code">
-          <strong><%= trackingCode %></strong>
-        </p>
-
-        <p class="note">
-          Please save this tracking code.
-          You will need it to check your application status.
-        </p>
-
-        <a href="/track?code=<%= trackingCode %>" class="btn-primary">
-          Track My Application
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-</div>
+<section class="page-content confirmation-page"><div class="container narrow">
+  <div class="confirmation-card">
+    <div class="success-mark" aria-hidden="true">✓</div><p class="eyebrow">Your adoption journey</p><h1><%= existingApplication ? 'You’re already on our list.' : 'Application received.' %></h1>
+    <p><%= existingApplication ? 'We found your original application for this puppy. Use the same private code to follow its progress.' : 'Thank you for telling us about your home. We’ll review your application and may contact you for more information.' %></p>
+    <div class="tracking-code-card"><span>Your private tracking code</span><strong id="application-code"><%= trackingCode %></strong><button type="button" class="copy-button" data-copy-target="application-code" hidden>Copy code</button><small data-copy-feedback aria-live="polite"></small></div>
+    <p class="note">Save this code somewhere safe. It gives access to your status and approved invoice.</p>
+    <div class="action-row"><a href="/track/result?code=<%= encodeURIComponent(trackingCode) %>" class="btn-primary">View my application ↗</a><a href="/contact" class="btn-secondary">Ask a question</a></div>
+  </div>
+</div></section>

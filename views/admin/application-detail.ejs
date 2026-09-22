@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="/css/applications.css?v=20260922">
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar', { active: 'applications' }) %>
+  <% const appPath = '/admin/applications/' + encodeURIComponent(application.id); const state = application.status || 'Pending'; %>
+  <main class="admin-content">
+    <a class="application-back" href="/admin/applications">← All applications</a>
+    <header class="admin-page-header">
+      <div><p class="admin-eyebrow">A family for <%= puppy ? puppy.name : 'your puppy' %></p><h1><%= application.name %></h1><p class="admin-subtitle">Applied <%= application.createdAt ? new Date(application.createdAt).toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'}) : 'recently' %> · <span class="mono"><%= application.id %></span></p></div>
+      <span class="status-pill <%= statusClass(state) %>"><%= state === 'Sold' ? 'Adoption completed' : state === 'Rejected' ? 'Declined' : state %></span>
+    </header>
+    <% if (success) { %><div class="admin-alert admin-alert-success" role="status"><%= success %></div><% } %>
+    <% if (error) { %><div class="admin-alert admin-alert-error" role="alert"><%= error %></div><% } %>
+    <div class="application-workspace">
+      <div class="application-main">
+        <section class="admin-panel">
+          <div class="admin-section-title"><h2>Meet the family</h2><a class="btn-small" href="/track/result?code=<%= encodeURIComponent(application.id) %>" target="_blank" rel="noopener noreferrer">View family portal ↗</a></div>
+          <dl class="family-details"><div><dt>Email</dt><dd><%= application.email %></dd></div><div><dt>Phone</dt><dd><%= application.phone || 'Not provided' %></dd></div><div><dt>Location</dt><dd><%= application.location || 'Not provided' %></dd></div><div><dt>Puppy</dt><dd><% if (puppy) { %><a href="/admin/puppies/edit?id=<%= encodeURIComponent(puppy.id) %>"><%= puppy.name %></a> · <%= puppy.breed || 'Breed not set' %><% } else { %>Listing no longer available<% } %></dd></div></dl>
+          <div class="family-message"><h3>Their message</h3><p class="preserve-lines"><%= application.message || 'No additional message was included.' %></p></div>
+        </section>
+        <section class="admin-panel" id="reply">
+          <p class="admin-eyebrow">Keep the conversation personal</p><h2>Reply to <%= (application.name || 'this family').split(' ')[0] %></h2><p class="admin-muted">Sent to <strong><%= application.email %></strong>. Replies from the family arrive in your email inbox.</p>
+          <form method="post" action="<%= appPath %>/reply" class="application-form" data-submit-lock data-reply-form data-family-name="<%= application.name %>" data-puppy-name="<%= puppy ? puppy.name : 'your selected puppy' %>">
+            <div class="form-group"><label for="reply-template">Start with a suggested reply</label><select id="reply-template" data-reply-template><option value="">Write your own message</option><option value="review">Thanks for applying</option><option value="questions">Ask a few questions</option><option value="call">Arrange a conversation</option><option value="pickup">Discuss pickup arrangements</option></select><small>Templates fill the draft below. Review and edit before sending.</small></div>
+            <div class="form-group"><label for="reply-subject">Subject</label><input id="reply-subject" name="subject" value="<%= draft.subject || 'Your application for ' + (puppy ? puppy.name : 'a puppy') %>" maxlength="160" required></div>
+            <div class="form-group"><label for="reply-body">Your message</label><textarea id="reply-body" name="messageBody" rows="9" maxlength="5000" required placeholder="Write a warm, personal reply…"><%= draft.messageBody || '' %></textarea><small>This message is emailed when you select Send reply.</small></div>
+            <button class="btn-primary" type="submit">Send reply</button>
+          </form>
+        </section>
+        <section class="admin-panel">
+          <div class="admin-section-title"><h2>Notes & activity</h2><span class="admin-muted">Private to your team</span></div>
+          <form method="post" action="<%= appPath %>/notes" class="application-form" data-submit-lock><div class="form-group"><label for="private-note">Add a private note</label><textarea id="private-note" name="note" rows="3" maxlength="3000" required placeholder="Call notes, preferences, or something to follow up on…"></textarea></div><button type="submit" class="btn-secondary">Save note</button></form>
+          <ol class="application-timeline">
+          <% (application.activity || []).slice().reverse().forEach(event => { %>
+            <li class="timeline-entry"><span class="timeline-dot <%= event.status === 'failed' ? 'failed' : '' %>" aria-hidden="true"></span><div><div class="timeline-heading"><strong><%= event.type === 'note' ? 'Private note' : event.type === 'email' ? (event.status === 'sent' ? 'Email sent' : 'Email not sent') : event.type === 'status' ? 'Status changed' : 'Follow-up updated' %></strong><time><%= new Date(event.createdAt).toLocaleString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) %></time></div><% if (event.subject) { %><p><strong><%= event.subject %></strong></p><% } %><p class="preserve-lines"><%= event.body || '' %></p><small class="admin-muted"><%= event.by || 'Breeder' %></small></div></li>
+          <% }) %>
+            <li class="timeline-entry"><span class="timeline-dot" aria-hidden="true"></span><div><strong>Application received</strong><p class="admin-muted">This history shows replies and updates made here. Invoice and agreement actions are available on their document pages.</p></div></li>
+          </ol>
+        </section>
+      </div>
+      <aside class="application-aside" aria-label="Application actions">
+        <section class="admin-panel"><h2>Next step</h2><p class="admin-muted"><%= state === 'Pending' ? 'Read their application, start a conversation, then decide if this is the right home.' : state === 'Approved' ? 'Prepare the adoption invoice and agreement, then coordinate the handover.' : state === 'Sold' ? 'Keep handover notes and follow up with the family as they settle in.' : 'This application is closed. You can still send a personal reply.' %></p>
+          <form method="post" action="<%= appPath %>/status" class="application-form" data-submit-lock><div class="form-group"><label for="application-status">Placement status</label><select name="status" id="application-status" required><% [['Pending','Pending review'],['Approved','Approved · reserve puppy'],['Sold','Completed · mark puppy sold'],['Rejected','Declined']].forEach(([value,label]) => { %><option value="<%= value %>" <%= state === value ? 'selected' : '' %>><%= label %></option><% }) %></select></div><label class="application-checkbox"><input type="checkbox" name="notifyApplicant"> Email the family about this change</label><small class="admin-muted">Approving reserves this puppy. Reopening or declining an active placement makes the puppy available again.</small><button class="btn-primary" type="submit">Save status</button></form>
+        </section>
+        <section class="admin-panel"><h2>Follow-up reminder</h2><form method="post" action="<%= appPath %>/follow-up" class="application-form" data-submit-lock><div class="form-group"><label for="follow-up-date">Follow up on</label><input type="date" id="follow-up-date" name="followUpDate" value="<%= application.followUpDate || '' %>"><small>Shows in your dashboard and application filters. Clear the date when finished.</small></div><button class="btn-secondary" type="submit">Save reminder</button></form></section>
+        <section class="admin-panel"><h2>Adoption documents</h2><p class="admin-muted">Prepare the details, review, then send a PDF to the family.</p>
+          <div class="application-document-links"><% invoices.forEach(invoice => { %><a class="btn-secondary" href="/admin/invoices/view/<%= encodeURIComponent(invoice.invoiceNumber) %>">Invoice <%= invoice.invoiceNumber %> · <%= invoice.paid ? 'Paid' : 'Unpaid' %></a><% }) %>
+          <% if (!invoices.length && state === 'Approved') { %><a class="btn-primary" href="/admin/invoices/add/<%= encodeURIComponent(application.id) %>">Create adoption invoice</a><% } else if (!invoices.length) { %><p class="admin-muted">Invoice creation is available after approval.</p><% } %></div>
+          <% if (contracts.length) { %><form action="/admin/applications/<%= encodeURIComponent(application.id) %>/agreement" method="get" class="application-form"><div class="form-group"><label for="agreement-template">Agreement template</label><select id="agreement-template" name="contractId" required><% contracts.forEach(contract => { %><option value="<%= contract.id %>"><%= contract.title %></option><% }) %></select></div><button class="btn-secondary" type="submit">Prepare agreement</button></form><% } else { %><a class="btn-secondary" href="/admin/contracts/new">Create an agreement template</a><% } %>
+        </section>
+      </aside>
+    </div>
+  </main>
+</div>
+<script src="/js/applications.js?v=20260922" defer></script>

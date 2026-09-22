@@ -231,9 +231,10 @@ router.post("/invoices/:number/manual-reply", requireAdmin, asyncHandler(async (
   if (!toEmail || !messageBody) return res.redirect("/admin/invoices?error=Email+and+message+required");
 
   const { sendManualReplyEmail } = require("../utils/emailService");
-  await sendManualReplyEmail({ toEmail, toName, subject, messageBody });
+  if (subject.length > 160 || /[\r\n]/.test(subject) || messageBody.length > 5000) return res.redirect('/admin/invoices?error=Please+shorten+the+subject+or+message.');
+  const sent = await sendManualReplyEmail({ toEmail, toName, subject, messageBody });
 
-  res.redirect("/admin/invoices?success=Message+sent+to+" + encodeURIComponent(toEmail));
+  res.redirect(sent ? "/admin/invoices?success=Message+sent+to+" + encodeURIComponent(toEmail) : '/admin/invoices?error=Message+not+sent.+Check+email+settings.');
 }));
 
 router.get("/invoices/edit/:number", requireAdmin, asyncHandler(async (req, res) => {

@@ -17,8 +17,9 @@
         <p class="admin-muted">Create the first puppy listing to begin accepting applications.</p>
       </section>
     <% } else { %>
+      <div class="admin-toolbar"><div class="admin-search"><label for="puppy-table-search">Find a puppy</label><input type="search" id="puppy-table-search" placeholder="Name or status" data-table-search="puppy-table" data-search-count="puppy-table-count" data-search-empty="puppy-table-empty"></div><span class="admin-muted" id="puppy-table-count" aria-live="polite"></span></div><p id="puppy-table-empty" class="admin-empty-state" hidden>No matching records. Try another search.</p>
       <div class="admin-table-wrap">
-        <table class="admin-table">
+        <table class="admin-table" id="puppy-table">
           <thead>
             <tr>
               <th>Name</th>

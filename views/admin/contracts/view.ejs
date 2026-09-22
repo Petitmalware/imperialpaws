@@ -36,6 +36,7 @@
 <a href="/admin/contracts/<%= encodeURIComponent(contract.id) %>/edit">Edit agreement details</a>
 <a href="/admin/contracts">Back</a>
 <form method="GET">
+<input type="hidden" name="email" value="<%= typeof buyerEmail === 'string' ? buyerEmail : '' %>">
 <label for="buyer">Adopting parent</label>
 <input id="buyer" name="buyer" value="<%= buyerName %>" maxlength="160">
 <button>Apply name</button>
@@ -44,7 +45,7 @@
 <form class="toolbar no-print" method="POST" action="/admin/contracts/<%= encodeURIComponent(contract.id) %>/email">
 <input type="hidden" name="buyerName" value="<%= buyerName %>">
 <label for="buyerEmail">Adopter email</label>
-<input id="buyerEmail" type="email" name="buyerEmail" required>
+<input id="buyerEmail" type="email" name="buyerEmail" value="<%= typeof buyerEmail === 'string' ? buyerEmail : '' %>" required>
 <button>Email agreement PDF</button>
 </form>
 <p class="notice no-print" id="fitStatus" role="status">One-page Letter agreement. Turn off browser headers and footers when printing.</p>

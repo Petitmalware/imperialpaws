@@ -1,54 +1,12 @@
-<div class="page-track reveal">
-
-  <section class="page-hero reveal">
-    <div class="container">
-      <h1>Track Your Application</h1>
-
-      <p class="track-intro reveal">
-        Enter the tracking code you received after submitting your adoption
-        application to view its current status.
-      </p>
-
-      <p class="track-note reveal">
-        Keep your code private. Approved invoice links are shown only through
-        the matching application status page.
-      </p>
-    </div>
-  </section>
-
-  <section class="page-content reveal">
-    <div class="container narrow reveal">
-
-      <% if (error) { %>
-        <div class="error-box"><%= error %></div>
-      <% } %>
-
-      <form method="GET" action="/track/result" class="track-form">
-
-        <% const trackingCode = typeof code !== "undefined" ? code : ""; %>
-
-        <div class="form-group">
-          <label>Tracking Code</label>
-          <input type="text" name="code" value="<%= trackingCode %>" required>
-        </div>
-
-        <button class="btn-primary" type="submit">
-          Check Status
-        </button>
-
-      </form>
-
-      <div class="trust-panel">
-        <h2>Status Guide</h2>
-        <ul class="trust-list">
-          <li><strong>Pending:</strong> your application is still being reviewed.</li>
-          <li><strong>Approved:</strong> next steps may be available and an invoice can be created.</li>
-          <li><strong>Rejected:</strong> this puppy will not move forward with this application.</li>
-          <li><strong>Sold:</strong> final placement has been marked complete.</li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
-</div>
+<section class="page-hero"><div class="container"><p class="eyebrow">Your adoption journey, in one place</p><h1>Welcome back.</h1><p class="subtitle">Use your private tracking code to see your application status and approved invoice.</p></div></section>
+<section class="page-content"><div class="container track-layout">
+  <div class="track-entry">
+    <% if (error) { %><div class="error-box" role="alert"><%= error %></div><% } %>
+    <form method="GET" action="/track/result" class="track-form">
+      <% const trackingCode = typeof code !== 'undefined' ? code : ''; %>
+      <h2>Find your application</h2><div class="form-group"><label for="tracking-code">Tracking code</label><input id="tracking-code" type="text" name="code" value="<%= trackingCode %>" required autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="tracking-help"><small id="tracking-help">Enter the code shown after you applied. Check your confirmation email too, if one was sent.</small></div>
+      <button class="btn-primary" type="submit">View application <span aria-hidden="true">↗</span></button>
+    </form>
+  </div>
+  <aside class="next-steps-card"><%- include('../partials/paw-logo') %><h2>A little help along the way.</h2><p>Can’t find your code? Contact us with the email address you used and the puppy’s name.</p><a href="/contact" class="text-link">Get help with my application ↗</a><hr><p><strong>Your code is private.</strong><br>Keep it safe and share it only with people you trust.</p></aside>
+</div></section>

@@ -1,298 +1,71 @@
-<section class="home-hero reveal">
+<section class="welcome-hero">
+  <div class="container welcome-grid">
+    <div class="welcome-copy">
+      <p class="eyebrow"><span aria-hidden="true">✦</span> A little paw. A lifelong companion.</p>
+      <h1>A new chapter.<br>A little more <em>love.</em></h1>
+      <p>Meet our puppies, get to know their stories, and take the next step toward welcoming a companion home.</p>
+      <div class="action-row"><a class="btn-primary" href="/puppies">Meet the puppies <span aria-hidden="true">↗</span></a><a class="btn-secondary" href="/adoption-process">How adoption works</a></div>
+      <div class="hero-footnote"><%- include('../partials/paw-logo') %><span>Thoughtful placement.<br><strong>Every family starts with an application.</strong></span></div>
+    </div>
+    <div class="welcome-photo">
+      <img src="/images/hero-pekingese.jpg" alt="A Pekingese puppy" width="700" height="780" fetchpriority="high" decoding="async">
+      <div class="photo-caption"><span class="caption-paw" aria-hidden="true">🐾</span><div><strong>Small paws, big personalities.</strong><span>Find out who is waiting to meet you.</span></div></div>
+    </div>
+  </div>
+</section>
+<section class="visitor-shortcuts" aria-label="Where would you like to go?">
+  <div class="container shortcut-grid">
+    <a href="/puppies"><span class="shortcut-number">01</span><span><strong>Find your companion</strong><small>Browse photos and puppy profiles</small></span><span aria-hidden="true">↗</span></a>
+    <a href="/track"><span class="shortcut-number">02</span><span><strong>Already applied?</strong><small>Check your status and documents</small></span><span aria-hidden="true">↗</span></a>
+    <a href="/contact"><span class="shortcut-number">03</span><span><strong>Let’s talk</strong><small>Get help with your next step</small></span><span aria-hidden="true">↗</span></a>
+  </div>
+</section>
+<section class="home-featured-lux">
   <div class="container">
-    <h1>ImperialPaws Pekingese</h1>
-
-    <p class="hero-subtitle">
-      Ethical, responsible Pekingese breeding focused on health,
-      temperament, and lifelong placement.
-    </p>
-
-    <a class="btn-primary" href="/puppies">View Available Puppies</a>
-
-    <p class="hero-trust">
-      Home-raised &bull; Thoughtful placement &bull; Ongoing support
-    </p>
-  </div>
-</section>
-
-<section class="home-trust-strip" aria-label="ImperialPaws trust signals">
-  <div class="container trust-grid">
-    <div>
-      <strong>Application Before Payment</strong>
-      <span>No public payment requests before review and approval.</span>
-    </div>
-    <div>
-      <strong>Status Tracking</strong>
-      <span>Every application receives a private tracking code.</span>
-    </div>
-    <div>
-      <strong>Clear Invoices</strong>
-      <span>Approved buyers receive itemized adoption invoices.</span>
-    </div>
-  </div>
-</section>
-
-<section class="home-section reveal">
-  <div class="container narrow">
-    <p class="intro-text">
-      ImperialPaws is a dedicated Pekingese breeding program committed to
-      raising healthy, well-socialized puppies in a calm home environment.
-      Every placement is handled with care, transparency, and long-term
-      responsibility.
-    </p>
-
-    <p class="intro-text">
-      Our focus is not volume or speed. It is the right puppy, the right family,
-      and a process that protects both.
-    </p>
-
-    <div class="trust-panel">
-      <h2>Built Around Buyer Confidence</h2>
-      <ul class="trust-list">
-        <li>Puppy details, status updates, application review, and invoices stay organized in one secure workflow.</li>
-        <li>No payment request is presented to public visitors before review and approval.</li>
-        <li>Approved families receive clear next steps and a written adoption invoice for their records.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<%- include("../partials/puppy-wizard") %>
-
-<% if (featuredPuppies && featuredPuppies.length) { %>
-  <section class="home-featured-lux reveal">
-    <div class="container">
-      <header class="featured-header">
-        <h2>Featured Puppies</h2>
-        <p>
-          A small selection of currently available Pekingese puppies,
-          raised with care, transparency, and intention.
-        </p>
-      </header>
-
+    <div class="section-heading"><div><p class="eyebrow">Meet the little ones</p><h2>Big love starts here.</h2></div><a href="/puppies" class="text-link">Explore all puppies <span aria-hidden="true">↗</span></a></div>
+    <% if (featuredPuppies && featuredPuppies.length) { %>
       <div class="featured-grid">
         <% featuredPuppies.forEach(puppy => { %>
           <article class="featured-card">
-            <div class="featured-image">
+            <a href="/puppies/<%= puppy.id %>" class="featured-image" aria-label="Meet <%= puppy.name %>">
               <% if (puppy.images && puppy.images.length) { %>
-                <img
-                  src="<%= puppy.images.find(i => i.isCover)?.path || puppy.images[0].path %>"
-                  alt="<%= puppy.name %>"
-                  loading="lazy"
-                  decoding="async">
-              <% } else { %>
-                <div class="image-placeholder">No Image</div>
-              <% } %>
-
-              <span class="featured-status <%= statusClass(puppy.status) %>">
-                <%= puppy.status || "Available" %>
-              </span>
-            </div>
-
+                <img src="<%= puppy.images.find(i => i.isCover)?.path || puppy.images[0].path %>" alt="<%= puppy.name %>" loading="lazy" decoding="async">
+              <% } else { %><div class="image-placeholder"><span aria-hidden="true">🐾</span> Photos coming soon</div><% } %>
+              <span class="featured-status <%= statusClass(puppy.status) %>"><%= puppy.status || 'Available' %></span>
+            </a>
             <div class="featured-body">
-              <h3><%= puppy.name %></h3>
-
-              <p class="meta">
-                <%= puppy.gender || "-" %>
-                <% if (puppy.color) { %> &bull; <%= puppy.color %><% } %>
-              </p>
-
-              <% if (puppy.price) { %>
-                <div class="price">
-                  <%= currencySymbol(puppy.currency) %><%= Number(puppy.price).toFixed(2) %>
-                </div>
-              <% } %>
-
-              <a href="/puppies/<%= puppy.id %>" class="btn-secondary">
-                View Details
-              </a>
+              <p class="eyebrow"><%= puppy.breed || 'Pekingese' %></p><h3><%= puppy.name %></h3>
+              <p class="meta"><%= [puppy.gender, puppy.color].filter(Boolean).join(' · ') %></p>
+              <div class="puppy-card-footer"><% if (puppy.price) { %><span class="price"><small>Adoption fee</small><%= currencySymbol(puppy.currency) %><%= Number(puppy.price).toFixed(2) %></span><% } %><a href="/puppies/<%= puppy.id %>" class="text-link">Meet <%= puppy.name %> ↗</a></div>
             </div>
           </article>
-        <% }) %>
+        <% }); %>
       </div>
-
-      <div class="featured-footer">
-        <a href="/puppies" class="text-link">View all available puppies</a>
-      </div>
-    </div>
-  </section>
-<% } %>
-
-<section class="home-section reveal">
-  <div class="container narrow">
-    <h2>Responsible Placement</h2>
-
-    <p>
-      ImperialPaws does not operate as a marketplace or broker. Puppies are not
-      placed based on speed, bidding, or payment alone. Each adoption is reviewed
-      carefully with the welfare of the puppy as the priority.
-    </p>
-
-    <p>
-      Families can browse puppies, submit an application, track status, and
-      receive a clear invoice only after approval.
-    </p>
+    <% } else { %>
+      <div class="empty-state"><%- include('../partials/paw-logo') %><h3>Good things are worth waiting for.</h3><p>No featured puppies are listed right now. Browse current listings or get in touch about availability.</p><a class="btn-secondary" href="/puppies">View puppy listings</a></div>
+    <% } %>
   </div>
 </section>
-
-<section class="home-highlight reveal">
-  <div class="container narrow">
-    <p>
-      Responsible breeding is more than producing puppies. It is planning, care,
-      documentation, and ethical decision-making from first inquiry through
-      lifelong support.
-    </p>
-  </div>
-</section>
-
-<section class="home-section reveal">
-  <div class="container narrow">
-    <h2>Our Commitment</h2>
-    <p>
-      Puppies are raised in a home environment with daily interaction, early
-      socialization, appropriate veterinary care, and careful monitoring before
-      placement.
-    </p>
-    <p class="center">
-      <a class="text-link" href="/about">Learn more about us</a>
-    </p>
-  </div>
-</section>
-
-<section class="home-section reveal home-alt">
+<section class="journey-section">
   <div class="container">
-    <h2>Why Families Choose ImperialPaws</h2>
-
-    <div class="feature-grid">
-      <div class="feature">
-        <h3>Ethical Breeding</h3>
-        <p>
-          We prioritize health, temperament, and responsible standards over
-          production volume or trends.
-        </p>
-      </div>
-
-      <div class="feature">
-        <h3>Transparent Process</h3>
-        <p>
-          Applications, tracking, approval steps, and invoices are handled in
-          one organized system.
-        </p>
-      </div>
-
-      <div class="feature">
-        <h3>Home-Raised Puppies</h3>
-        <p>
-          Puppies receive daily care, structure, and early socialization before
-          joining approved homes.
-        </p>
-      </div>
-    </div>
-
-    <div class="assurance-grid">
-      <div class="assurance-card">
-        <strong>Private Tracking</strong>
-        <p>Applicants receive a code to check status without exposing private details publicly.</p>
-      </div>
-      <div class="assurance-card">
-        <strong>Careful Review</strong>
-        <p>Placement decisions consider the puppy's welfare, buyer preparedness, and fit.</p>
-      </div>
-      <div class="assurance-card">
-        <strong>Invoice Records</strong>
-        <p>Invoices are created only after approval and remain accessible through the buyer's tracking flow.</p>
-      </div>
+    <div class="section-heading"><div><p class="eyebrow">A thoughtful beginning</p><h2>From first hello to next steps.</h2></div><p>A clear path, with room for questions along the way.</p></div>
+    <div class="journey-grid">
+      <article><span class="journey-number">01</span><h3>Get to know a puppy</h3><p>Explore photos, personality notes, health details, and current availability.</p><a href="/puppies" class="text-link">Browse puppies ↗</a></article>
+      <article><span class="journey-number">02</span><h3>Tell us about your home</h3><p>Complete a short application from the puppy’s profile. No payment is requested when you apply.</p><a href="/adoption-process" class="text-link">See the process ↗</a></article>
+      <article><span class="journey-number">03</span><h3>Follow your next steps</h3><p>Save your private tracking code to check your application status and approved invoice.</p><a href="/track" class="text-link">My application ↗</a></article>
     </div>
   </div>
 </section>
-
-<section class="home-section reveal">
-  <div class="container narrow">
-    <h2>Adoption Steps</h2>
-
-    <div class="expect-grid">
-      <div>
-        <h3>Browse</h3>
-        <p>Review available puppies and detailed profiles at your own pace.</p>
-      </div>
-
-      <div>
-        <h3>Apply</h3>
-        <p>Submit one application per puppy so placement can be reviewed fairly.</p>
-      </div>
-
-      <div>
-        <h3>Track</h3>
-        <p>Use your tracking code for status updates and next steps.</p>
-      </div>
-    </div>
-
-    <p class="center">
-      <a class="text-link" href="/adoption-process">View the full adoption process</a>
-    </p>
-  </div>
-</section>
-
-<section class="home-section reveal home-alt">
-  <div class="container narrow">
-    <h2>Questions Before Applying?</h2>
-    <p>
-      The FAQ page explains availability, applications, approval, payments,
-      puppy care, and what families can expect from the process.
-    </p>
-    <p class="center">
-      <a class="text-link" href="/faq">Read frequently asked questions</a>
-    </p>
-  </div>
-</section>
-
-<section class="home-section reveal">
-  <div class="container narrow">
-    <h2>Buyer Safety Notes</h2>
-    <p>
-      Responsible puppy placement should never feel rushed. Review each puppy
-      profile carefully, submit one accurate application, and keep your tracking
-      code private. Any invoice should match the approved puppy, buyer details,
-      and agreed adoption amount.
-    </p>
-    <p class="center">
-      <a class="text-link" href="/privacy-policy">Review privacy policy</a>
-      <span class="divider">&bull;</span>
-      <a class="text-link" href="/terms">Read website terms</a>
-    </p>
-  </div>
-</section>
-
 <% if (testimonials && testimonials.length) { %>
-  <section class="home-testimonials-lux reveal">
-    <div class="container">
-      <header class="testimonials-header">
-        <h2>What Puppy Families Say</h2>
-        <p>
-          Thoughtful words shared by families who welcomed an ImperialPaws
-          Pekingese into their home.
-        </p>
-      </header>
-
-      <div class="testimonials-grid">
-        <% testimonials.forEach(t => { %>
-          <article class="testimonial-card">
-            <p class="testimonial-message">&ldquo;<%= t.message %>&rdquo;</p>
-            <div class="testimonial-author">
-              <strong><%= t.name %></strong>
-              <% if (t.location) { %>
-                <span><%= t.location %></span>
-              <% } %>
-            </div>
-          </article>
-        <% }) %>
-      </div>
-
-      <div class="testimonials-footer">
-        <a href="/testimonials" class="text-link">Read more testimonials</a>
-        <span class="divider">&bull;</span>
-        <a href="/testimonials/submit" class="text-link">Share your experience</a>
-      </div>
+<section class="home-testimonials-lux">
+  <div class="container">
+    <div class="section-heading"><div><p class="eyebrow">Letters from our families</p><h2>Little paws. Lasting stories.</h2></div><a href="/testimonials" class="text-link">Read family stories ↗</a></div>
+    <div class="testimonials-grid">
+      <% testimonials.slice(0, 3).forEach(t => { %>
+        <article class="testimonial-card"><span class="quote-mark" aria-hidden="true">“</span><p class="testimonial-message"><%= t.message %></p><div class="testimonial-author"><strong><%= t.name %></strong><% if (t.location) { %><span><%= t.location %></span><% } %></div></article>
+      <% }); %>
     </div>
-  </section>
+  </div>
+</section>
 <% } %>
+<section class="welcome-help"><div class="container"><div><p class="eyebrow">We’re here for your next chapter</p><h2>A few questions before you begin?</h2><p>Start with our FAQs, or reach out for help with a puppy or an existing application.</p></div><div class="action-row"><a class="btn-primary" href="/faq">Explore FAQs</a><a class="btn-secondary" href="/contact">Get in touch</a></div></div></section>

@@ -1,4 +1,4 @@
-﻿# ImperialPaws
+# ImperialPaws
 
 Express/EJS website for a Pekingese puppy breeder with public puppy listings,
 adoption applications, application tracking, testimonials, invoices, and an
@@ -155,3 +155,31 @@ environment variables.
 For local development, set `OWNER_USERNAME` and `OWNER_PASSWORD` in your shell or
 `.env` before starting the app. The committed JSON seed data is intentionally
 empty so private admin credentials are not stored in GitHub.
+
+## September 2026 usability upgrade
+
+The breeder workspace now includes a searchable application inbox, status filters,
+individual family pages, editable reply starters, private notes, dated follow-ups,
+and a history of replies and placement changes. A family page links to its invoices
+and pre-fills the buyer on an agreement preview. Replies from buyers still arrive
+in the configured email inbox; this is not an inbound email synchronizer.
+
+Application status changes send email only when the breeder selects the notification
+checkbox. Failed sends report failure and personal reply drafts remain in the current
+admin session. Follow-up dates appear in the dashboard/inbox; they do not send automated
+messages. Existing application fields and records are preserved, with history added
+when the workspace is used. Approval blocks conflicting active puppy placements.
+
+Public pages have responsive navigation, puppy filters, clearer forms, copyable tracking
+codes, and accurate next steps. New tracking codes are random; existing codes still work.
+Invoice-number-only URLs lead to the tracking page; private tracking links and emailed
+PDF snapshot links remain usable. Private pages use no-store and no-referrer headers.
+
+Before deployment, back up server/data, public/uploads, .env, and the PM2 configuration.
+Keep the existing VPS configuration and customer records; do not reset or overwrite them.
+Existing admin accounts continue to work. For an empty admin store, OWNER_PASSWORD must
+be explicitly configured; there is no built-in default owner password.
+
+Validation: npm test includes isolated application workflow/privacy tests plus the
+existing document, contract, storage, smoke, and system suites. Tests must run locally
+with test transport; never run fixture suites against live customer data.

@@ -1,167 +1,21 @@
-/* ============================
-   IMPERIALPAWS — PUPPIES PAGE
-   Clean • Trusted • Mobile-Safe
-   Scoped to .page-puppies
-============================ */
-
-/* ---------- PAGE BACKGROUND ---------- */
-.page-puppies {
-  background: linear-gradient(
-    180deg,
-    #f4f1ea 0%,
-    #efece4 100%
-  );
-}
-
-/* ---------- GRID ---------- */
-.page-puppies .premium-puppy-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2.2rem;
-  margin-top: 3rem;
-}
-
-/* ---------- CARD ---------- */
-.page-puppies .premium-puppy-card {
-  background: #faf9f6; /* parchment, not pure white */
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.page-puppies .premium-puppy-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 45px rgba(0,0,0,0.12);
-}
-
-/* ---------- IMAGE ---------- */
-.page-puppies .puppy-image-wrap {
-  position: relative;
-  height: 240px;
-  background: #e9e6de;
-  overflow: hidden;
-}
-
-.page-puppies .puppy-image-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ---------- STATUS BADGE ---------- */
-.page-puppies .status-badge {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.page-puppies .status-badge.available {
-  background: #1f7a4d;
-}
-
-.page-puppies .status-badge.reserved {
-  background: #b08900;
-}
-
-.page-puppies .status-badge.sold {
-  background: #8b0000;
-}
-
-/* ---------- CARD BODY ---------- */
-.page-puppies .puppy-card-body {
-  padding: 1.6rem;
-  text-align: center;
-}
-
-.page-puppies .puppy-card-body h3 {
-  font-family: "Playfair Display", serif;
-  font-size: 1.3rem;
-  margin-bottom: 0.4rem;
-  color: #1f1f1f;
-}
-
-.page-puppies .meta {
-  font-size: 0.85rem;
-  color: #666;
-  margin-bottom: 0.9rem;
-}
-
-.page-puppies .price {
-  font-size: 1.35rem;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 1.2rem;
-}
-
-.page-puppies .card-note {
-  min-height: 3.2rem;
-  margin: 0 0 1.2rem;
-  color: #5f5b52;
-  font-size: 0.88rem;
-  line-height: 1.55;
-}
-
-/* ---------- BUTTON ---------- */
-.page-puppies .btn-secondary {
-  display: inline-block;
-  padding: 0.75rem 1.8rem;
-  border-radius: 999px;
-  background: transparent;
-  color: #1f1f1f;
-  border: 1px solid #c7a45a;
-  text-decoration: none;
-  font-size: 0.8rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.page-puppies .btn-secondary:hover {
-  background: #c7a45a;
-  color: #111;
-  transform: translateY(-2px);
-}
-
-/* ==================================================
-   MOBILE OPTIMIZATION (NO LAYOUT CHANGE)
-================================================== */
-@media (max-width: 768px) {
-
-  .page-puppies .premium-puppy-grid {
-    gap: 1.8rem;
-    margin-top: 2.5rem;
-  }
-
-  .page-puppies .puppy-card-body {
-    padding: 1.4rem;
-  }
-
-  .page-puppies .puppy-card-body h3 {
-    font-size: 1.2rem;
-  }
-
-  .page-puppies .price {
-    font-size: 1.25rem;
-  }
-}
-
-/* Extra-small phones */
-@media (max-width: 480px) {
-  .page-puppies .puppy-image-wrap {
-    height: 210px;
-  }
-
-  .page-puppies .btn-secondary {
-    padding: 0.8rem 2rem; /* better tap target */
-  }
-}
+.page-puppies { background:#fbfaf6; }
+.page-puppies .premium-puppy-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr)); gap:26px; margin:20px 0 40px; }
+.page-puppies .premium-puppy-card { border:1px solid #e1e2d8; border-radius:15px; overflow:hidden; background:#fffefa; box-shadow:0 5px 16px #24382006; transition:box-shadow .2s,transform .2s; }
+.page-puppies .premium-puppy-card:hover { box-shadow:0 13px 28px #253b2010; transform:translateY(-3px); }
+.page-puppies .puppy-image-wrap { display:block; position:relative; height:280px; background:#edf0e6; overflow:hidden; }
+.page-puppies .puppy-image-wrap img { width:100%; height:100%; object-fit:cover; }
+.page-puppies .status-badge { position:absolute; top:16px; left:16px; padding:5px 12px; border-radius:999px; font-size:10px; font-weight:600; letter-spacing:.05em; color:#385340; background:#ecf1e7; }
+.page-puppies .status-badge.reserved { background:#fbefd0; color:#826327; }
+.page-puppies .status-badge.sold { background:#eceae5; color:#61655b; }
+.page-puppies .puppy-card-body { padding:24px; }
+.page-puppies .puppy-card-body h2 { font-size:29px; color:#294333; margin:3px 0 4px; }
+.page-puppies .meta { color:#6a6f62; font-size:13px; margin:4px 0 20px; }
+.puppy-filters { display:grid; grid-template-columns:2fr 1.1fr 1fr 1fr auto; gap:14px; align-items:end; padding:20px 22px; border:1px solid #dce1d3; border-radius:13px; box-shadow:none; background:#f0f2e9; }
+.puppy-filters input,.puppy-filters select { width:100%; padding:11px; height:46px; margin:0; background:#fffefa; border:1px solid #ccd2c2; border-radius:8px; font:inherit; font-size:13px; color:#344836; }
+.puppy-filters label { letter-spacing:0; text-transform:none; font-size:12px; font-weight:600; color:#475a46; }
+.puppy-filters .filter-reset { padding:8px 5px; border:0; background:none; text-decoration:underline; font-size:12px; color:#465c44; cursor:pointer; min-height:46px; }
+.listing-summary { display:flex; justify-content:space-between; align-items:center; gap:16px; margin:20px 0 0; font-size:12px; }
+.listing-summary p { font-size:12px; color:#5d6958; margin:0; }
+.listing-summary a { color:#415b40; text-underline-offset:4px; font-size:12px; }
+@media(max-width:900px) { .puppy-filters { grid-template-columns:repeat(3,minmax(0,1fr)); } .filter-search { grid-column:1/-1; } .puppy-filters .filter-reset { grid-column:1/-1; justify-content:center; min-height:36px; } }
+@media(max-width:500px) { .puppy-filters { padding:16px; gap:12px; grid-template-columns:1fr 1fr; } .puppy-filters>div:last-of-type { grid-column:1/-1; } .listing-summary { align-items:flex-start; } .page-puppies .puppy-image-wrap { height:300px; } }

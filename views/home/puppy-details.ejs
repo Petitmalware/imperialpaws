@@ -1,14 +1,15 @@
 <div class="page-puppy-detail">
   <section class="page-hero reveal">
     <div class="container">
-      <h1 class="hero-title"><%= puppy.name %></h1>
+      <a class="text-link" href="/puppies">← All puppies</a>
+      <h1 class="hero-title">Meet <%= puppy.name %>.</h1>
 
       <p class="puppy-intro">
         Raised in a home environment with daily care, early socialization,
         and ongoing health monitoring.
       </p>
 
-      <p class="subtitle">Pekingese Puppy Details</p>
+      <p class="subtitle"><%= puppy.breed || 'Pekingese' %> puppy details</p>
     </div>
   </section>
 
@@ -29,15 +30,11 @@
         </div>
 
         <% if (puppy.images && puppy.images.length > 1) { %>
-          <div class="lux-thumbnails">
-            <% puppy.images.forEach(img => { %>
-              <img
-                src="<%= img.path %>"
-                class="lux-thumb"
-                data-full-image="<%= img.path %>"
-                alt="<%= puppy.name %> gallery image"
-                loading="lazy"
-                decoding="async">
+          <div class="lux-thumbnails" aria-label="Puppy photos">
+            <% puppy.images.forEach((img, index) => { const selected = img.path === (puppy.images.find(i => i.isCover)?.path || puppy.images[0].path); %>
+              <button type="button" class="lux-thumb <%= selected ? 'active' : '' %>" data-full-image="<%= img.path %>" aria-label="View photo <%= index + 1 %> of <%= puppy.name %>" aria-pressed="<%= selected %>">
+                <img src="<%= img.path %>" alt="" loading="lazy" decoding="async">
+              </button>
             <% }) %>
           </div>
         <% } %>
@@ -76,6 +73,7 @@
 
         <% if (puppy.price) { %>
           <div class="lux-price-large">
+            <small>Adoption fee</small>
             <%= currencySymbol(puppy.currency) %><%= Number(puppy.price || 0).toFixed(2) %>
           </div>
         <% } %>
@@ -86,6 +84,7 @@
           </a>
         <% } else { %>
           <span class="lux-unavailable">Currently Not Available</span>
+          <a href="/puppies" class="btn-secondary">Meet our other puppies</a>
         <% } %>
       </div>
     </div>
@@ -108,7 +107,7 @@
         </div>
         <div class="process-card">
           <strong>Submit Once</strong>
-          <p>The system reuses your existing tracking code if you already applied for this puppy.</p>
+          <p>Already applied for this puppy? Use your original tracking code to follow its progress.</p>
         </div>
         <div class="process-card">
           <strong>Wait For Approval</strong>

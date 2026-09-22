@@ -1,5 +1,6 @@
 require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
 const express = require("express");
+const { randomBytes } = require("crypto");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -56,9 +57,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use((req, res, next) => {
+  if (/^\/(admin|track|invoice|documents)(\/|$)/.test(req.path)) {
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+  }
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "SAMEORIGIN");
-  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  if (!res.getHeader('Referrer-Policy')) res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   if (IS_PRODUCTION) {
     res.setHeader("Strict-Transport-Security", "max-age=15552000; includeSubDomains");
@@ -134,6 +139,10 @@ const publicFormRateLimiter = createRateLimiter({
 app.post("/admin/login", loginRateLimiter);
 app.post("/apply", publicFormRateLimiter);
 app.post("/testimonials/submit", publicFormRateLimiter);
+const trackingRateLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 80,
+  message: 'Too many tracking attempts. Please wait a few minutes and try again.' });
+app.get('/track/result', trackingRateLimiter);
+app.use('/invoice', trackingRateLimiter);
 
 app.use((req, res, next) => {
   res.locals.adminUser = req.session && req.session.admin
@@ -296,19 +305,10 @@ function isSold(puppy) {
 }
 
 function generateTrackingCode(applications) {
-  const now = new Date();
-  const year = now.getFullYear().toString().slice(-2);
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-
-  for (let i = 0; i < 20; i += 1) {
-    const random = Math.floor(1000 + Math.random() * 9000);
-    const code = `IP-PUPPY-${year}${month}-${random}`;
-    if (!applications.some(application => application.id === code)) {
-      return code;
-    }
-  }
-
-  return `IP-PUPPY-${year}${month}-${Date.now()}`;
+  let code;
+  do { code = 'IP-PUPPY-' + randomBytes(12).toString('hex').toUpperCase(); }
+  while (applications.some(application => application.id === code));
+  return code;
 }
 
 app.get("/", asyncHandler(async (req, res) => {
@@ -543,10 +543,13 @@ app.post("/apply", asyncHandler(async (req, res) => {
     message: String(req.body.message || "").trim()
   };
 
-  if (!values.name || !values.email || !values.phone || !values.location) {
+  if (!values.name || !values.email || !values.phone || !values.location ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email) ||
+      values.name.length > 120 || values.email.length > 254 || values.phone.length > 40 ||
+      values.location.length > 180 || values.message.length > 5000) {
     return res.status(400).render("home/apply", {
       puppy,
-      error: "Please complete the required fields.",
+      error: "Please complete the required fields, use a valid email address, and keep your message under 5,000 characters.",
       values,
       pageMeta: res.locals.buildPageMeta({
         canonicalPath: `/apply/${encodeURIComponent(puppy.id)}`,
@@ -561,6 +564,13 @@ app.post("/apply", asyncHandler(async (req, res) => {
   );
 
   if (duplicate) {
+    let previous = null;
+    try { previous = JSON.parse(req.cookies.imperialpaws_application || 'null'); } catch {}
+    if (!previous || previous.trackingCode !== duplicate.id || previous.puppyId !== puppy.id) {
+      return res.status(409).render('home/apply', { puppy, values,
+        error: 'An application using these contact details already exists for this puppy. Use the tracking code in your confirmation email, or contact us for help.',
+        pageMeta: res.locals.buildPageMeta({ canonicalPath: '/apply/' + encodeURIComponent(puppy.id), robots: 'noindex, nofollow', title: 'Application already received' }) });
+    }
     res.cookie(
       "imperialpaws_application",
       JSON.stringify({ puppyId: puppy.id, trackingCode: duplicate.id }),
@@ -586,7 +596,7 @@ app.post("/apply", asyncHandler(async (req, res) => {
     sendApplicationConfirmationEmail,
     sendBreederNewApplicationAlert
   } = require("./utils/emailService");
-  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  const baseUrl = getBaseUrl(req, res.locals.siteSettings);
   const newApp = { ...values, trackingCode, id: trackingCode };
   sendApplicationConfirmationEmail(newApp, baseUrl).catch(err => console.error("Applicant confirmation email error:", err));
   sendBreederNewApplicationAlert(newApp).catch(err => console.error("Breeder alert email error:", err));
@@ -694,7 +704,8 @@ app.post("/testimonials/submit", testimonialUpload.single("photo"), asyncHandler
 }));
 
 app.use((req, res) => {
-  res.status(404).send("Page not found");
+  res.status(404).render('errors/not-found', { isAdminPage: false,
+    pageMeta: res.locals.buildPageMeta({title:'Page not found',robots:'noindex, nofollow'}) });
 });
 
 app.use((err, req, res, next) => {

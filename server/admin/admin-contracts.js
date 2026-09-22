@@ -126,6 +126,7 @@ router.get(
     res.render("admin/contracts/view", {
       contract: { ...contract, filledBody },
       buyerName,
+      buyerEmail: typeof req.query.email === 'string' ? req.query.email : '',
       layout: false
     });
   })
@@ -146,24 +147,24 @@ router.post(
   asyncHandler(async (req, res) => {
     const contract = await getContract(req.params.id);
     if (!contract) return res.status(404).send("Contract not found");
-    
+
     const buyerName = String(req.body.buyerName || "").trim() || "Adopting Parent";
     const buyerEmail = String(req.body.buyerEmail || "").trim();
-    
+
     if (!buyerEmail) {
       req.session._flash = { type: "danger", message: "Please provide the buyer's email address." };
       return res.redirect(`/admin/contracts/${encodeURIComponent(contract.id)}/view`);
     }
 
     const { sendContractEmail } = require("../utils/emailService");
-    
+
     const sent = await sendContractEmail(contract, buyerName, buyerEmail);
     if (sent) {
       req.session._flash = { type: "success", message: `Contract successfully emailed to ${buyerEmail}!` };
     } else {
       req.session._flash = { type: "danger", message: `Could not send email. Please check SMTP settings in Settings or .env.` };
     }
-    
+
     res.redirect(`/admin/contracts`);
   })
 );

@@ -43,7 +43,7 @@
   <% } %>
 
   <% if (isAdminPage) { %>
-    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/admin.css?v=20260922">
   <% } else { %>
     <%
       const routePath = typeof currentPath !== "undefined" ? currentPath : "";
@@ -63,8 +63,8 @@
         publicCss.push("/css/adoption-process.css");
       }
     %>
-    <% publicCss.forEach(cssFile => { %>
-      <link rel="stylesheet" href="<%= cssFile %>">
+    <% publicCss.push('/css/experience.css'); publicCss.forEach(cssFile => { %>
+      <link rel="stylesheet" href="<%= cssFile %>?v=20260922">
     <% }) %>
   <% } %>
 
@@ -78,19 +78,19 @@
     <%- include("../partials/header") %>
   <% } %>
 
-  <main class="<%= isAdminPage ? 'admin-root' : 'main-content' %>">
+  <% if (isAdminPage) { %><div class="admin-root"><% } else { %><main class="main-content" id="main-content" tabindex="-1"><% } %>
     <%- body %>
-  </main>
+  <% if (isAdminPage) { %></div><% } else { %></main><% } %>
 
   <% if (!isAdminPage) { %>
     <%- include("../partials/footer") %>
   <% } %>
 
   <% if (!isAdminPage) { %>
-    <script src="/js/header.js" defer></script>
-    <script src="/js/site.js" defer></script>
+    <script src="/js/header.js?v=20260922" defer></script>
+    <script src="/js/site.js?v=20260922" defer></script>
     <% if (typeof currentPath !== "undefined" && currentPath.startsWith("/puppies/")) { %>
-      <script src="/js/puppy-gallery.js" defer></script>
+      <script src="/js/puppy-gallery.js?v=20260922" defer></script>
     <% } %>
   <% } %>
 </body>
