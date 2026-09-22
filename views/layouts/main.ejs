@@ -59,12 +59,12 @@
         publicCss.push("/css/testimonials-lux.css");
       } else if (routePath === "/about") {
         publicCss.push("/css/about.css");
-      } else if (routePath === "/adoption-process") {
-        publicCss.push("/css/adoption-process.css");
+      } else if (routePath === "/adoption-process" || routePath === "/faq") {
+        publicCss.push("/css/help-pages.css");
       }
     %>
     <% publicCss.push('/css/experience.css'); publicCss.forEach(cssFile => { %>
-      <link rel="stylesheet" href="<%= cssFile %>?v=20260922">
+      <link rel="stylesheet" href="<%= cssFile %>?v=20260922b">
     <% }) %>
   <% } %>
 

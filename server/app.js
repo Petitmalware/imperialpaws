@@ -220,58 +220,8 @@ const loadTestimonials = () =>
   loadCollection("testimonials", { fallbackToLocal: true });
 const saveTestimonials = data => saveCollection("testimonials", data);
 
-const FAQ_ITEMS = [
-  {
-    question: "Why do you require an adoption application?",
-    answer:
-      "The adoption application helps ImperialPaws review each family carefully so every Pekingese puppy is placed into a safe, prepared, and committed home."
-  },
-  {
-    question: "Does submitting an application guarantee approval?",
-    answer:
-      "No. Every application is reviewed individually, and placement decisions are made in the best interest of the puppy."
-  },
-  {
-    question: "How can I check the status of my application?",
-    answer:
-      "After submitting an application, buyers receive a unique tracking code that can be used on the website to check application status."
-  },
-  {
-    question: "When are payments requested?",
-    answer:
-      "Payments are not requested through the public website before an application is reviewed and approved. Approved buyers receive a clear adoption invoice."
-  },
-  {
-    question: "Do you accept more than one application per puppy?",
-    answer:
-      "To maintain fairness and clarity, the website prevents the same buyer from submitting repeated applications for the same puppy when the same email address or phone number is used."
-  },
-  {
-    question: "Are your puppies vaccinated and vet checked?",
-    answer:
-      "Puppies receive age-appropriate veterinary care and monitoring. Specific health details are listed on each puppy detail page when available."
-  },
-  {
-    question: "Do you offer delivery or transportation?",
-    answer:
-      "Transportation options may vary depending on location and circumstances. Available options are discussed with approved applicants."
-  },
-  {
-    question: "Can I visit the puppies in person?",
-    answer:
-      "Visit options, if available, are discussed during the adoption process and may depend on timing, location, and the puppy's age."
-  },
-  {
-    question: "Who can I contact if I have additional questions?",
-    answer:
-      "If your question is not answered on the website, you may reach out through the contact page when public contact information is available."
-  },
-  {
-    question: "Do you serve families in the United States?",
-    answer:
-      "ImperialPaws Pekingese is built for families in the United States and focuses on responsible placement, clear communication, and appropriate next steps for approved homes."
-  }
-];
+const FAQ_GROUPS = require('./utils/publicFaq');
+const FAQ_ITEMS = FAQ_GROUPS.flatMap(group => group.items);
 
 function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
@@ -383,12 +333,13 @@ app.get("/adoption-process", (req, res) => res.render("home/adoption-process", {
   pageMeta: res.locals.buildPageMeta({
     canonicalPath: "/adoption-process",
     description:
-      "Review the ImperialPaws Pekingese adoption process, including puppy browsing, application review, tracking, approval, and invoice steps.",
+      "Review the ImperialPaws Pekingese adoption process, including puppy browsing, family applications, personal follow-up, and homecoming arrangements.",
     title: "Pekingese Puppy Adoption Process"
   })
 }));
 app.get("/faq", (req, res) => res.render("home/faq", {
   faqItems: FAQ_ITEMS,
+  faqGroups: FAQ_GROUPS,
   jsonLd: res.locals.buildJsonLd(
     buildFAQSchema(FAQ_ITEMS),
     buildBreadcrumbSchema(res.locals.pageMeta.baseUrl, [
@@ -399,7 +350,7 @@ app.get("/faq", (req, res) => res.render("home/faq", {
   pageMeta: res.locals.buildPageMeta({
     canonicalPath: "/faq",
     description:
-      "Find answers about ImperialPaws Pekingese applications, puppy availability, approval, tracking codes, invoices, health care, and placement expectations.",
+      "Find answers about ImperialPaws Pekingese puppy availability, applications, tracking codes, records, and homecoming arrangements.",
     title: "Pekingese Puppy Adoption FAQ"
   })
 }));

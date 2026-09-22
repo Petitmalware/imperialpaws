@@ -10,7 +10,7 @@ h1,h2,h3,h4 { color:#2a4233; }
 .page-hero { background:#f0f2e9; padding:48px 0 42px; border-bottom:1px solid #dce2d3; }
 .page-hero h1 { font-size:clamp(32px,4.2vw,50px); font-weight:500; margin:13px 0 14px; color:#2b4534; letter-spacing:-.04em; }
 .page-hero .subtitle { max-width:650px; color:#5e6b59; font-size:15px; line-height:1.75; }
-.page-content { padding:42px 0 64px; }
+.page-content { padding:42px 0 64px; background:#fbfaf6; }
 .btn-primary,.btn-secondary { display:inline-flex; align-items:center; justify-content:center; gap:12px; min-height:46px; padding:12px 20px; border:1px solid #294a35; border-radius:8px; font:600 12px/1.5 Inter,sans-serif; text-decoration:none; letter-spacing:0; cursor:pointer; transition:background .2s,box-shadow .2s; }
 .btn-primary { background:#294a35; color:#fffdf6; }
 .btn-primary:hover { background:#1e3827; color:#fffdf6; transform:none; }
@@ -145,3 +145,15 @@ button:disabled { cursor:wait; opacity:.65; }
 .page-puppy-detail .lux-thumb[aria-pressed=true] { opacity:1; border-color:#657d50; }
 .page-puppy-detail .lux-unavailable { display:block; margin-bottom:12px; }
 @media(max-width:760px) { .page-puppy-detail .lux-detail-grid { grid-template-columns:1fr; gap:30px; padding:0 20px; } .page-puppy-detail .detail-content { padding-top:28px; } .page-puppy-detail .lux-details { max-width:520px; } .page-puppy-detail .lux-main-image { max-height:520px; } }
+
+/* Consistent, readable controls across the public pages. */
+.btn-primary,.btn-secondary,.text-link { font-size:14px; }
+.text-link { min-height:40px; }
+.main-nav { font-size:13px; }
+.application-form label,.track-form label,.form-heading p,.next-steps-card p,.next-steps-card li { font-size:14px; }
+.application-form input,.application-form textarea,.track-form input { font-size:16px; }
+.form-group small,.optional-label,.submit-area>p,.submit-area .quiet-link { font-size:13px; }
+.application-puppy p:not(.eyebrow),.portal-card p,.contact-route p,.contact-route strong { font-size:14px; }
+.application-timeline strong,.application-timeline p { font-size:14px; }
+.contact-methods span,.contact-methods small { font-size:13px; }
+.page-content h2 { letter-spacing:-.02em; }

@@ -1,0 +1,44 @@
+.help-intro { max-width: 1080px; margin: 0 auto; padding: 60px 24px 40px; }
+.help-intro h1 { max-width: 720px; margin: 14px 0 20px; font-size: clamp(36px, 4.5vw, 55px); font-weight: 500; line-height: 1.16; letter-spacing: -.035em; }
+.help-intro > p:last-child { max-width: 620px; margin: 0; font-size: 17px; line-height: 1.8; color: #606c61; }
+.help-layout { max-width: 1080px; margin: 0 auto; padding: 0 24px 64px; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 64px; align-items: start; }
+.help-aside { position: sticky; top: 116px; border-top: 1px solid #d8dfd4; padding-top: 24px; }
+.help-aside h2 { font-size: 23px; font-weight: 500; margin: 0 0 12px; letter-spacing: -.02em; }
+.help-aside p { font-size: 14px; line-height: 1.75; color: #657063; margin: 0 0 18px; }
+.help-aside .text-link { font-size: 14px; }
+.adoption-guide { list-style: none; margin: 0; padding: 0; }
+.adoption-guide li { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 22px; border-top: 1px solid #d8dfd4; padding: 28px 0 32px; }
+.guide-number { display: grid; place-items: center; width: 40px; height: 40px; background: #edf0e6; border: 1px solid #dde2d2; border-radius: 50%; color: #6c704e; font: 18px Georgia, serif; }
+.adoption-guide h2 { font: 500 27px/1.3 "Playfair Display", Georgia, serif; letter-spacing: -.02em; margin: 3px 0 13px; }
+.adoption-guide p { font-size: 16px; line-height: 1.8; color: #5b685d; margin: 0 0 13px; }
+.guide-closing { margin-top: 10px; padding: 26px 28px; border-radius: 12px; background: #eef1e7; border: 1px solid #dce2d3; }
+.guide-closing p { color: #54674f; font-size: 15px; margin: 0 0 18px; line-height: 1.7; }
+.help-category-nav { display: grid; gap: 4px; margin-bottom: 30px; }
+.help-category-nav a { font-size: 14px; text-decoration: none; color: #3b5940; padding: 10px 0; border-bottom: 1px solid #e3e7dc; line-height: 1.5; }
+.help-category-nav a:hover { color: #846a36; }
+.help-faq-group { margin-bottom: 36px; scroll-margin-top: 112px; }
+.help-faq-group > h2 { font-size: 26px; font-weight: 500; letter-spacing: -.02em; margin: 0 0 17px; }
+.help-faq-group details { border-bottom: 1px solid #dce2d4; }
+.help-faq-group details:first-of-type { border-top: 1px solid #dce2d4; }
+.help-faq-group summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 0; cursor: pointer; list-style: none; color: #2c4434; font-size: 16px; font-weight: 500; line-height: 1.5; }
+.help-faq-group summary::-webkit-details-marker { display: none; }
+.help-faq-group summary::after { content: '+'; flex-shrink: 0; display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid #d4ddcb; border-radius: 50%; color: #698057; font-size: 20px; font-weight: 400; }
+.help-faq-group details[open] summary::after { content: '−'; }
+.help-answer { padding: 0 44px 22px 0; }
+.help-answer p { font-size: 15px; line-height: 1.85; margin: 0 0 10px; color: #5e6b5e; }
+.help-faq-group summary:focus-visible, .help-category-nav a:focus-visible { outline: 2px solid #67835a; outline-offset: 4px; border-radius: 3px; }
+@media(max-width:760px) {
+  .help-intro { padding: 36px 20px 30px; }
+  .help-intro > p:last-child { font-size: 16px; }
+  .help-layout { grid-template-columns: 1fr; gap: 30px; padding: 0 20px 45px; }
+  .help-aside { position: static; padding: 18px 0 0; }
+  .help-aside p { margin-bottom: 10px; }
+  .help-category-nav { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 20px; }
+  .help-category-nav a { padding: 6px 0; font-size: 13px; }
+  .adoption-guide li { gap: 16px; grid-template-columns: 32px minmax(0, 1fr); padding: 23px 0; }
+  .guide-number { width: 32px; height: 32px; font-size: 16px; }
+  .adoption-guide h2 { font-size: 24px; margin-top: 0; }
+  .adoption-guide p { font-size: 15px; }
+  .guide-closing { padding: 22px; }
+  .help-answer { padding-right: 0; }
+}
