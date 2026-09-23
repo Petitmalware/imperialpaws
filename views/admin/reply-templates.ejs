@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/css/applications.css?v=20260922c">
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar', { active: 'reply-templates' }) %>
+  <main class="admin-content">
+    <header class="admin-page-header"><div><p class="admin-eyebrow">Your words, ready when you need them</p><h1>Breeder email templates</h1><p class="admin-subtitle">Eight thoughtful replies, from a new application to a puppy’s first days at home.</p></div><a class="btn-secondary" href="/admin/applications">Open applications</a></header>
+    <% if (success) { %><div class="admin-alert admin-alert-success" role="status"><%= success %></div><% } %>
+    <% if (error) { %><div class="admin-alert admin-alert-error" role="alert"><%= error %></div><% } %>
+    <div class="reply-library-layout">
+      <div class="reply-library">
+        <p class="admin-muted">Make these sound like you. Save your wording here, then choose an email inside a family’s application to fill their details and review before sending.</p>
+        <% templates.forEach((template, index) => { const values = draft && draft.id === template.id ? draft : template; %>
+          <details class="admin-panel reply-template-card" id="<%= template.id %>" <%= (draft && draft.id === template.id) || index === 0 ? 'open' : '' %>>
+            <summary><span class="reply-stage-number"><%= index + 1 %></span><span><strong><%= template.label %></strong><small><%= template.description %></small></span></summary>
+            <form method="post" action="/admin/reply-templates/<%= template.id %>" class="application-form" data-submit-lock>
+              <div class="form-group"><label for="subject-<%= template.id %>">Email subject</label><input id="subject-<%= template.id %>" name="subject" value="<%= values.subject %>" maxlength="160" required></div>
+              <div class="form-group"><label for="body-<%= template.id %>">Email message</label><textarea id="body-<%= template.id %>" name="body" rows="13" maxlength="5000" required><%= values.body %></textarea><small>A greeting with the family’s name and a sign-off with your breeder name are added automatically.</small></div>
+              <button class="btn-primary" type="submit">Save this email</button>
+            </form>
+            <form method="post" action="/admin/reply-templates/<%= template.id %>/reset" class="reply-reset" data-template-reset data-submit-lock><button class="btn-small" type="submit">Restore original wording</button></form>
+          </details>
+        <% }) %>
+      </div>
+      <aside class="reply-library-help admin-panel"><p class="admin-eyebrow">Details that fill themselves</p><h2>Personalize each reply</h2><p>Copy these fields into your saved subject or message. The family’s application fills them when you prepare a draft.</p><dl class="reply-fields"><% mergeFields.forEach(field => { %><div><dt><code>{{<%= field.key %>}}</code></dt><dd><%= field.label %></dd></div><% }) %></dl><p>Invoice fields use the invoice you select. Payment and delivery details come from the instructions you enter for that family. Save your usual payment instructions directly in the documents template if you prefer.</p><p>Change your sign-off in <a href="/admin/settings">Site settings → Site name</a>.</p><p class="reply-library-note">The documents email needs both PDFs. Payment confirmation needs a paid invoice. Welcome home is available after the adoption is marked completed.</p></aside>
+    </div>
+  </main>
+</div>
+<script src="/js/applications.js?v=20260922c" defer></script>

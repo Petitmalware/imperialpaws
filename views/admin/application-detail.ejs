@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/css/applications.css?v=20260922">
+<link rel="stylesheet" href="/css/applications.css?v=20260922c">
 <div class="admin-shell">
   <%- include('../partials/admin-sidebar', { active: 'applications' }) %>
   <% const appPath = '/admin/applications/' + encodeURIComponent(application.id); const state = application.status || 'Pending'; %>
@@ -18,11 +18,24 @@
           <div class="family-message"><h3>Their message</h3><p class="preserve-lines"><%= application.message || 'No additional message was included.' %></p></div>
         </section>
         <section class="admin-panel" id="reply">
-          <p class="admin-eyebrow">Keep the conversation personal</p><h2>Reply to <%= (application.name || 'this family').split(' ')[0] %></h2><p class="admin-muted">Sent to <strong><%= application.email %></strong>. Replies from the family arrive in your email inbox.</p>
-          <form method="post" action="<%= appPath %>/reply" class="application-form" data-submit-lock data-reply-form data-family-name="<%= application.name %>" data-puppy-name="<%= puppy ? puppy.name : 'your selected puppy' %>">
-            <div class="form-group"><label for="reply-template">Start with a suggested reply</label><select id="reply-template" data-reply-template><option value="">Write your own message</option><option value="review">Thanks for applying</option><option value="questions">Ask a few questions</option><option value="call">Arrange a conversation</option><option value="pickup">Discuss pickup arrangements</option></select><small>Templates fill the draft below. Review and edit before sending.</small></div>
+          <div class="admin-section-title"><div><p class="admin-eyebrow">From first hello to homecoming</p><h2>Reply to <%= (application.name || 'this family').split(' ')[0] %></h2></div><a class="btn-small" href="/admin/reply-templates">Edit saved templates</a></div><p class="admin-muted">Sent to <strong><%= application.email %></strong>. Replies from the family arrive in your email inbox.</p>
+          <form method="post" action="<%= appPath %>/reply" class="application-form" data-submit-lock data-reply-form>
+            <div class="reply-template-picker">
+              <div class="form-group"><label for="reply-template">Choose the next email</label><select id="reply-template" name="templateId" data-reply-template><option value="">Write your own message</option><% replyData.templates.forEach((template, index) => { const sentBefore = (application.activity || []).some(event => event.templateId === template.id && event.status === 'sent'); %><option value="<%= template.id %>" <%= draft.templateId === template.id ? 'selected' : '' %>><%= index + 1 %>. <%= template.label %><%= sentBefore ? ' · Sent before' : '' %></option><% }) %></select></div>
+              <p class="admin-muted" data-template-description>Choose a saved email, add any document or delivery details below, then fill your draft.</p>
+              <p class="reply-requirements" data-template-requirements aria-live="polite"></p>
+            </div>
+            <details class="reply-delivery" data-reply-documents <%= draft.invoiceNumber || draft.contractId ? 'open' : '' %>><summary>Attach adoption documents</summary><fieldset class="reply-documents"><legend>Documents for this family</legend>
+              <div class="form-group"><label for="reply-invoice">Invoice</label><select id="reply-invoice" name="invoiceNumber"><option value="">Choose an invoice</option><% invoices.forEach(invoice => { %><option value="<%= invoice.invoiceNumber %>" <%= draft.invoiceNumber === invoice.invoiceNumber ? 'selected' : '' %>><%= invoice.invoiceNumber %> · <%= invoice.paid ? 'Paid' : 'Unpaid' %></option><% }) %></select><small>Invoice amounts fill from this selection. Create or edit invoices in Adoption documents.</small></div>
+              <label class="application-checkbox"><input type="checkbox" name="attachInvoice" <%= draft.attachInvoice ? 'checked' : '' %>> Attach the selected invoice PDF</label>
+              <div class="form-group"><label for="reply-contract">Agreement to attach</label><select id="reply-contract" name="contractId"><option value="">No agreement attachment</option><% contracts.forEach(contract => { %><option value="<%= contract.id %>" <%= draft.contractId === contract.id ? 'selected' : '' %>><%= contract.title %><%= contract.breed ? ' · ' + contract.breed : '' %></option><% }) %></select><small>Uses the selected agreement’s saved terms and this family’s name. Review its breed and terms in Adoption documents before sending. PDF attachments include private backup download links.</small></div>
+            </fieldset></details>
+            <details class="reply-delivery" data-payment-details <%= draft.paymentDetails ? 'open' : '' %>><summary>Payment instructions</summary><div class="form-group"><label for="reply-payment">Directions for this family</label><textarea id="reply-payment" name="paymentDetails" rows="4" maxlength="1000" placeholder="Agreed payment method, recipient details, payment reference, and how you will confirm receipt…"><%= draft.paymentDetails || '' %></textarea><small>Replaces {{payment_details}} in the documents email. You can also save your usual instructions directly in that email template.</small></div></details>
+            <details class="reply-delivery" data-delivery-details <%= draft.deliveryDetails ? 'open' : '' %>><summary>Collection or delivery details</summary><div class="form-group"><label for="reply-delivery">Arrangements for this family</label><textarea id="reply-delivery" name="deliveryDetails" rows="4" maxlength="1000" placeholder="Date and time, collection point or delivery address, contact details, and any agreed transport information…"><%= draft.deliveryDetails || '' %></textarea><small>These details replace {{delivery_details}} when you fill the draft.</small></div></details>
+            <div class="reply-fill"><button type="button" class="btn-secondary" data-fill-reply>Fill draft from this email</button><small>Review and edit the draft below. Nothing is sent until you select Send reply.</small></div>
+            <p class="reply-draft-hint" data-draft-hint role="status" hidden></p>
             <div class="form-group"><label for="reply-subject">Subject</label><input id="reply-subject" name="subject" value="<%= draft.subject || 'Your application for ' + (puppy ? puppy.name : 'a puppy') %>" maxlength="160" required></div>
-            <div class="form-group"><label for="reply-body">Your message</label><textarea id="reply-body" name="messageBody" rows="9" maxlength="5000" required placeholder="Write a warm, personal reply…"><%= draft.messageBody || '' %></textarea><small>This message is emailed when you select Send reply.</small></div>
+            <div class="form-group"><label for="reply-body">Your message</label><textarea id="reply-body" name="messageBody" rows="13" maxlength="5000" required placeholder="Write a warm, personal reply…"><%= draft.messageBody || '' %></textarea><small>We add “Hello <%= application.name %>” and your breeder name as the sign-off. Edit any {{unfinished_fields}} before sending.</small></div>
             <button class="btn-primary" type="submit">Send reply</button>
           </form>
         </section>
@@ -31,7 +44,7 @@
           <form method="post" action="<%= appPath %>/notes" class="application-form" data-submit-lock><div class="form-group"><label for="private-note">Add a private note</label><textarea id="private-note" name="note" rows="3" maxlength="3000" required placeholder="Call notes, preferences, or something to follow up on…"></textarea></div><button type="submit" class="btn-secondary">Save note</button></form>
           <ol class="application-timeline">
           <% (application.activity || []).slice().reverse().forEach(event => { %>
-            <li class="timeline-entry"><span class="timeline-dot <%= event.status === 'failed' ? 'failed' : '' %>" aria-hidden="true"></span><div><div class="timeline-heading"><strong><%= event.type === 'note' ? 'Private note' : event.type === 'email' ? (event.status === 'sent' ? 'Email sent' : 'Email not sent') : event.type === 'status' ? 'Status changed' : 'Follow-up updated' %></strong><time><%= new Date(event.createdAt).toLocaleString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) %></time></div><% if (event.subject) { %><p><strong><%= event.subject %></strong></p><% } %><p class="preserve-lines"><%= event.body || '' %></p><small class="admin-muted"><%= event.by || 'Breeder' %></small></div></li>
+            <li class="timeline-entry"><span class="timeline-dot <%= event.status === 'failed' ? 'failed' : '' %>" aria-hidden="true"></span><div><div class="timeline-heading"><strong><%= event.type === 'note' ? 'Private note' : event.type === 'email' ? (event.status === 'sent' ? 'Email sent' : 'Email not sent') : event.type === 'status' ? 'Status changed' : 'Follow-up updated' %></strong><time><%= new Date(event.createdAt).toLocaleString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) %></time></div><% if (event.subject) { %><p><strong><%= event.subject %></strong></p><% } %><p class="preserve-lines"><%= event.body || '' %></p><% if (event.attachments && event.attachments.length) { %><p class="timeline-attachments">PDFs: <%= event.attachments.join(' · ') %></p><% } %><small class="admin-muted"><%= event.by || 'Breeder' %></small></div></li>
           <% }) %>
             <li class="timeline-entry"><span class="timeline-dot" aria-hidden="true"></span><div><strong>Application received</strong><p class="admin-muted">This history shows replies and updates made here. Invoice and agreement actions are available on their document pages.</p></div></li>
           </ol>
@@ -51,4 +64,5 @@
     </div>
   </main>
 </div>
-<script src="/js/applications.js?v=20260922" defer></script>
+<script type="application/json" id="reply-data"><%- JSON.stringify(replyData).replace(/</g, '\\u003c') %></script>
+<script src="/js/applications.js?v=20260922c" defer></script>

@@ -59,7 +59,7 @@ async function isEmailEnabled() {
 /**
  * Base email layout wrapper with state-of-the-art luxury styling.
  */
-function wrapHtmlContent(title, contentHtml) {
+function wrapHtmlContent(title, contentHtml, breederName = 'ImperialPaws') {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -205,15 +205,14 @@ function wrapHtmlContent(title, contentHtml) {
 <body>
   <div class="email-container">
     <div class="email-header">
-      <h1>ImperialPaws</h1>
-      <p>Ethical Pekingese Breeding Program</p>
+      <h1>${escapeHtml(breederName)}</h1>
+      <p>Puppy adoption &amp; family care</p>
     </div>
     <div class="email-body">
       ${contentHtml}
     </div>
     <div class="email-footer">
-      &copy; ${new Date().getFullYear()} ImperialPaws Pekingese. All rights reserved.<br>
-      Responsible Home-Raised Pekingese Placement &bull; USA<br><br>
+      &copy; ${new Date().getFullYear()} ${escapeHtml(breederName)}. All rights reserved.<br><br>
       <a href="https://imperialpaws.pet">imperialpaws.pet</a> &bull; <a href="mailto:info@imperialpaws.pet">info@imperialpaws.pet</a>
     </div>
   </div>
@@ -369,18 +368,34 @@ async function sendPaymentReminderEmail(invoice, recipient) {
   return sendInvoiceDocumentEmail(invoice, recipient, 'Adoption payment reminder');
 }
 
-async function sendManualReplyEmail({ toEmail, toName, subject, messageBody }) {
-  if (!toEmail || !messageBody) return false;
+async function sendManualReplyEmail({ toEmail, toName, subject, messageBody, breederName = 'ImperialPaws', documentInvoice, documentContract }) {
+  if (!toEmail || !messageBody || !(await isEmailEnabled())) return false;
+  const documents = [];
+  if (documentInvoice || documentContract) {
+    const { invoicePdf, contractPdf } = require('./documentPdf');
+    const { saveDelivery } = require('./documentDelivery');
+    if (documentInvoice) {
+      const filename = 'Adoption-Invoice-' + String(documentInvoice.invoiceNumber).replace(/[^a-zA-Z0-9_-]/g, '-') + '.pdf';
+      documents.push({ label: 'Adoption invoice', ...await saveDelivery(await invoicePdf(documentInvoice), filename) });
+    }
+    if (documentContract) {
+      documents.push({ label: 'Adoption agreement', ...await saveDelivery(await contractPdf(documentContract, toName || 'Adopting parent'), 'Adoption-Agreement.pdf') });
+    }
+  }
   const emailSubject = subject || `A Message from ImperialPaws`;
-  const text = `Dear ${toName || "there"},\n\n${messageBody}\n\nBest regards,\nImperialPaws\nImperialPaws.pet`;
+  const downloadsText = documents.length ? '\n\nYour PDFs are attached. You can also download the same copies without logging in:\n' + documents.map(doc => doc.label + ': ' + doc.url).join('\n') + '\nPlease keep these private links with your puppy records.' : '';
+  const downloadsHtml = documents.length ? '<h3>Your adoption documents</h3><p>Your PDFs are attached. These private links also download the same copies without an account or login.</p>' + documents.map(doc => '<div class="btn-wrapper"><a class="btn" href="' + escapeHtml(doc.url) + '">Download ' + escapeHtml(doc.label.toLowerCase()) + ' PDF</a></div>').join('') : '';
+  const text = `Hello ${toName || "there"},\n\n${messageBody}${downloadsText}\n\nWarm regards,\n${breederName}`;
   const html = wrapHtmlContent(
     escapeHtml(emailSubject),
-    `<h2>A Message from ImperialPaws</h2>
-    <p>Dear ${escapeHtml(toName || "there")},</p>
-    <div style="margin: 16px 0; padding: 20px; border-left: 4px solid #C7A45A; background: #FFFDF9; line-height: 1.8; color: #222; white-space: pre-wrap;">${escapeHtml(String(messageBody).trim()).replace(/\n/g, "<br>")}</div>
-    <p>Best regards,<br><strong>ImperialPaws</strong><br><a href="https://imperialpaws.pet">ImperialPaws.pet</a></p>`
+    `<h2>${escapeHtml(emailSubject)}</h2>
+    <p>Hello ${escapeHtml(toName || "there")},</p>
+    <div style="margin:16px 0;line-height:1.8;color:#263e31;">${escapeHtml(String(messageBody).trim()).replace(/\n/g, "<br>")}</div>
+    ${downloadsHtml}
+    <p>Warm regards,<br><strong>${escapeHtml(breederName)}</strong></p>`,
+    breederName
   );
-  return sendMailSafe({ to: toEmail, subject: emailSubject, text, html });
+  return sendMailSafe({ to: toEmail, subject: emailSubject, text, html, attachments: documents.map(doc => doc.attachment) });
 }
 
 /**

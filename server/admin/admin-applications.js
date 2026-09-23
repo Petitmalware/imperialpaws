@@ -3,8 +3,10 @@ const { randomUUID } = require('crypto');
 const router = express.Router();
 const { requireAdmin } = require('./admin-auth');
 const { loadCollection, saveCollection } = require('../utils/dataStore');
-const { loadSiteSettings } = require('../utils/siteSettings');
+const { loadSiteSettings, saveSiteSettings } = require('../utils/siteSettings');
 const { getBaseUrl } = require('../utils/seo');
+const { DEFAULT_TEMPLATES, MERGE_FIELDS, resolveTemplates, unresolvedFields } = require('../utils/replyTemplates');
+const { getCurrencySymbol } = require('../utils/currency');
 const asyncHandler = require('../utils/asyncHandler');
 const STATUSES = ['Pending', 'Approved', 'Rejected', 'Sold'];
 const STAGES = ['under_review', 'approved_guidance', 'deposit_received', 'pre_delivery', 'welcome_home'];
@@ -35,6 +37,47 @@ async function findApplication(req, res) {
   return { applications, application };
 }
 async function baseUrl() { return getBaseUrl(null, await loadSiteSettings()); }
+function invoiceValues(invoice) {
+  const subtotal = (invoice.items || []).reduce((sum, item) => sum + Number(item.qty || 0) * Number(item.unitPrice || 0), 0);
+  const total = subtotal * (1 + Number(invoice.taxRate || 0));
+  const money = amount => (invoice.currency || 'USD') + ' ' + getCurrencySymbol(invoice.currency) + amount.toFixed(2);
+  return { invoice_number: invoice.invoiceNumber,
+    invoice_total: Number.isFinite(total) ? money(total) : '',
+    balance_due: Number.isFinite(total) ? money(invoice.paid ? 0 : total) : '' };
+}
+router.get('/reply-templates', requireAdmin, asyncHandler(async (req, res) => {
+  const settings = await loadSiteSettings();
+  res.render('admin/reply-templates', { templates: resolveTemplates(settings), mergeFields: MERGE_FIELDS,
+    success: clean(req.query.success), error: clean(req.query.error),
+    draft: req.session.replyTemplateDraft || null });
+}));
+router.post('/reply-templates/:id', requireAdmin, update(async (req, res) => {
+  const template = DEFAULT_TEMPLATES.find(item => item.id === req.params.id);
+  if (!template) return res.status(404).send('Email template not found.');
+  const subject = clean(req.body.subject), body = clean(req.body.body);
+  req.session.replyTemplateDraft = { id: template.id, subject: subject.slice(0, 160), body: body.slice(0, 5000) };
+  const allowed = new Set(MERGE_FIELDS.map(field => '{{' + field.key + '}}'));
+  const unknown = unresolvedFields(subject, body).filter(field => !allowed.has(field.replace(/\s/g, '')));
+  if (!subject || subject.length > 160 || /[\r\n]/.test(subject) || !body || body.length > 5000 || unknown.length) {
+    const message = unknown.length ? 'Unknown merge fields: ' + unknown.join(', ') : 'Add a subject (up to 160 characters) and message (up to 5,000 characters).';
+    return res.redirect('/admin/reply-templates?error=' + encodeURIComponent(message) + '#' + template.id);
+  }
+  const settings = await loadSiteSettings({ force: true });
+  settings.replyTemplates = { ...settings.replyTemplates, [template.id]: { subject, body } };
+  await saveSiteSettings(settings);
+  delete req.session.replyTemplateDraft;
+  res.redirect('/admin/reply-templates?success=' + encodeURIComponent(template.label + ' saved for future drafts.') + '#' + template.id);
+}));
+router.post('/reply-templates/:id/reset', requireAdmin, update(async (req, res) => {
+  const template = DEFAULT_TEMPLATES.find(item => item.id === req.params.id);
+  if (!template) return res.status(404).send('Email template not found.');
+  const settings = await loadSiteSettings({ force: true });
+  settings.replyTemplates = { ...settings.replyTemplates };
+  delete settings.replyTemplates[template.id];
+  await saveSiteSettings(settings);
+  if (req.session.replyTemplateDraft?.id === template.id) delete req.session.replyTemplateDraft;
+  res.redirect('/admin/reply-templates?success=' + encodeURIComponent(template.label + ' restored to its original wording.') + '#' + template.id);
+}));
 router.get('/applications', requireAdmin, asyncHandler(async (req, res) => {
   const [all, puppies] = await Promise.all([loadCollection('applications'), loadCollection('puppies')]);
   const filters = { q: clean(req.query.q).slice(0, 120), status: STATUSES.includes(req.query.status) ? req.query.status : '', followUp: req.query.followUp === 'due' ? 'due' : '' };
@@ -63,10 +106,18 @@ router.get('/applications/:id/agreement', requireAdmin, asyncHandler(async (req,
 router.get('/applications/:id', requireAdmin, asyncHandler(async (req, res) => {
   const found = await findApplication(req, res);
   if (!found) return;
-  const [puppies, invoices, contracts] = await Promise.all(['puppies', 'invoices', 'contracts'].map(name => loadCollection(name)));
+  const [puppies, invoices, contracts, settings] = await Promise.all([
+    ...['puppies', 'invoices', 'contracts'].map(name => loadCollection(name)), loadSiteSettings()
+  ]);
+  const puppy = puppies.find(p => p.id === found.application.puppyId) || null;
+  const familyInvoices = invoices.filter(i => i.applicationId === found.application.id);
+  const replyData = { templates: resolveTemplates(settings), status: found.application.status || 'Pending',
+    values: { buyer_name: found.application.name, puppy_name: puppy?.name || '', breed: puppy?.breed || '',
+      breeder_name: settings.meta?.siteName || 'ImperialPaws', application_code: found.application.id,
+      portal_url: getBaseUrl(null, settings) + '/track/result?code=' + encodeURIComponent(found.application.id) },
+    invoices: familyInvoices.map(invoice => ({ number: invoice.invoiceNumber, paid: Boolean(invoice.paid), values: invoiceValues(invoice) })) };
   res.render('admin/application-detail', { application: found.application,
-    puppy: puppies.find(p => p.id === found.application.puppyId) || null,
-    invoices: invoices.filter(i => i.applicationId === found.application.id), contracts,
+    puppy, invoices: familyInvoices, contracts, replyData,
     draft: (req.session.applicationDrafts || {})[req.params.id] || {},
     success: clean(req.query.success), error: clean(req.query.error) });
 }));
@@ -75,16 +126,38 @@ router.post('/applications/:id/reply', requireAdmin, update(async (req, res) => 
   if (!found) return;
   const { applications, application } = found;
   const subject = clean(req.body.subject), messageBody = clean(req.body.messageBody);
+  const templateId = clean(req.body.templateId), invoiceNumber = clean(req.body.invoiceNumber), contractId = clean(req.body.contractId);
+  const attachInvoice = req.body.attachInvoice === 'on', deliveryDetails = clean(req.body.deliveryDetails), paymentDetails = clean(req.body.paymentDetails);
   req.session.applicationDrafts = req.session.applicationDrafts || {};
-  req.session.applicationDrafts[application.id] = { subject: subject.slice(0, 160), messageBody: messageBody.slice(0, 5000) };
+  req.session.applicationDrafts[application.id] = { subject: subject.slice(0, 160), messageBody: messageBody.slice(0, 5000),
+    templateId, invoiceNumber, contractId, attachInvoice, deliveryDetails: deliveryDetails.slice(0, 1000), paymentDetails: paymentDetails.slice(0, 1000) };
   if (!subject || subject.length > 160 || /[\r\n]/.test(subject) || !messageBody || messageBody.length > 5000) {
     return redirect(req, res, 'error', 'Add a subject (up to 160 characters) and message (up to 5,000 characters).');
   }
+  const missing = unresolvedFields(subject, messageBody);
+  if (missing.length) return redirect(req, res, 'error', 'Fill these details before sending: ' + missing.join(', ') + '.');
+  const template = DEFAULT_TEMPLATES.find(item => item.id === templateId);
+  if (templateId && !template) return redirect(req, res, 'error', 'Choose an available email template or write your own message.');
+  const requirements = template?.requires || [];
+  if (requirements.includes('approved') && !['Approved', 'Sold'].includes(application.status)) return redirect(req, res, 'error', 'Approve this application before sending this stage of the adoption.');
+  if (requirements.includes('completed') && application.status !== 'Sold') return redirect(req, res, 'error', 'Mark the adoption as completed before sending the welcome-home email.');
+  if (deliveryDetails.length > 1000 || (requirements.includes('delivery_details') && !deliveryDetails)) return redirect(req, res, 'error', 'Add the confirmed delivery arrangements (up to 1,000 characters).');
+  if (paymentDetails.length > 1000) return redirect(req, res, 'error', 'Keep payment instructions under 1,000 characters.');
+  const [invoices, contracts, settings] = await Promise.all([loadCollection('invoices'), loadCollection('contracts'), loadSiteSettings()]);
+  const invoice = invoices.find(item => item.invoiceNumber === invoiceNumber && item.applicationId === application.id);
+  const contract = contracts.find(item => item.id === contractId);
+  if ((invoiceNumber && !invoice) || (attachInvoice && !invoice)) return redirect(req, res, 'error', 'Choose an invoice belonging to this application.');
+  if (contractId && !contract) return redirect(req, res, 'error', 'Choose an available agreement template.');
+  if (requirements.includes('invoice') && (!invoice || !attachInvoice)) return redirect(req, res, 'error', 'Select and attach this family’s invoice before sending this email.');
+  if (requirements.includes('contract') && !contract) return redirect(req, res, 'error', 'Select the agreement to attach before sending this email.');
+  if (requirements.includes('paid_invoice') && !invoice?.paid) return redirect(req, res, 'error', 'Record payment on the selected invoice before sending a payment confirmation.');
   const { sendManualReplyEmail } = require('../utils/emailService');
   let sent = false;
-  try { sent = await sendManualReplyEmail({ toEmail: application.email, toName: application.name, subject, messageBody }); }
+  try { sent = await sendManualReplyEmail({ toEmail: application.email, toName: application.name, subject, messageBody,
+    breederName: settings.meta?.siteName || 'ImperialPaws', documentInvoice: attachInvoice ? invoice : null, documentContract: contract || null }); }
   catch { /* Keep the draft and record the failed attempt for a clear retry. */ }
-  record(application, req, { type: 'email', status: sent ? 'sent' : 'failed', subject, body: messageBody });
+  record(application, req, { type: 'email', status: sent ? 'sent' : 'failed', subject, body: messageBody, templateId,
+    attachments: [...(attachInvoice ? ['Invoice ' + invoice.invoiceNumber + ' (PDF)'] : []), ...(contract ? [contract.title + ' (PDF)'] : [])] });
   await saveCollection('applications', applications);
   if (sent) delete req.session.applicationDrafts[application.id];
   return redirect(req, res, sent ? 'success' : 'error', sent ? 'Reply sent to ' + application.email + '.' : 'Reply was not sent. Your draft is saved here; check email settings before trying again.');
