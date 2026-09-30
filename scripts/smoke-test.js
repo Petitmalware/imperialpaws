@@ -400,7 +400,7 @@ async function main() {
 
   const adminInvoiceIndex = await assertRoute("/admin/invoices", 200, cookie);
   const adminInvoiceIndexHtml = await adminInvoiceIndex.text();
-  assert(adminInvoiceIndexHtml.includes(`/admin/invoices/${invoice.invoiceNumber}/send-pdf`), "Invoice list should email a PDF through the server.");
+  assert(adminInvoiceIndexHtml.includes(`/admin/invoices/${invoice.invoiceNumber}/email`), "Invoice list should open the preview and delivery format chooser.");
   const download = await assertRoute(`/invoice/${application.id}/${invoice.invoiceNumber}/download`, 200);
   assert(download.headers.get('content-type').includes('application/pdf'), "Buyer download must return a PDF.");
 
@@ -410,7 +410,7 @@ async function main() {
     cookie
   );
   const adminInvoiceViewHtml = await adminInvoiceView.text();
-  assert(adminInvoiceViewHtml.includes("Email Buyer"), "Invoice view should include email buyer action.");
+  assert(adminInvoiceViewHtml.includes("Preview &amp; send"), "Invoice view should include preview before sending.");
   assert(adminInvoiceViewHtml.includes("Adoption Note"), "Admin invoice view should show adoption note.");
 
   const togglePaid = await postForm(

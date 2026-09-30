@@ -4,7 +4,7 @@
 <div class="invoice-actions no-print"><a class="btn-print" href="/admin/invoices/<%= encodeURIComponent(invoice.invoiceNumber) %>/pdf">Download PDF</a>
 <a class="btn-print" href="/admin/invoices/edit/<%= encodeURIComponent(invoice.invoiceNumber) %>">Edit invoice</a><a class="btn-print" href="/admin/invoices">Back</a>
 <% if (invoice.adoptingParent?.email) { %>
-<form method="POST" action="/admin/invoices/<%= encodeURIComponent(invoice.invoiceNumber) %>/send-pdf"><button class="btn-print" type="submit">Email Buyer PDF</button></form><% } %>
+<a class="btn-print" href="/admin/invoices/<%= encodeURIComponent(invoice.invoiceNumber) %>/email">Preview &amp; send email / PDF</a><% } %>
 </div>
 <%- include('../../partials/adoption-invoice', {invoice}) %>
 </div></body></html>

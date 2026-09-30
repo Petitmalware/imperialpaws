@@ -581,6 +581,7 @@ async function sendAdoptionCompleteEmail({ application, puppy, customNote, baseU
 }
 
 module.exports = {
+  sendPreparedInvoiceEmail: sendMailSafe,
   isEmailEnabled,
   sendApplicationConfirmationEmail,
   sendBreederNewApplicationAlert,

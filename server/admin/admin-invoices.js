@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+router.use(require("./admin-invoice-email"));
 const { requireAdmin } = require("./admin-auth");
 const { getCurrencySymbol } = require("../utils/currency");
 const { loadSiteSettings } = require("../utils/siteSettings");
@@ -136,15 +137,6 @@ router.post("/invoices/add", requireAdmin, asyncHandler(async (req, res) => {
   invoices.push(invoice);
   await saveCollection("invoices", invoices);
 
-  // Trigger optional email notification to parent
-  const { sendInvoiceNotificationEmail } = require("../utils/emailService");
-  const baseUrl = `${req.protocol}://${req.get("host")}`;
-  if (invoice.adoptingParent && invoice.adoptingParent.email) {
-    sendInvoiceNotificationEmail(invoice, invoice.adoptingParent.email, baseUrl).catch(err => {
-      console.error("Invoice email notification error:", err);
-    });
-  }
-
   res.redirect(`/admin/invoices/view/${invoice.invoiceNumber}`);
 }));
 
@@ -166,14 +158,7 @@ router.get("/invoices/:number/pdf", requireAdmin, asyncHandler(async (req, res) 
   res.attachment("Adoption-Invoice.pdf").send(await invoicePdf(invoice));
 }));
 
-router.post("/invoices/:number/send-pdf", requireAdmin, asyncHandler(async (req, res) => {
-  const invoices = await loadCollection("invoices");
-  const invoice = invoices.find(i => i.invoiceNumber === req.params.number);
-  if (!invoice) return res.status(404).send("Invoice not found");
-  const { sendInvoiceNotificationEmail } = require("../utils/emailService");
-  const sent = await sendInvoiceNotificationEmail(invoice, invoice.adoptingParent?.email);
-  res.redirect(sent ? "/admin/invoices?success=Invoice+PDF+emailed" : "/admin/invoices?error=Email+not+sent.+Check+the+recipient+and+email+settings.");
-}));
+router.post("/invoices/:number/send-pdf", requireAdmin, (req, res) => res.redirect(`/admin/invoices/${encodeURIComponent(req.params.number)}/email`));
 
 router.post("/invoices/:number/toggle-paid", requireAdmin, asyncHandler(async (req, res) => {
   const invoices = await loadCollection("invoices");
@@ -182,40 +167,14 @@ router.post("/invoices/:number/toggle-paid", requireAdmin, asyncHandler(async (r
   if (invoice) {
     invoice.paid = !invoice.paid;
     invoice.status = invoice.paid ? "Paid" : "Pending";
+    invoice.paidAt = invoice.paid ? new Date().toISOString() : null;
     await saveCollection("invoices", invoices);
-
-    // Fire Payment Received email when toggled to Paid
-    if (invoice.paid) {
-      const recipientEmail = invoice.adoptingParent?.email;
-      if (recipientEmail) {
-        const { sendPaymentReceivedEmail } = require("../utils/emailService");
-        const baseUrl = `${req.protocol}://${req.get("host")}`;
-        sendPaymentReceivedEmail(invoice, recipientEmail, baseUrl).catch(err => {
-          console.error("Payment received email error:", err);
-        });
-      }
-    }
   }
 
   res.redirect("/admin/invoices");
 }));
 
-router.post("/invoices/:number/send-reminder", requireAdmin, asyncHandler(async (req, res) => {
-  const invoices = await loadCollection("invoices");
-  const invoice = invoices.find(i => i.invoiceNumber === req.params.number);
-
-  if (!invoice || invoice.paid) return res.redirect("/admin/invoices");
-
-  const recipientEmail = invoice.adoptingParent?.email;
-  if (!recipientEmail) return res.redirect("/admin/invoices?error=No+email+on+invoice");
-
-  const { sendPaymentReminderEmail } = require("../utils/emailService");
-  const baseUrl = `${req.protocol}://${req.get("host")}`;
-  const sent = await sendPaymentReminderEmail(invoice, recipientEmail, baseUrl);
-  res.redirect(sent
-    ? "/admin/invoices?success=Reminder+sent+to+" + encodeURIComponent(recipientEmail)
-    : "/admin/invoices?error=Reminder+not+sent.+Check+email+settings.");
-}));
+router.post("/invoices/:number/send-reminder", requireAdmin, (req, res) => res.redirect(`/admin/invoices/${encodeURIComponent(req.params.number)}/email`));
 
 router.post("/invoices/:number/manual-reply", requireAdmin, asyncHandler(async (req, res) => {
   const invoices = await loadCollection("invoices");

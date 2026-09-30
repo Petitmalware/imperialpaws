@@ -102,7 +102,9 @@ function contact(person = {}) {
   return [person.name, person.address, [person.city, person.state, person.zip].filter(Boolean).join(', '), person.phone, person.email, person.website].filter(Boolean).join('\n');
 }
 
-async function invoicePdf(invoice) {
+async function invoicePdf(invoice, { receipt = false } = {}) {
+  if (receipt && !invoice.paid) throw new Error('Payment must be recorded before issuing a receipt.');
+  const documentTitle = receipt ? 'Adoption Payment Receipt' : 'Adoption Invoice';
   const currency = invoice.currency || '$';
   const money = n => currency + Number(n).toFixed(2);
   const items = invoice.items || [];
@@ -110,10 +112,10 @@ async function invoicePdf(invoice) {
   const tax = subtotal * Number(invoice.taxRate || 0);
   if (![subtotal, tax].every(Number.isFinite)) throw new Error('Invoice amounts must be valid numbers.');
   const puppy = invoice.puppy || {};
-  return makePdf(`Adoption Invoice ${invoice.invoiceNumber}`, [
+  return makePdf(`${documentTitle} ${invoice.invoiceNumber}`, [
     { text: invoice.seller?.name || 'Breeder / Seller', size: 19, gap: 4, style: 'brand' },
     { text: 'PUPPY PLACEMENT & ADOPTION', size: 8, muted: true, gap: 18 },
-    { text: 'Adoption Invoice', size: 24, gap: 16, style: 'title' },
+    { text: documentTitle, size: 24, gap: 16, style: 'title' },
     { columns: [`Invoice: ${invoice.invoiceNumber}\nIssued: ${invoice.issueDate || String(invoice.createdAt || '').slice(0, 10)}`, `${invoice.paid ? 'PAID IN FULL' : 'PAYMENT PENDING'}${invoice.dueDate ? '\nPayment due: ' + invoice.dueDate : ''}`], gap: 12, style: 'cards' },
     { columns: ['BREEDER / SELLER\n' + contact(invoice.seller), 'ADOPTING PARENT\n' + contact(invoice.adoptingParent)], gap: 14, style: 'cards' },
     ...(Object.values(puppy).some(Boolean) ? [{ text: 'Puppy being welcomed home', size: 14, gap: 5, style: 'section' }, { text: [['Name', puppy.name], ['Breed', puppy.breed], ['Sex', puppy.gender], ['Color / markings', puppy.color]].filter(([,value]) => value).map(([label,value]) => label + ': ' + value).join('\n'), gap: 14, style: 'details' }] : []),
@@ -121,7 +123,7 @@ async function invoicePdf(invoice) {
     ...items.map(item => ({ columns: [String(item.description || 'Adoption fee') + (Number(item.qty) !== 1 ? `\n${item.qty} placements at ${money(item.unitPrice)} each` : ''), money(Number(item.qty || 0) * Number(item.unitPrice || 0))], gap: 4, style: 'fee' })),
     { columns: ['Subtotal' + (tax ? '\nTax' : '') + '\nTotal adoption charges' + (invoice.paid ? '\nPayment recorded' : '') + '\nBalance due', [money(subtotal), ...(tax ? [money(tax)] : []), money(subtotal + tax), ...(invoice.paid ? [money(subtotal + tax)] : []), money(invoice.paid ? 0 : subtotal + tax)].join('\n')], gap: 16, style: 'totals' },
     ...(invoice.notes ? [{ text: 'Adoption notes & payment terms', size: 14, gap: 5, style: 'section' }, { text: invoice.notes, size: 9, gap: 18 }] : []),
-    { text: 'Please retain this invoice with your adoption agreement and puppy records.', size: 8, muted: true }
+    { text: `Please retain this ${receipt ? 'receipt' : 'invoice'} with your adoption agreement and puppy records.`, size: 8, muted: true }
   ]);
 }
 

@@ -66,19 +66,15 @@
 
                   <form data-submit-lock method="POST" action="/admin/invoices/<%= inv.invoiceNumber %>/toggle-paid">
                     <button type="submit" class="btn-small">
-                      <%= inv.paid ? "Mark Unpaid" : "Mark paid & email receipt" %>
+                      <%= inv.paid ? "Mark Unpaid" : "Mark paid" %>
                     </button>
                   </form>
 
                   <% if (buyerEmail && !inv.paid) { %>
-                    <form data-submit-lock method="POST" action="/admin/invoices/<%= inv.invoiceNumber %>/send-reminder">
-                      <button type="submit" class="btn-small" style="background:#FEF3C7; color:#92400E; border:1px solid #F59E0B;">
-                        🔔 Send Reminder
-                      </button>
-                    </form>
+                    <a class="btn-small" href="/admin/invoices/<%= encodeURIComponent(inv.invoiceNumber) %>/email">Preview payment reminder</a>
                   <% } %>
 
-                  <% if (buyerEmail) { %><form data-submit-lock method="POST" action="/admin/invoices/<%= encodeURIComponent(inv.invoiceNumber) %>/send-pdf"><button type="submit" class="btn-small">Email invoice PDF</button></form>
+                  <% if (buyerEmail) { %><a class="btn-small" href="/admin/invoices/<%= encodeURIComponent(inv.invoiceNumber) %>/email">Preview &amp; send invoice / receipt</a>
                     <button
                       class="btn-small"
                       style="background:#EFF6FF; color:#1E40AF; border:1px solid #93C5FD;"
